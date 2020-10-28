@@ -12,5 +12,5 @@ I am a Distinguished Member of Technical Staff in the Information Division in th
 
 Research Sypnosis
 ======
-My research focus on developing machine learning solutions to various problems encountered in DSO. My main area of application is natural language processing.  
+My research focuses on developing machine learning solutions to various problems encountered in DSO. My main area of application is natural language processing.  
 
