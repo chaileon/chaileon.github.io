@@ -8,7 +8,7 @@ redirect_from:
   - /about.html
 ---
 
-I am a Distinguished Member of Technical Staff in the Information Division in the [DSO National Laboratories](http://dso.org.sg). I work with a group of motivated researchers and engineers to apply machine learning solutions to challenging problems.
+I am a Distinguished Member of Technical Staff in the Information Division in the [DSO National Laboratories](https://www.dso.org.sg/). I work with a group of motivated researchers and engineers to apply machine learning solutions to challenging problems.
 
 Research Sypnosis
 ======
