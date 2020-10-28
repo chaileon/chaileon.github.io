@@ -8,9 +8,9 @@ redirect_from:
   - /about.html
 ---
 
-This is the front page forked from [academicpages template](https://github.com/academicpages/academicpages.github.io) and hosted on GitHub pages. 
+I am a Distinguished Member of Technical Staff in the Information Division in the [DSO National Laboratories]. (http://dso.org.sg). I work with a group of motivated researchers and engineers to apply machine learning solutions to challenging problems.
 
-Bio
+Research Sypnosis
 ======
-TBD
+My research focus on developing machine learning solutions to various problems encountered in DSO. My main area of application is natural language processing.  
 
