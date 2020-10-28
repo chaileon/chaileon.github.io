@@ -7,10 +7,10 @@
 
 # Site Settings
 locale                   : "en-US"
-title                    : "Your Name / Site Title"
+title                    : "CHIEU Hai Leong"
 title_separator          : "-"
-name                     : &name "Your Name"
-description              : &description "personal description"
+name                     : &name "Hai Leong"
+description              : &description "Machine Learning Researcher"
 url                      : https://chaileon.github.io 
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : "chaileon/chaileon.github.io"
