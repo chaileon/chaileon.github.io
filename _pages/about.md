@@ -19,6 +19,10 @@ Information Exploitation Lab in DSO
 I work with a group of motivated researchers and engineers to apply machine learning solutions to challenging problems. Find out more about a few members of our team here:
 
 - [Adam Chai](https://sites.google.com/site/kianmingachai/)
+- [Pan Xinghao](https://scholar.google.com.sg/citations?user=Zldo9CAAAAAJ&hl=en)
+- [Serene Yeo](https://yeoserene.github.io/)
+- [Teow Loo Nin](https://sg.linkedin.com/in/loo-nin-teow-ba9b3a83)
+
 
 
 
