@@ -10,7 +10,7 @@ locale                   : "en-US"
 title                    : "CHIEU Hai Leong"
 title_separator          : "-"
 name                     : &name "Hai Leong"
-description              : &description "Machine Learning Researcher"
+description              : &description "Researcher"
 url                      : https://chaileon.github.io 
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : "chaileon/chaileon.github.io"
