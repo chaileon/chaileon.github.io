@@ -7,15 +7,58 @@
 
 <html lang="en">
 <style>
-.responsiveCal {
-position: relative; padding-bottom: 75%; height: 0; overflow: hidden;
-}
-.responsiveCal iframe {
-position: absolute; top:0; left: 0; width: 100%; height: 100%;
-}
-body {
-  font-size:24px;
-}
+  body {
+    font-size: 18px;
+    line-height: 1.7;
+    color: #222;
+    background-color: #f9f9f9;
+  }
+  .container {
+    max-width: 860px;
+  }
+  h2 {
+    font-size: 1.8em;
+    margin-top: 1.4em;
+    margin-bottom: 0.4em;
+    color: #111;
+  }
+  p {
+    margin-bottom: 0.9em;
+  }
+  a {
+    color: #1a6496;
+  }
+  a:hover {
+    color: #0d3c5e;
+    text-decoration: underline;
+  }
+.profile-links a {
+    display: inline-block;
+    margin-right: 8px;
+    padding: 4px 10px;
+    border: 1px solid #1a6496;
+    border-radius: 4px;
+    font-size: 0.9em;
+    text-decoration: none;
+  }
+  .profile-links a:hover {
+    background-color: #1a6496;
+    color: #fff;
+  }
+  ul {
+    padding-left: 1.5em;
+  }
+  ul li {
+    margin-bottom: 0.3em;
+  }
+  .content-section {
+    margin-top: 40px;
+    text-align: justify;
+    background: #fff;
+    border-radius: 6px;
+    padding: 32px 40px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  }
 </style>
 
 <head>
@@ -28,92 +71,43 @@ body {
   <link href='https://fonts.googleapis.com/css?family=Oswald:700' rel='stylesheet' type='text/css'>
 </head>
 <body>
-<!-- Navigation -->
-	<nav class="navbar navbar-inverse navbar-static-top" role="navigation">
-	  <div class="container">
-		<div class="navbar-header">
-		  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-		</div>
-		<!-- Collect the nav links, forms, and other content for toggling -->
-		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-		  <ul class="nav navbar-nav">
-				  <li><a href="index.html">Home</a></li>
-				  <li><a href="#news">News</a></li> 
-				  <li><a href="#people">People</a></li> 
-				  <li><a href="#reading">Reading Group</a></li> 
-		  </ul>
-		</div>
-	  </div>
-	</nav>
-  
   <!-- Page Content -->
     <div class="container">
 
-                <!-- Main Image 
-                <img class="img-responsive" src="photo.gif" alt=""><br>
-		-->
-                
-                <div style="margin-top:3%; text-align:justify;">                
+                <div class="content-section">
 
-	<h2><u>Chieu</u> Hai Leong</h2>
-		<p>I am a Distinguished Member of Technical Staff in the <u>Information Exploitation Lab (IEL)</u> in <a href="https://www.dso.org.sg/">DSO National Laboratories</a>.
-        	I work on applying artificial intelligence and machine learning to real problems in DSO. My research focuses mainly on natural language processing. Check out my <a href="https://scholar.google.com.sg/citations?user=9QO16LcAAAAJ&hl=en">Google Scholar</a> page for my published works. I serve as program committee member or reviewer for top conferences such as Neurips (Top 10% reviewers in 2020), ICLR, AAAI, IJCAI, ACL, and EMNLP.
-		<p>
-	        [<a href="mailto:chaileon@dso.org.sg">Email</a>] &nbsp;  
-       	 	[<a href="https://scholar.google.com.sg/citations?user=9QO16LcAAAAJ&hl=en">Google Scholar</a>] &nbsp;
-        	[<a href="https://sg.linkedin.com/in/hai-leong-chieu-29a95a30">LinkedIn</a>]
+  <h2><u>Chieu</u> Hai Leong</h2>
+  <p>I am a Distinguished Member of Technical Staff in the <u>Information Exploitation Lab (IEL)</u> in <a href="https://www.dso.org.sg/">DSO National Laboratories</a>.
+  I work on applying artificial intelligence and machine learning to real problems in DSO. My research focuses mainly on natural language processing. Check out my <a href="https://scholar.google.com.sg/citations?user=9QO16LcAAAAJ&hl=en">Google Scholar</a> page for my published works. I serve as program committee member or reviewer for top conferences such as Neurips (Top 10% reviewers in 2020), ICLR, AAAI, IJCAI, ACL, and EMNLP.</p>
+  <p class="profile-links">
+    <a href="mailto:chaileon@dso.org.sg">Email</a>
+    <a href="https://scholar.google.com.sg/citations?user=9QO16LcAAAAJ&hl=en">Google Scholar</a>
+    <a href="https://sg.linkedin.com/in/hai-leong-chieu-29a95a30">LinkedIn</a>
+  </p>
 
-	<h2 id="news">News in our lab</h2>
-		<ul>
-		  <li>11/2021: Our NUS High intern published his internship work in the WNUT workshop 2021 [<a href="https://aclanthology.org/2021.wnut-1.10/">paper</a>].
-		  <li>09/2020: Our joint paper on rumor detection with SMU has been accepted at EMNLP 2020 [<a href="https://www.aclweb.org/anthology/2020.emnlp-main.108.pdf">paper</a>].
-		  <li>07/2020: <a href="https://scholar.google.com.sg/citations?user=nRPnPEAAAAAJ&hl=en">Seah Chun Wei</a> has returned from his attachment to the University of Massachusetts. Read about his joint work with his host, <a href="http://www.cis.umassd.edu/~mshao/">Ming Shao</a>, on multi-modal action recognition in their ACM-MM 2020 paper [<a href="https://dl.acm.org/doi/10.1145/3394171.3413531">paper</a>].
-		  <li>01/2020: <a href="https://yeoserene.github.io/">Serene Yeo</a> has returned from her attachment to <a href="https://www.regina.csail.mit.edu/">Regina Barzilay</a> at MIT. You can read about her work on fake news detection in this news feature [<a href="https://www.csail.mit.edu/news/better-fact-checking-fake-news">news</a>] and in this EMNLP 2019 paper on debiasing fact checking models [<a href="https://www.aclweb.org/anthology/D19-1341/">paper</a>].
-		  <li>12/2019: <a href="https://github.com/serenaklm">Serena Khoo</a>'s paper on rumor detection has been accepted for an oral presentation at AAAI 2020 [<a href="https://arxiv.org/abs/2001.10667">paper</a>].	
-                </ul>
+  <h2 id="people">People</h2>
+  <p>I work with a group of motivated scientists and engineers in DSO. You can find out more about a few members of our team in the links below.</p>
+  <ul>
+    <li><a href="https://sites.google.com/site/kianmingachai/">Adam Chai</a></li>
+    <li><a href="https://scholar.google.com.sg/citations?user=Zldo9CAAAAAJ&amp;hl=en">Pan Xinghao</a></li>
+    <li><a href="https://scholar.google.com.sg/citations?user=nRPnPEAAAAAJ&hl=en">Seah Chun Wei</a></li>
+    <li><a href="https://github.com/serenaklm">Serena Khoo</a></li>
+    <li><a href="https://scholar.google.com.sg/citations?user=zrJdj6YAAAAJ&amp;hl=en">Shen Bingquan</a></li>
+    <li><a href="https://sg.linkedin.com/in/loo-nin-teow-ba9b3a83">Teow Loo Nin</a></li>
+  </ul>
+  <p>For new staff or people interested in joining us:</p>
+  <ul>
+    <li>Here is some <a href="https://suzyahyah.github.io/machine%20learning/2018/08/30/OnboardingML.html">advice</a> to start you off.</li>
+    <li>Here is a <a href="https://hub.dso.org.sg/personal/chaileon/Documents/ReadingGroup/guide_to_report_writing.pdf">short article</a> about report writing (accessible only to DSO staff).</li>
+  </ul>
 
-	<h2 id="people" style="text-align:left;">People</h2>
-			<p>I work with a group of motivated scientists and engineers in DSO. 
-
-You can find out more about a few members of our team in the links below. </p>
-<ul>
-<li>
-		  [<a href="https://sites.google.com/site/kianmingachai/">Adam Chai</a>] &nbsp;
-		  [<a href="https://eugenesiow.com/about/">Eugene Siow</a>] &nbsp;
-		  [<a href="https://scholar.google.com.sg/citations?user=mBM4R48AAAAJ&amp;hl=en">Nicholas Chen</a>] &nbsp;
-			  [<a href="https://scholar.google.com.sg/citations?user=Zldo9CAAAAAJ&amp;hl=en">Pan Xinghao</a>] &nbsp;
-			  [<a href="https://scholar.google.com.sg/citations?user=nRPnPEAAAAAJ&hl=en">Seah Chun Wei</a>] &nbsp;
-		  [<a href="https://github.com/serenaklm">Serena Khoo</a>] &nbsp;
-		  [<a href="https://yeoserene.github.io/">Serene Yeo</a>] &nbsp;
-		  [<a href="https://scholar.google.com.sg/citations?user=zrJdj6YAAAAJ&amp;hl=en">Shen Bingquan</a>] &nbsp;
-		  [<a href="https://sg.linkedin.com/in/loo-nin-teow-ba9b3a83">Teow Loo Nin</a>]
-</ul>
-For new staffs or people interested in joining us, 
-<ul>
-<li> Here is some [<a href="https://suzyahyah.github.io/machine%20learning/2018/08/30/OnboardingML.html">advice</a>] to start you off. 
-<li> Here is a [<a href="https://hub.dso.org.sg/personal/chaileon/Documents/ReadingGroup/guide_to_report_writing.pdf">short article</a>] about report writing (accessible only to DSO staffs).
-</ul>
-
-		<h2 id="reading" style="text-align:left;">Reading Group</h2>
-
-		<p>We hold weekly virtual reading group sessions (usually on Wednesdays 4pm), where one of us shares a paper of interest. For DSO staffs, you can access the schedule and slides of past presentation [<a href="https://hub.dso.org.sg/personal/chaileon/Documents/Forms/All.aspx?RootFolder=%2Fpersonal%2Fchaileon%2FDocuments%2FReadingGroup">here</a>].<p>
-<div class="responsiveCal">
-<iframe src="https://calendar.google.com/calendar/embed?height=600&amp;wkst=1&amp;bgcolor=%23ffffff&amp;ctz=Asia%2FSingapore&amp;src=MmdxMWJoZXJiMW9kbWVwZ2RnMXNkOW03ODhAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&amp;color=%23F4511E" style="border:solid 1px #777" width="800" height="600" frameborder="0" scrolling="no"></iframe>
-
-</div>
-	</div>
+  </div>
          </div> 
 
 
     </div>
     <!-- /.container -->
-<a title="Web Analytics" href="https://statcounter.com/" target="_blank"><img src="https://c.statcounter.com/12418552/0/6d8da69b/1/" alt="Web Analytics" ></a>
-    
+
 </body>
 
 </html>
