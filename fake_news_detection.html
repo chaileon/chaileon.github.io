@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fake News Detection with Gemma 4 — Student Project Guide</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #232636;
+      --border: #2e3148;
+      --text: #e2e4f0;
+      --muted: #8b8fa8;
+      --accent: #6c63ff;
+      --accent-soft: #2d2b4e;
+      --green: #22c55e;
+      --green-soft: #0f2e1a;
+      --yellow: #fbbf24;
+      --yellow-soft: #2d2410;
+      --red: #f87171;
+      --red-soft: #2d1010;
+      --blue: #60a5fa;
+      --blue-soft: #0f1d2e;
+      --radius: 10px;
+      --mono: "JetBrains Mono", "Fira Code", "Courier New", monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    /* ── Layout ── */
+    .page { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      padding: 64px 24px 48px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 48px;
+    }
+    .hero .badge {
+      display: inline-block;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: clamp(28px, 5vw, 44px);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #fff 30%, var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p { color: var(--muted); max-width: 600px; margin: 0 auto 28px; font-size: 16px; }
+    .pills { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+    .pill {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 5px 14px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* ── Table of contents ── */
+    .toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 48px;
+    }
+    .toc h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 12px; }
+    .toc ol { padding-left: 20px; }
+    .toc li { margin: 4px 0; }
+    .toc a { color: var(--blue); text-decoration: none; font-size: 14px; }
+    .toc a:hover { text-decoration: underline; }
+
+    /* ── Sections ── */
+    section { margin-bottom: 56px; scroll-margin-top: 24px; }
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .step-num {
+      flex-shrink: 0;
+      width: 36px; height: 36px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 15px;
+      color: #fff;
+    }
+    .step-header h2 { font-size: 22px; font-weight: 700; }
+    h2 { font-size: 22px; font-weight: 700; margin-bottom: 16px; }
+    h3 { font-size: 17px; font-weight: 600; margin: 24px 0 10px; color: var(--text); }
+    p  { margin-bottom: 12px; color: var(--muted); }
+    p strong { color: var(--text); }
+    ul, ol { padding-left: 22px; color: var(--muted); margin-bottom: 12px; }
+    li { margin: 4px 0; }
+    li strong { color: var(--text); }
+
+    /* ── Callout boxes ── */
+    .callout {
+      border-left: 3px solid;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 14px 18px;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+    .callout.info  { border-color: var(--blue);   background: var(--blue-soft);   color: #93c5fd; }
+    .callout.warn  { border-color: var(--yellow);  background: var(--yellow-soft); color: #fde68a; }
+    .callout.tip   { border-color: var(--green);   background: var(--green-soft);  color: #86efac; }
+    .callout.danger{ border-color: var(--red);     background: var(--red-soft);    color: #fca5a5; }
+    .callout strong { color: inherit; }
+
+    /* ── Code blocks ── */
+    .code-wrap { position: relative; margin: 16px 0; border-radius: var(--radius); overflow: hidden; }
+    .code-label {
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      padding: 7px 14px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .copy-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 11px;
+      padding: 3px 9px;
+      transition: all .15s;
+    }
+    .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .copy-btn.copied { border-color: var(--green); color: var(--green); }
+    pre { margin: 0 !important; border-radius: 0 !important; }
+    pre code.hljs { padding: 20px !important; font-size: 13px !important; font-family: var(--mono) !important; }
+
+    /* ── Expandable hints ── */
+    .hint-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    .hint-toggle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      cursor: pointer;
+      background: var(--surface);
+      user-select: none;
+      transition: background .15s;
+    }
+    .hint-toggle:hover { background: var(--surface2); }
+    .hint-toggle-left { display: flex; align-items: center; gap: 12px; }
+    .hint-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .hint-title { font-weight: 600; font-size: 15px; }
+    .hint-subtitle { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .chevron { color: var(--muted); transition: transform .2s; font-size: 18px; }
+    .hint-body {
+      display: none;
+      padding: 0 20px 20px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+    }
+    .hint-body.open { display: block; }
+    .chevron.open { transform: rotate(180deg); }
+
+    /* ── Difficulty badges ── */
+    .diff {
+      display: inline-block;
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    .diff-1 { background: var(--green-soft);  color: var(--green);  border: 1px solid var(--green); }
+    .diff-2 { background: var(--yellow-soft); color: var(--yellow); border: 1px solid var(--yellow); }
+    .diff-3 { background: var(--red-soft);    color: var(--red);    border: 1px solid var(--red); }
+
+    /* ── Dataset table ── */
+    table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 14px 0; }
+    th { background: var(--surface2); padding: 10px 14px; text-align: left; color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; border-bottom: 1px solid var(--border); }
+    td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--muted); }
+    td:first-child { color: var(--text); font-weight: 500; }
+    tr:last-child td { border-bottom: none; }
+
+    /* ── Checklist ── */
+    .checklist { list-style: none; padding: 0; }
+    .checklist li { padding: 6px 0; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 10px; }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist .check { color: var(--green); font-size: 16px; flex-shrink: 0; }
+
+    /* ── Step connector ── */
+    .steps-container { position: relative; }
+    .step-divider { border: none; border-top: 1px dashed var(--border); margin: 0 0 48px; }
+
+    /* ── Footer ── */
+    footer { text-align: center; padding: 32px; border-top: 1px solid var(--border); color: var(--muted); font-size: 13px; }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .hero { padding: 40px 16px 32px; }
+      .step-header h2 { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════ HERO ═══ -->
+<div class="hero">
+  <div class="badge">Student Project — AI for Good</div>
+  <h1>Fake News Detection<br>with Gemma 4</h1>
+  <p>Build a Python pipeline that reads news articles from URLs and classifies them as real or fake using a local language model running free on Google Colab.</p>
+  <div class="pills">
+    <span class="pill">Python</span>
+    <span class="pill">Google Colab</span>
+    <span class="pill">Gemma 4 (1B)</span>
+    <span class="pill">HuggingFace Transformers</span>
+    <span class="pill">Prompt Engineering</span>
+    <span class="pill">NLP</span>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- TOC -->
+  <div class="toc">
+    <h3>Table of Contents</h3>
+    <ol>
+      <li><a href="#prereqs">Prerequisites &amp; Setup</a></li>
+      <li><a href="#colab">Setting Up Google Colab</a></li>
+      <li><a href="#install">Install Dependencies</a></li>
+      <li><a href="#model">Load Gemma 4 (1B)</a></li>
+      <li><a href="#scrape">Fetch Article Content from URLs</a></li>
+      <li><a href="#pipeline">The Fake News Detection Pipeline</a></li>
+      <li><a href="#evaluate">Evaluate Your Results</a></li>
+      <li><a href="#hints">Going Further — Hints &amp; Techniques</a></li>
+      <li><a href="#datasets">Datasets &amp; Test URLs</a></li>
+      <li><a href="#challenges">Challenge Extensions</a></li>
+    </ol>
+  </div>
+
+  <div class="steps-container">
+
+    <!-- ════════ STEP 0: PREREQUISITES ════════ -->
+    <section id="prereqs">
+      <div class="step-header">
+        <div class="step-num">0</div>
+        <h2>Prerequisites &amp; Setup</h2>
+      </div>
+
+      <p>You don't need to install anything on your computer. Everything runs in your browser through Google Colab. Before you start, make sure you have:</p>
+
+      <ul class="checklist">
+        <li><span class="check">✓</span> A <strong>Google account</strong> (a regular Gmail account works)</li>
+        <li><span class="check">✓</span> A <strong>HuggingFace account</strong> — free at <a style="color:var(--blue)" href="https://huggingface.co/join" target="_blank">huggingface.co/join</a></li>
+        <li><span class="check">✓</span> Access granted to <strong>Gemma 4</strong> — visit the <a style="color:var(--blue)" href="https://huggingface.co/google/gemma-4-1b-it" target="_blank">google/gemma-4-1b-it</a> model page and click <em>"Agree and access repository"</em> (takes &lt; 1 minute)</li>
+        <li><span class="check">✓</span> A HuggingFace <strong>access token</strong> — go to <em>Settings → Access Tokens → New Token</em> and copy it somewhere safe</li>
+      </ul>
+
+      <div class="callout warn">
+        <strong>Why do I need a HuggingFace token?</strong> Gemma 4 is a gated model — Google requires you to agree to usage terms before downloading it. Your token proves you have done this.
+      </div>
+    </section>
+
+    <hr class="step-divider" />
+
+    <!-- ════════ STEP 1: COLAB ════════ -->
+    <section id="colab">
+      <div class="step-header">
+        <div class="step-num">1</div>
+        <h2>Setting Up Google Colab</h2>
+      </div>
+
+      <p>Google Colab gives you a free Jupyter notebook environment with access to a GPU — essential for running language models quickly.</p>
+
+      <h3>Create a new notebook</h3>
+      <ol>
+        <li>Go to <a style="color:var(--blue)" href="https://colab.research.google.com" target="_blank">colab.research.google.com</a></li>
+        <li>Click <strong>File → New notebook</strong></li>
+        <li>Rename it to something like <em>fake_news_detection.ipynb</em></li>
+      </ol>
+
+      <h3>Enable the GPU runtime</h3>
+      <ol>
+        <li>Click <strong>Runtime → Change runtime type</strong></li>
+        <li>Under <em>Hardware accelerator</em>, select <strong>T4 GPU</strong></li>
+        <li>Click <strong>Save</strong></li>
+      </ol>
+
+      <div class="callout tip">
+        <strong>Tip:</strong> The free T4 GPU has ~15 GB of VRAM — more than enough to run Gemma 4 1B. If Colab says "GPU not available, connect to CPU", try again later or use <em>Runtime → Disconnect and delete runtime</em> to get a fresh session.
+      </div>
+
+      <h3>How Colab notebooks work</h3>
+      <p>A notebook is made of <strong>cells</strong>. Each cell contains Python code. You run a cell by clicking the ▶ button on its left, or pressing <strong>Shift + Enter</strong>. Cells share the same Python environment, so variables defined in one cell are available in the next.</p>
+
+      <div class="callout info">
+        <strong>New to notebooks?</strong> Think of each cell as a mini-program. You build your project step by step, running one cell at a time and seeing results immediately below each cell.
+      </div>
+    </section>
+
+    <hr class="step-divider" />
+
+    <!-- ════════ STEP 2: INSTALL ════════ -->
+    <section id="install">
+      <div class="step-header">
+        <div class="step-num">2</div>
+        <h2>Install Dependencies</h2>
+      </div>
+
+      <p>Create your <strong>first cell</strong> and paste this code. The <code style="color:var(--accent)">!</code> prefix tells Colab to run a shell command instead of Python.</p>
+
+      <div class="code-wrap">
+        <div class="code-label">Cell 1 — Install packages<button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><code class="language-python">!pip install -q transformers accelerate bitsandbytes requests beautifulsoup4 huggingface_hub</code></pre>
+      </div>
+
+      <div class="callout info">
+        <strong>What each package does:</strong><br>
+        <strong>transformers</strong> — HuggingFace library for loading and running language models<br>
+        <strong>accelerate</strong> — automatically places model layers on GPU<br>
+        <strong>bitsandbytes</strong> — enables 4-bit quantization to save memory<br>
+        <strong>requests + beautifulsoup4</strong> — fetches and parses web pages<br>
+        <strong>huggingface_hub</strong> — handles authentication for gated models
+      </div>
+
+      <p>Now create a <strong>second cell</strong> to log in to HuggingFace with your token:</p>
+
+      <div class="code-wrap">
+        <div class="code-label">Cell 2 — HuggingFace login<button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><code class="language-python">from huggingface_hub import login
+import torch
+
+# Paste your HuggingFace token here (keep it private — don't share your notebook publicly)
+login(token="hf_YOUR_TOKEN_HERE")
+
+# Verify the GPU is available
+print(f"GPU available: {torch.cuda.is_available()}")
+if torch.cuda.is_available():
+    print(f"GPU name: {torch.cuda.get_device_name(0)}")
+    print(f"GPU memory: {torch.cuda.get_device_properties(0).total_memory / 1e9:.1f} GB")</code></pre>
+      </div>
+
+      <div class="callout warn">
+        <strong>Keep your token private.</strong> Never share a Colab notebook that contains your real HuggingFace token. Use Colab's <em>Secrets</em> feature (the key icon 🔑 in the left sidebar) to store it safely, then access it with <code style="color:var(--accent)">from google.colab import userdata; token = userdata.get("HF_TOKEN")</code>.
+      </div>
+    </section>
+
+    <hr class="step-divider" />
+
+    <!-- ════════ STEP 3: LOAD MODEL ════════ -->
+    <section id="model">
+      <div class="step-header">
+        <div class="step-num">3</div>
+        <h2>Load Gemma 4 (1B)</h2>
+      </div>
+
+      <p>Gemma 4 is Google's open-weights language model family. The <strong>1B</strong> (1-billion parameter) instruction-tuned variant is the smallest and fastest — perfect for experimentation on a free GPU.</p>
+
+      <div class="code-wrap">
+        <div class="code-label">Cell 3 — Load Gemma 4 1B<button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><code class="language-python">from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig, pipeline
+
+MODEL_ID = "google/gemma-4-1b-it"
+
+# 4-bit quantization: loads the model in ~1 GB instead of ~2 GB, with minimal quality loss
+bnb_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_compute_dtype=torch.bfloat16,
+    bnb_4bit_use_double_quant=True,
+)
+
+print("Loading tokenizer...")
+tokenizer = AutoTokenizer.from_pretrained(MODEL_ID)
+
+print("Loading model (this may take 1-2 minutes)...")
+model = AutoModelForCausalLM.from_pretrained(
+    MODEL_ID,
+    quantization_config=bnb_config,
+    device_map="auto",
+)
+model.eval()
+
+# Wrap in a pipeline for easy use
+generator = pipeline(
+    "text-generation",
+    model=model,
+    tokenizer=tokenizer,
+    max_new_tokens=300,
+    do_sample=False,          # deterministic output
+    temperature=1.0,
+    repetition_penalty=1.1,
+)
+
+print("✓ Gemma 4 1B loaded and ready!")</code></pre>
+      </div>
+
+      <div class="callout tip">
+        <strong>What is quantization?</strong> Language models store billions of decimal numbers (weights). Quantization compresses each number from 16 bits down to 4 bits, shrinking the model to roughly a quarter of its original size in memory. Quality drops very slightly, but it lets you run models that would otherwise not fit on a free GPU.
+      </div>
+
+      <h3>Test the model with a quick question</h3>
+
+      <div class="code-wrap">
+        <div class="code-label">Cell 4 — Smoke test<button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><code class="language-python">def ask(prompt_text):
+    messages = [{"role": "user", "content": prompt_text}]
+    output = generator(messages)
+    return output[0]["generated_text"][-1]["content"]
+
+# Quick test
+reply = ask("In one sentence, what is fake news?")
+print(reply)</code></pre>
+      </div>
+
+      <p>If you get a coherent sentence back, your model is working correctly.</p>
+    </section>
+
+    <hr class="step-divider" />
+
+    <!-- ════════ STEP 4: SCRAPE ════════ -->
+    <section id="scrape">
+      <div class="step-header">
+        <div class="step-num">4</div>
+        <h2>Fetch Article Content from URLs</h2>
+      </div>
+
+      <p>Before the model can analyse a news article, we need to download the page and extract the readable text from the HTML. We use <strong>requests</strong> to fetch the page and <strong>BeautifulSoup</strong> to parse it.</p>
+
+      <div class="code-wrap">
+        <div class="code-label">Cell 5 — Article fetcher<button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><code class="language-python">import requests
+from bs4 import BeautifulSoup
+
+def fetch_article(url: str, max_chars: int = 3000) -> dict:
+    """Download a URL and return its title + body text."""
+    headers = {"User-Agent": "Mozilla/5.0 (compatible; FakeNewsBot/1.0)"}
+    try:
+        resp = requests.get(url, headers=headers, timeout=10)
+        resp.raise_for_status()
+    except requests.RequestException as e:
+        return {"url": url, "title": "ERROR", "body": str(e)}
+
+    soup = BeautifulSoup(resp.text, "html.parser")
+
+    # Extract title
+    title_tag = soup.find("title")
+    title = title_tag.get_text(strip=True) if title_tag else "No title found"
+
+    # Remove non-content tags
+    for tag in soup(["script", "style", "nav", "footer", "aside", "header"]):
+        tag.decompose()
+
+    # Grab paragraph text
+    paragraphs = [p.get_text(separator=" ", strip=True) for p in soup.find_all("p")]
+    body = " ".join(paragraphs)[:max_chars]
+
+    return {"url": url, "title": title, "body": body}
+
+# Test it
+article = fetch_article("https://www.bbc.com/news")
+print("Title:", article["title"])
+print("Body preview:", article["body"][:200], "...")</code></pre>
+      </div>
+
+      <div class="callout warn">
+        <strong>Some websites block scrapers.</strong> If you get a 403 error or get back almost no text, the site may require JavaScript to render, use a paywall, or block bots. Try a different URL or use the <em>datasets</em> in Step 9 which provide pre-extracted text.
+      </div>
+    </section>
+
+    <hr class="step-divider" />
+
+    <!-- ════════ STEP 5: PIPELINE ════════ -->
+    <section id="pipeline">
+      <div class="step-header">
+        <div class="step-num">5</div>
+        <h2>The Fake News Detection Pipeline</h2>
+      </div>
+
+      <p>Now we wire everything together. The pipeline fetches an article, constructs a prompt, and asks Gemma 4 whether the article is real or fake.</p>
+
+      <div class="code-wrap">
+        <div class="code-label">Cell 6 — Detection pipeline<button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><code class="language-python">import json, re
+
+PROMPT_TEMPLATE = """You are a professional fact-checking assistant helping to identify misinformation.
+
+Carefully read the news article below and evaluate it.
+
+--- ARTICLE ---
+Title: {title}
+URL: {url}
+Content: {body}
+--- END ARTICLE ---
+
+Evaluate the article on the following criteria:
+1. Does the headline match the content?
+2. Are specific facts, names, dates, or statistics mentioned (good sign)?
+3. Does the language use emotional exaggeration or alarming words (bad sign)?
+4. Does the content make extraordinary claims without evidence?
+
+Respond ONLY with a JSON object in this exact format:
+{{
+  "verdict": "REAL" or "FAKE" or "UNCERTAIN",
+  "confidence": "LOW", "MEDIUM", or "HIGH",
+  "red_flags": ["list", "of", "concerns"],
+  "reason": "A 2-3 sentence explanation of your verdict."
+}}"""
+
+def detect_fake_news(url: str) -> dict:
+    """Full pipeline: fetch article → prompt Gemma 4 → parse result."""
+    print(f"  Fetching: {url}")
+    article = fetch_article(url)
+
+    if article["title"] == "ERROR":
+        return {"url": url, "error": article["body"]}
+
+    prompt = PROMPT_TEMPLATE.format(
+        title=article["title"],
+        url=url,
+        body=article["body"],
+    )
+
+    print(f"  Analysing: {article['title'][:60]}...")
+    raw_output = ask(prompt)
+
+    # Try to parse the JSON response
+    try:
+        # Extract JSON block if model added extra text
+        match = re.search(r"\{.*\}", raw_output, re.DOTALL)
+        result = json.loads(match.group()) if match else {"raw": raw_output}
+    except (json.JSONDecodeError, AttributeError):
+        result = {"raw": raw_output}
+
+    result["url"] = url
+    result["title"] = article["title"]
+    return result
+
+
+def print_result(r: dict):
+    verdict = r.get("verdict", "UNKNOWN")
+    colour = {"REAL": "✅", "FAKE": "🚫", "UNCERTAIN": "⚠️"}.get(verdict, "❓")
+    print(f"\n{colour}  {verdict}  [{r.get('confidence', '?')} confidence]")
+    print(f"    Title : {r.get('title', 'N/A')[:70]}")
+    print(f"    Reason: {r.get('reason', r.get('raw', 'N/A'))[:200]}")
+    flags = r.get("red_flags", [])
+    if flags:
+        print(f"    Flags : {', '.join(flags)}")
+    print(f"    URL   : {r['url']}")</code></pre>
+      </div>
+
+      <h3>Run it on a set of URLs</h3>
+
+      <div class="code-wrap">
+        <div class="code-label">Cell 7 — Test your URLs<button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><code class="language-python"># Add your own URLs to test!
+test_urls = [
+    "https://www.bbc.com/news/world",            # Reputable source
+    "https://www.reuters.com/world/",             # Reputable source
+    # Replace the lines below with URLs you want to investigate:
+    # "https://example-suspicious-site.com/shocking-news",
+]
+
+print("=" * 60)
+print("FAKE NEWS DETECTION PIPELINE")
+print("=" * 60)
+
+results = []
+for url in test_urls:
+    print(f"\nProcessing URL...")
+    r = detect_fake_news(url)
+    print_result(r)
+    results.append(r)
+
+print("\n" + "=" * 60)
+print(f"Analysed {len(results)} articles.")</code></pre>
+      </div>
+
+      <div class="callout tip">
+        <strong>Understanding the output:</strong> The model returns a structured JSON verdict. <em>UNCERTAIN</em> is a valid and often honest answer — real misinformation is subtle, and a small model doing its best shouldn't always be forced into a binary choice.
+      </div>
+    </section>
+
+    <hr class="step-divider" />
+
+    <!-- ════════ STEP 6: EVALUATE ════════ -->
+    <section id="evaluate">
+      <div class="step-header">
+        <div class="step-num">6</div>
+        <h2>Evaluate Your Results</h2>
+      </div>
+
+      <p>Saying "the model classified an article as FAKE" is not very meaningful on its own. Good science requires measuring how <em>accurate</em> and <em>consistent</em> your classifier is. Use a labelled dataset (see Step 9) where you already know the ground truth.</p>
+
+      <div class="code-wrap">
+        <div class="code-label">Cell 8 — Compute accuracy<button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><code class="language-python">def evaluate(labelled_samples: list[dict]) -> None:
+    """
+    labelled_samples: list of {"url": "...", "label": "REAL" or "FAKE"}
+    """
+    correct, total, skipped = 0, 0, 0
+
+    for sample in labelled_samples:
+        print(f"\nGround truth: {sample['label']}")
+        r = detect_fake_news(sample["url"])
+        print_result(r)
+
+        predicted = r.get("verdict")
+        if predicted in ("REAL", "FAKE"):
+            total += 1
+            if predicted == sample["label"]:
+                correct += 1
+        else:
+            skipped += 1   # UNCERTAIN or parse error
+
+    accuracy = correct / total if total > 0 else 0
+    print(f"\n{'='*40}")
+    print(f"Accuracy : {accuracy:.1%}  ({correct}/{total} correct)")
+    print(f"Skipped  : {skipped} (UNCERTAIN / parse error)")
+
+
+# Example with known labels — replace with your own
+labelled = [
+    {"url": "https://www.bbc.com/news/world",    "label": "REAL"},
+    {"url": "https://www.reuters.com/world/",    "label": "REAL"},
+    # {"url": "https://...",                      "label": "FAKE"},
+]
+evaluate(labelled)</code></pre>
+      </div>
+
+      <div class="callout info">
+        <strong>Think about these questions:</strong>
+        Does accuracy alone tell the whole story? What happens if 90% of your test articles are real — could a dumb classifier that always says "REAL" score 90%? Look up <em>precision, recall, and F1 score</em> for a more complete picture.
+      </div>
+    </section>
+
+    <hr class="step-divider" />
+
+    <!-- ════════ HINTS ════════ -->
+    <section id="hints">
+      <div class="step-header">
+        <div class="step-num">7</div>
+        <h2>Going Further — Hints &amp; Techniques</h2>
+      </div>
+      <p>Once the basic pipeline works, here are three techniques to make it significantly better. Expand each card to learn more.</p>
+
+      <!-- ── Prompt Engineering ── -->
+      <div class="hint-card">
+        <div class="hint-toggle" onclick="toggleHint(this)">
+          <div class="hint-toggle-left">
+            <div class="hint-icon" style="background:#1e1b4b">🎯</div>
+            <div>
+              <div class="hint-title">Prompt Engineering</div>
+              <div class="hint-subtitle">Craft better instructions to dramatically improve accuracy</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="diff diff-1">Beginner</span>
+            <span class="chevron">▼</span>
+          </div>
+        </div>
+        <div class="hint-body">
+          <p style="margin-top:14px">The single biggest lever you have is the <strong>prompt</strong> — the instructions you give the model. Small wording changes can shift accuracy by 10-20 percentage points.</p>
+
+          <h3>Technique 1: Zero-shot vs Few-shot</h3>
+          <p><strong>Zero-shot</strong> (what you did above) gives the model no examples. <strong>Few-shot</strong> shows it 2-3 examples of fake and real articles inside the prompt so it calibrates its judgement.</p>
+
+          <div class="code-wrap">
+            <div class="code-label">Few-shot prompt example<button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code class="language-python">FEW_SHOT_EXAMPLES = """
+Here are two example classifications:
+
+EXAMPLE 1 (REAL):
+Title: "Central bank raises interest rates by 0.25%"
+Content: "The Federal Reserve raised its benchmark rate by a quarter point on Wednesday,
+citing persistent inflation. Chair Jerome Powell said..."
+Result: {"verdict": "REAL", "confidence": "HIGH", "reason": "Specific institution, named official, and verifiable policy action."}
+
+EXAMPLE 2 (FAKE):
+Title: "Scientists PROVE 5G towers cause cancer — government hiding it!!"
+Content: "A SHOCKING new study that big pharma doesn't want you to see reveals..."
+Result: {"verdict": "FAKE", "confidence": "HIGH", "reason": "Sensational language, vague unnamed study, conspiracy framing."}
+
+Now classify this article:
+"""</code></pre>
+          </div>
+
+          <h3>Technique 2: Chain-of-Thought (CoT)</h3>
+          <p>Ask the model to <em>think step by step</em> before giving its verdict. This forces it to reason rather than guess.</p>
+
+          <div class="code-wrap">
+            <div class="code-label">Chain-of-thought prompt addition<button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code class="language-python">COT_SUFFIX = """
+Before giving your JSON verdict, think through these questions:
+Step 1: What specific factual claims are made?
+Step 2: Are sources named and verifiable?
+Step 3: What is the emotional tone of the writing?
+Step 4: Does the headline match the body?
+
+After your thinking, output the JSON verdict on the last line.
+"""</code></pre>
+          </div>
+
+          <h3>Technique 3: Red-flag vocabulary</h3>
+          <p>Give the model a list of phrases commonly found in fake news to help it pattern-match. Examples: <em>"you won't believe", "mainstream media won't tell you", "SHOCKING", "wake up sheeple", "100% proven", "sources say"</em> (without names).</p>
+
+          <div class="callout tip" style="margin-top:12px">
+            <strong>Experiment:</strong> Run the same set of 10 articles with your original prompt and your improved prompt. Compare accuracy. This is called an <em>ablation study</em> — a real technique used in AI research.
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SelfCheckGPT ── -->
+      <div class="hint-card">
+        <div class="hint-toggle" onclick="toggleHint(this)">
+          <div class="hint-toggle-left">
+            <div class="hint-icon" style="background:#1a2e1a">🔁</div>
+            <div>
+              <div class="hint-title">SelfCheckGPT — Consistency Sampling</div>
+              <div class="hint-subtitle">Run the model multiple times and measure disagreement</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="diff diff-2">Intermediate</span>
+            <span class="chevron">▼</span>
+          </div>
+        </div>
+        <div class="hint-body">
+          <p style="margin-top:14px"><strong>SelfCheckGPT</strong> is a technique from a 2023 research paper (Manakul et al.) that detects when a model is <em>hallucinating</em> or uncertain by sampling the same prompt multiple times at different temperatures and measuring how consistent the answers are.</p>
+
+          <p>The intuition is simple: <strong>if the model is confident and correct, it will give the same answer every time. If it gives different answers, it is uncertain — and uncertain answers deserve less trust.</strong></p>
+
+          <div class="code-wrap">
+            <div class="code-label">SelfCheckGPT implementation<button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code class="language-python">from collections import Counter
+
+# Re-create the pipeline with sampling enabled for this technique
+sampling_generator = pipeline(
+    "text-generation",
+    model=model,
+    tokenizer=tokenizer,
+    max_new_tokens=300,
+    do_sample=True,     # Enable randomness
+    temperature=0.8,    # Controls randomness (0 = deterministic, 1 = creative)
+)
+
+def selfcheck_detect(url: str, num_samples: int = 5) -> dict:
+    """Run the model N times and report the majority vote + consistency score."""
+    article = fetch_article(url)
+    prompt = PROMPT_TEMPLATE.format(**article, url=url)
+    messages = [{"role": "user", "content": prompt}]
+
+    verdicts = []
+    for i in range(num_samples):
+        output = sampling_generator(messages)
+        raw = output[0]["generated_text"][-1]["content"]
+        try:
+            match = re.search(r'"verdict"\s*:\s*"(\w+)"', raw)
+            verdict = match.group(1) if match else "UNCERTAIN"
+        except AttributeError:
+            verdict = "UNCERTAIN"
+        verdicts.append(verdict)
+        print(f"  Sample {i+1}: {verdict}")
+
+    counts = Counter(verdicts)
+    majority_verdict, majority_count = counts.most_common(1)[0]
+    consistency = majority_count / num_samples  # 1.0 = all samples agree
+
+    return {
+        "url": url,
+        "title": article["title"],
+        "verdict": majority_verdict,
+        "confidence": "HIGH" if consistency >= 0.8 else ("MEDIUM" if consistency >= 0.6 else "LOW"),
+        "consistency": f"{consistency:.0%}",
+        "all_verdicts": verdicts,
+        "reason": f"Majority vote from {num_samples} samples: {dict(counts)}"
+    }
+
+# Test it
+r = selfcheck_detect("https://www.bbc.com/news/world", num_samples=3)
+print_result(r)
+print(f"Consistency: {r['consistency']}")</code></pre>
+          </div>
+
+          <div class="callout info">
+            <strong>Why does this help?</strong> A model may confidently say "FAKE" once by chance. But if you ask it 5 times and it says FAKE 4 out of 5, you have much stronger evidence. A 60/40 split (REAL vs FAKE) tells you the article is genuinely ambiguous — which itself is useful information.
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Multi-Agent ── -->
+      <div class="hint-card">
+        <div class="hint-toggle" onclick="toggleHint(this)">
+          <div class="hint-toggle-left">
+            <div class="hint-icon" style="background:#1a1a2e">🤖</div>
+            <div>
+              <div class="hint-title">Multi-Agent Pipeline</div>
+              <div class="hint-subtitle">Decompose the task into specialised sub-agents</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="diff diff-3">Advanced</span>
+            <span class="chevron">▼</span>
+          </div>
+        </div>
+        <div class="hint-body">
+          <p style="margin-top:14px">Instead of asking one model to do everything, break the task into <strong>specialised agents</strong>, each with a narrow, clear job. The outputs of earlier agents become the inputs to later ones.</p>
+
+          <p>This mirrors how a real newsroom fact-checks a story: one person extracts the claims, another checks each claim independently, a third writes the verdict. Specialisation improves quality.</p>
+
+          <div class="code-wrap">
+            <div class="code-label">Multi-agent architecture<button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code class="language-python">def agent_extract_claims(article_text: str) -> list[str]:
+    """Agent 1: Extract specific factual claims from the article."""
+    prompt = f"""Read the article below and list up to 5 specific factual claims made in it.
+A factual claim is a statement that could, in principle, be verified (e.g. a statistic,
+a named person doing something, an event happening on a date).
+
+Article: {article_text[:2000]}
+
+Output a numbered list of claims only. No other text."""
+    raw = ask(prompt)
+    # Parse numbered list
+    claims = re.findall(r'\d+\.\s+(.+)', raw)
+    return claims if claims else [raw]
+
+
+def agent_evaluate_claim(claim: str) -> dict:
+    """Agent 2: Evaluate a single claim for plausibility."""
+    prompt = f"""You are a fact-checker. Evaluate this single claim:
+"{claim}"
+
+Does this claim:
+- Sound plausible based on general knowledge?
+- Use specific verifiable details (names, dates, numbers)?
+- Contain exaggerated or unverifiable language?
+
+Respond with JSON: {{"plausible": true/false, "reason": "one sentence"}}"""
+    raw = ask(prompt)
+    try:
+        match = re.search(r'\{.*\}', raw, re.DOTALL)
+        return json.loads(match.group()) if match else {"plausible": None, "reason": raw}
+    except (json.JSONDecodeError, AttributeError):
+        return {"plausible": None, "reason": raw}
+
+
+def agent_aggregate(title: str, claim_results: list[dict]) -> dict:
+    """Agent 3: Aggregate individual claim verdicts into an overall verdict."""
+    summary = "\n".join(
+        f"- Claim: {r.get('claim','?')} → Plausible: {r.get('plausible')} ({r.get('reason','')})"
+        for r in claim_results
+    )
+    prompt = f"""You are the editor reviewing a fact-check report.
+
+Article title: {title}
+
+Individual claim evaluations:
+{summary}
+
+Based on these results, give an overall verdict.
+Respond with JSON: {{"verdict": "REAL"/"FAKE"/"UNCERTAIN", "confidence": "LOW"/"MEDIUM"/"HIGH", "reason": "2-3 sentences"}}"""
+    raw = ask(prompt)
+    try:
+        match = re.search(r'\{.*\}', raw, re.DOTALL)
+        return json.loads(match.group()) if match else {"verdict": "UNCERTAIN", "reason": raw}
+    except (json.JSONDecodeError, AttributeError):
+        return {"verdict": "UNCERTAIN", "reason": raw}
+
+
+def multi_agent_detect(url: str) -> dict:
+    """Full 3-agent pipeline."""
+    print(f"\n[Agent 0] Fetching article...")
+    article = fetch_article(url)
+
+    print("[Agent 1] Extracting claims...")
+    claims = agent_extract_claims(article["body"])
+    print(f"  Found {len(claims)} claims: {claims[:2]}...")
+
+    print("[Agent 2] Evaluating each claim...")
+    claim_results = []
+    for claim in claims:
+        result = agent_evaluate_claim(claim)
+        result["claim"] = claim
+        claim_results.append(result)
+        print(f"  → {claim[:50]}: plausible={result.get('plausible')}")
+
+    print("[Agent 3] Aggregating verdict...")
+    final = agent_aggregate(article["title"], claim_results)
+    final["url"] = url
+    final["title"] = article["title"]
+    final["claims_checked"] = len(claims)
+    return final
+
+# Run the multi-agent pipeline
+r = multi_agent_detect("https://www.bbc.com/news/world")
+print_result(r)
+print(f"Claims checked: {r.get('claims_checked', 0)}")</code></pre>
+          </div>
+
+          <div class="callout tip">
+            <strong>Going even further:</strong> Add a fourth agent that searches Google News to see if <em>other reputable outlets</em> are reporting the same story. Cross-referencing sources is one of the most reliable fake news signals used by professional fact-checkers.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="step-divider" />
+
+    <!-- ════════ DATASETS ════════ -->
+    <section id="datasets">
+      <div class="step-header">
+        <div class="step-num">8</div>
+        <h2>Datasets &amp; Test URLs</h2>
+      </div>
+
+      <p>To properly evaluate your classifier you need articles where the ground truth (real or fake) is already known. Here are some public datasets:</p>
+
+      <table>
+        <thead>
+          <tr><th>Dataset</th><th>Size</th><th>Format</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>LIAR</td>
+            <td>12,800 statements</td>
+            <td>CSV (text, no URLs)</td>
+            <td>Labelled by PolitiFact; 6-level scale from "pants-on-fire" to "true"</td>
+          </tr>
+          <tr>
+            <td>FakeNewsNet</td>
+            <td>~23,000 articles</td>
+            <td>JSON + URLs</td>
+            <td>PolitiFact + GossipCop sources; includes social engagement data</td>
+          </tr>
+          <tr>
+            <td>ISOT Fake News</td>
+            <td>44,000 articles</td>
+            <td>CSV (title + text)</td>
+            <td>Clean binary labels (real/fake); good for beginners</td>
+          </tr>
+          <tr>
+            <td>WELFake</td>
+            <td>72,000 articles</td>
+            <td>CSV</td>
+            <td>Merged from 4 datasets for more diversity</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Quick-start: load ISOT from HuggingFace</h3>
+      <div class="code-wrap">
+        <div class="code-label">Cell — Load a labelled dataset<button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><code class="language-python">!pip install -q datasets
+
+from datasets import load_dataset
+
+# The "GonzaloA/fake_news" dataset is a clean version of ISOT
+ds = load_dataset("GonzaloA/fake_news", split="test")
+print(f"Test set size: {len(ds)}")
+print(ds[0])  # Preview one example
+
+# Evaluate on the first 20 examples (no URLs needed — text is already extracted)
+def detect_from_text(title: str, body: str) -> dict:
+    prompt = PROMPT_TEMPLATE.format(title=title, url="N/A", body=body[:2000])
+    raw = ask(prompt)
+    try:
+        match = re.search(r'\{.*\}', raw, re.DOTALL)
+        return json.loads(match.group()) if match else {"verdict": "UNCERTAIN"}
+    except (json.JSONDecodeError, AttributeError):
+        return {"verdict": "UNCERTAIN"}
+
+correct, total = 0, 0
+for example in ds.select(range(20)):  # start small!
+    label = "REAL" if example["label"] == 1 else "FAKE"
+    pred = detect_from_text(example["title"], example["text"])
+    verdict = pred.get("verdict", "UNCERTAIN")
+    if verdict in ("REAL", "FAKE"):
+        total += 1
+        if verdict == label:
+            correct += 1
+    print(f"GT: {label} | Pred: {verdict} | {example['title'][:50]}")
+
+print(f"\nAccuracy: {correct/total:.1%} ({correct}/{total})")</code></pre>
+      </div>
+    </section>
+
+    <hr class="step-divider" />
+
+    <!-- ════════ CHALLENGES ════════ -->
+    <section id="challenges">
+      <div class="step-header">
+        <div class="step-num">9</div>
+        <h2>Challenge Extensions</h2>
+      </div>
+
+      <p>Finished the core project? Push your work further with these open-ended challenges:</p>
+
+      <h3><span class="diff diff-1">Easy</span> &nbsp; Visualise results</h3>
+      <p>Use <code style="color:var(--accent)">matplotlib</code> to plot a bar chart of REAL vs FAKE verdicts, or a confusion matrix comparing your predictions against the ground truth labels.</p>
+
+      <h3><span class="diff diff-1">Easy</span> &nbsp; Add source credibility scoring</h3>
+      <p>Extract the domain name from each URL and compare it against a known list of reliable outlets (BBC, Reuters, AP News) or low-credibility sites. Use this as an additional signal in your prompt.</p>
+
+      <h3><span class="diff diff-2">Medium</span> &nbsp; Compare model sizes</h3>
+      <p>Run the same evaluation using <code style="color:var(--accent)">google/gemma-4-4b-it</code> (4B parameters). Does accuracy improve? How much slower is it? Is the extra quality worth the extra compute?</p>
+
+      <h3><span class="diff diff-2">Medium</span> &nbsp; Fine-tune on a small dataset</h3>
+      <p>Use HuggingFace <code style="color:var(--accent)">PEFT</code> and <code style="color:var(--accent)">LoRA</code> to fine-tune Gemma 4 1B on 1,000 labelled examples. Fine-tuning can dramatically outperform prompting for well-defined classification tasks.</p>
+
+      <h3><span class="diff diff-3">Hard</span> &nbsp; Build a browser extension</h3>
+      <p>Wrap your pipeline in a lightweight Flask API, host it on a free service like Hugging Face Spaces, and build a Chrome extension that automatically checks the current page you are reading.</p>
+
+      <h3><span class="diff diff-3">Hard</span> &nbsp; Real-time Twitter / X monitoring</h3>
+      <p>Use the Twitter API to collect trending news URLs and run them through your pipeline automatically, flagging high-confidence FAKE results for human review.</p>
+
+      <div class="callout info" style="margin-top:24px">
+        <strong>For your project write-up, consider:</strong> What are the ethical implications of automated fake news detection? What happens when the model is wrong? Who is harmed by false positives (labelling real news as fake) vs false negatives (missing actual fake news)?
+      </div>
+    </section>
+
+  </div><!-- steps-container -->
+
+</div><!-- page -->
+
+<footer>
+  <p>Built for high school students exploring AI &amp; NLP &middot; Gemma 4 by <a href="https://deepmind.google/technologies/gemma/" target="_blank">Google DeepMind</a> &middot; Run on <a href="https://colab.research.google.com" target="_blank">Google Colab</a></p>
+</footer>
+
+<script>
+  // Syntax highlighting
+  hljs.highlightAll();
+
+  // Copy-to-clipboard
+  function copyCode(btn) {
+    const pre = btn.closest(".code-wrap").querySelector("pre");
+    const text = pre.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = "Copied!";
+      btn.classList.add("copied");
+      setTimeout(() => { btn.textContent = "Copy"; btn.classList.remove("copied"); }, 2000);
+    });
+  }
+
+  // Expandable hint cards
+  function toggleHint(toggle) {
+    const body = toggle.nextElementSibling;
+    const chevron = toggle.querySelector(".chevron");
+    body.classList.toggle("open");
+    chevron.classList.toggle("open");
+  }
+</script>
+</body>
+</html>
