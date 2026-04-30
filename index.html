@@ -1,117 +1,271 @@
 <!DOCTYPE html>
-<!--
-    Plain-Academic by Vasilios Mavroudis
-    Released under the Simplified BSD License/FreeBSD (2-clause) License.
-    https://github.com/mavroudisv/plain-academic
--->
-
 <html lang="en">
 <head>
   <title>Chieu Hai Leong</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.75;
+      color: #1a1a1a;
+      background: #f0f3f7;
+      border-top: 4px solid #1a6496;
+    }
+
+    .page-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 44px 20px 72px;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 36px 44px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+      margin-bottom: 16px;
+    }
+
+    /* ── Profile header ── */
+    .profile-layout {
+      display: flex;
+      gap: 32px;
+      align-items: flex-start;
+    }
+    .avatar {
+      flex-shrink: 0;
+      width: 108px;
+      height: 108px;
+      border-radius: 50%;
+      overflow: hidden;
+      box-shadow: 0 4px 14px rgba(26,100,150,0.30);
+      border: 3px solid #fff;
+      outline: 2.5px solid #1a6496;
+    }
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .profile-info { flex: 1; min-width: 0; }
+
+    .profile-name {
+      font-family: 'Merriweather', serif;
+      font-size: 1.9em;
+      font-weight: 700;
+      color: #111;
+      margin: 0 0 4px;
+      letter-spacing: -0.3px;
+    }
+    .profile-name .given { color: #1a6496; }
+
+    .profile-title {
+      font-size: 0.9em;
+      color: #555;
+      margin: 0 0 16px;
+    }
+    .profile-title a {
+      color: #555;
+      text-decoration: underline;
+      text-decoration-color: #ccc;
+    }
+    .profile-title a:hover {
+      color: #1a6496;
+      text-decoration-color: #1a6496;
+    }
+    .bio {
+      font-size: 0.94em;
+      color: #333;
+      margin: 0 0 20px;
+    }
+    .profile-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .profile-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      border: 1.5px solid #1a6496;
+      border-radius: 20px;
+      font-size: 0.82em;
+      font-weight: 600;
+      color: #1a6496;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: background 0.15s, color 0.15s;
+    }
+    .profile-links a:hover {
+      background: #1a6496;
+      color: #fff;
+    }
+    .profile-links a i { font-size: 0.95em; }
+
+    /* ── Section headings ── */
+    h2 {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-family: 'Merriweather', serif;
+      font-size: 0.78em;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #1a6496;
+      margin: 0 0 18px;
+      padding-bottom: 10px;
+      border-bottom: 1.5px solid #e4edf5;
+    }
+    h2 i {
+      font-size: 1.05em;
+      opacity: 0.8;
+    }
+
+    /* ── News ── */
+    .news-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .news-list li {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+      padding: 9px 0;
+      border-bottom: 1px solid #f2f2f2;
+      font-size: 0.94em;
+    }
+    .news-list li:last-child { border-bottom: none; padding-bottom: 0; }
+    .news-list li:first-child { padding-top: 0; }
+    .news-date {
+      flex-shrink: 0;
+      font-size: 0.75em;
+      font-weight: 600;
+      color: #999;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      min-width: 68px;
+    }
+
+    /* ── People ── */
+    .people-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 6px 12px;
+      list-style: none;
+      padding: 0;
+      margin: 0 0 20px;
+    }
+    .people-grid li {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.94em;
+    }
+    .people-grid li::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #2a9fd6;
+      flex-shrink: 0;
+    }
+
+    /* ── Generic lists ── */
+    ul.plain-list {
+      padding-left: 1.3em;
+      margin: 0;
+    }
+    ul.plain-list li {
+      font-size: 0.94em;
+      margin-bottom: 6px;
+    }
+
+    a { color: #1a6496; text-decoration: none; }
+    a:hover { text-decoration: underline; color: #0d3c5e; }
+
+    p { margin: 0 0 12px; font-size: 0.94em; }
+    p:last-child { margin-bottom: 0; }
+
+    @media (max-width: 560px) {
+      .card { padding: 24px 20px; }
+      .profile-layout { flex-direction: column; align-items: center; text-align: center; }
+      .profile-links { justify-content: center; }
+      .profile-name { font-size: 1.55em; }
+      .news-list li { flex-direction: column; gap: 2px; }
+      .news-date { min-width: unset; }
+    }
+  </style>
 </head>
-<style>
-  body {
-    font-family: 'Inter', sans-serif;
-    font-size: 18px;
-    line-height: 1.7;
-    color: #222;
-    background-color: #f9f9f9;
-  }
-  .container {
-    max-width: 860px;
-  }
-  h2 {
-    font-family: 'Merriweather', serif;
-    font-size: 1.7em;
-    margin-top: 1.4em;
-    margin-bottom: 0.4em;
-    color: #111;
-    font-weight: 700;
-  }
-  p {
-    margin-bottom: 0.9em;
-  }
-  a {
-    color: #1a6496;
-  }
-  a:hover {
-    color: #0d3c5e;
-    text-decoration: underline;
-  }
-  .profile-links a {
-    display: inline-block;
-    margin-right: 8px;
-    padding: 4px 12px;
-    border: 1px solid #1a6496;
-    border-radius: 4px;
-    font-size: 0.88em;
-    font-weight: 500;
-    text-decoration: none;
-    letter-spacing: 0.02em;
-  }
-  .profile-links a:hover {
-    background-color: #1a6496;
-    color: #fff;
-  }
-  ul {
-    padding-left: 1.5em;
-  }
-  ul li {
-    margin-bottom: 0.3em;
-  }
-  .content-section {
-    margin-top: 40px;
-    text-align: justify;
-    background: #fff;
-    border-radius: 6px;
-    padding: 32px 40px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
-  }
-</style>
 <body>
-  <!-- Page Content -->
-  <div class="container">
-    <div class="content-section">
 
-      <h2><u>Chieu</u> Hai Leong</h2>
-      <p>I am a Distinguished Member of Technical Staff in the <u>Information Exploitation Lab (IEL)</u> in <a href="https://www.dso.org.sg/">DSO National Laboratories</a>.
-      I work on applying artificial intelligence and machine learning to real problems in DSO. My research focuses mainly on natural language processing. Check out my <a href="https://scholar.google.com.sg/citations?user=9QO16LcAAAAJ&hl=en">Google Scholar</a> page for my published works. I served as a program committee member or reviewer for top conferences such as NeurIPS (Top 10% reviewers in 2020), ICLR, AAAI, IJCAI, ACL, and EMNLP.</p>
-      <p class="profile-links">
-        <a href="mailto:chaileon@dso.org.sg">Email</a>
-        <a href="https://scholar.google.com.sg/citations?user=9QO16LcAAAAJ&hl=en">Google Scholar</a>
-        <a href="https://sg.linkedin.com/in/hai-leong-chieu-29a95a30">LinkedIn</a>
-      </p>
+<div class="page-wrap">
 
-      <h2 id="news">News</h2>
-      <ul>
-        <li><a href="https://www.dso.org.sg/media-article/mindef-dsta-and-dso-partner-mistral-ai-to-advance-generative-ai-for-defence-applications">MINDEF, DSTA and DSO partner Mistral AI to advance generative AI for defence applications</a> (March 2025)</li>
-        <li><a href="https://www.dsta.gov.sg/docs/default-source/news-releases-documents/dtp-2022-individual-(research-development)-award-dr-chieu-hai-leong.pdf">Defence Technology Prize 2022 – Individual (Research &amp; Development) Award</a> (October 2022)</li>
+    <div class="card">
+      <div class="profile-layout">
+        <div class="avatar">
+          <img src="https://scholar.googleusercontent.com/citations?view_op=view_photo&user=9QO16LcAAAAJ&citpid=5" alt="Chieu Hai Leong">
+        </div>
+        <div class="profile-info">
+          <h1 class="profile-name"><span class="given">Chieu</span> Hai Leong</h1>
+          <p class="profile-title">
+            Distinguished Member of Technical Staff &middot; Information Exploitation Lab &middot;
+            <a href="https://www.dso.org.sg/">DSO National Laboratories</a>
+          </p>
+          <p class="bio">I work on applying artificial intelligence and machine learning to real problems in DSO. My research focuses mainly on natural language processing. I served as a program committee member or reviewer for top conferences such as NeurIPS (Top 10% reviewers in 2020), ICLR, AAAI, IJCAI, ACL, and EMNLP.</p>
+          <div class="profile-links">
+            <a href="mailto:chaileon@dso.org.sg"><i class="fa-solid fa-envelope"></i> Email</a>
+            <a href="https://scholar.google.com.sg/citations?user=9QO16LcAAAAJ&hl=en"><i class="fa-solid fa-graduation-cap"></i> Google Scholar</a>
+            <a href="https://sg.linkedin.com/in/hai-leong-chieu-29a95a30"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 id="news"><i class="fa-solid fa-newspaper"></i> News</h2>
+      <ul class="news-list">
+        <li>
+          <span class="news-date">Mar 2025</span>
+          <a href="https://www.dso.org.sg/media-article/mindef-dsta-and-dso-partner-mistral-ai-to-advance-generative-ai-for-defence-applications">MINDEF, DSTA and DSO partner Mistral AI to advance generative AI for defence applications</a>
+        </li>
+        <li>
+          <span class="news-date">Oct 2022</span>
+          <a href="https://www.dsta.gov.sg/docs/default-source/news-releases-documents/dtp-2022-individual-(research-development)-award-dr-chieu-hai-leong.pdf">Defence Technology Prize 2022 &ndash; Individual (Research &amp; Development) Award</a>
+        </li>
       </ul>
+    </div>
 
-      <h2 id="people">People</h2>
+    <div class="card">
+      <h2 id="people"><i class="fa-solid fa-users"></i> People</h2>
       <p>I work with a group of motivated scientists and engineers in DSO. You can find out more about a few members of our team in the links below.</p>
-      <ul>
+      <ul class="people-grid">
         <li><a href="https://sites.google.com/view/kianmingachai?usp=sharing">Adam Chai</a></li>
-        <li><a href="https://scholar.google.com.sg/citations?user=Zldo9CAAAAAJ&amp;hl=en">Pan Xinghao</a></li>
+        <li><a href="https://dblp.org/pid/160/1722.html">Chong Wen Haw</a></li>
+        <li><a href="https://scholar.google.com.sg/citations?user=Zldo9CAAAAAJ&hl=en">Pan Xinghao</a></li>
         <li><a href="https://scholar.google.com.sg/citations?user=nRPnPEAAAAAJ&hl=en">Seah Chun Wei</a></li>
         <li><a href="https://github.com/serenaklm">Serena Khoo</a></li>
-        <li><a href="https://scholar.google.com.sg/citations?user=zrJdj6YAAAAJ&amp;hl=en">Shen Bingquan</a></li>
+        <li><a href="https://scholar.google.com.sg/citations?user=zrJdj6YAAAAJ&hl=en">Shen Bingquan</a></li>
         <li><a href="https://sg.linkedin.com/in/loo-nin-teow-ba9b3a83">Teow Loo Nin</a></li>
       </ul>
       <p>For new staff or people interested in joining us:</p>
-      <ul>
+      <ul class="plain-list">
         <li>Here is some <a href="https://suzyahyah.github.io/machine%20learning/2018/08/30/OnboardingML.html">advice</a> to start you off.</li>
         <li>Here is a <a href="https://hub.dso.org.sg/personal/chaileon/Documents/ReadingGroup/guide_to_report_writing.pdf">short article</a> about report writing (accessible only to DSO staff).</li>
       </ul>
-
     </div>
-  </div>
 
+  </div>
 </body>
 </html>
