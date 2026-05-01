@@ -35,7 +35,27 @@
     }
 
     /* ── Profile header ── */
-    .profile-info { min-width: 0; }
+    .profile-layout {
+      display: flex;
+      gap: 32px;
+      align-items: flex-start;
+    }
+    .avatar {
+      flex-shrink: 0;
+      width: 108px;
+      height: 108px;
+      border-radius: 50%;
+      overflow: hidden;
+      box-shadow: 0 4px 14px rgba(26,100,150,0.30);
+      border: 3px solid #fff;
+      outline: 2.5px solid #1a6496;
+    }
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .profile-info { flex: 1; min-width: 0; }
 
     .profile-name {
       font-family: 'Merriweather', serif;
@@ -180,6 +200,7 @@
 
     @media (max-width: 560px) {
       .card { padding: 24px 20px; }
+      .profile-layout { flex-direction: column; align-items: center; text-align: center; }
       .profile-links { justify-content: center; }
       .profile-name { font-size: 1.55em; }
       .news-list li { flex-direction: column; gap: 2px; }
@@ -193,6 +214,9 @@
 
     <div class="card">
       <div class="profile-layout">
+        <div class="avatar">
+          <img src="profile.jpg" alt="Chieu Hai Leong">
+        </div>
         <div class="profile-info">
           <h1 class="profile-name"><span class="given">Chieu</span> Hai Leong</h1>
           <p class="profile-title">
