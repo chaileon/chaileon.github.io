@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>WOS — Chieu Hai Leong</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.75;
+      color: #1a1a1a;
+      background: #f0f3f7;
+      border-top: 4px solid #1a6496;
+    }
+
+    .page-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 44px 20px 72px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 36px 44px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-family: 'Merriweather', serif;
+      font-size: 1.6em;
+      font-weight: 700;
+      color: #111;
+      margin: 0 0 4px;
+    }
+
+    .subtitle {
+      font-size: 0.9em;
+      color: #555;
+      margin: 0 0 28px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    ul li {
+      border-bottom: 1px solid #f0f0f0;
+      padding: 10px 0;
+    }
+
+    ul li:last-child {
+      border-bottom: none;
+    }
+
+    ul li a {
+      color: #1a6496;
+      text-decoration: none;
+      font-size: 0.95em;
+      font-weight: 500;
+    }
+
+    ul li a:hover {
+      text-decoration: underline;
+    }
+
+    .file-meta {
+      font-size: 0.82em;
+      color: #888;
+      margin-left: 8px;
+    }
+
+    .back {
+      font-size: 0.88em;
+      color: #1a6496;
+      text-decoration: none;
+    }
+
+    .back:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="page-wrap">
+    <div class="card">
+      <a class="back" href="/">&larr; Back to homepage</a>
+      <h1 style="margin-top: 20px;">WOS</h1>
+      <p class="subtitle">Project files and scripts</p>
+      <ul>
+        <li>
+          <a href="student_project.html">student_project.html</a>
+          <span class="file-meta">HTML</span>
+        </li>
+        <li>
+          <a href="debate_colab_gemma4.ipynb">debate_colab_gemma4.ipynb</a>
+          <span class="file-meta">Jupyter Notebook</span>
+        </li>
+        <li>
+          <a href="debate_ollama.py">debate_ollama.py</a>
+          <span class="file-meta">Python</span>
+        </li>
+        <li>
+          <a href="persuader_config.json">persuader_config.json</a>
+          <span class="file-meta">JSON</span>
+        </li>
+        <li>
+          <a href="persuader_config_tom.json">persuader_config_tom.json</a>
+          <span class="file-meta">JSON</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
