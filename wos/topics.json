@@ -1,0 +1,22 @@
+[
+  {
+    "pos": "Universal basic income should be implemented nationwide.",
+    "neg": "Universal basic income should not be implemented, as it is economically unsustainable."
+  },
+  {
+    "pos": "Social media platforms should be regulated like public utilities.",
+    "neg": "Social media platforms should remain privately controlled without utility-style regulation."
+  },
+  {
+    "pos": "Mandatory voting should be enforced in democratic elections.",
+    "neg": "Voting should remain voluntary in democratic elections."
+  },
+  {
+    "pos": "Artificial intelligence development should be subject to international treaty oversight.",
+    "neg": "Artificial intelligence development should remain free from international treaty restrictions."
+  },
+  {
+    "pos": "Remote work should be the permanent default for office-based professions.",
+    "neg": "In-person work should remain the default for office-based professions."
+  }
+]
