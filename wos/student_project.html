@@ -381,7 +381,7 @@
           <strong>Upload the notebook</strong>
           <p>
             Click <strong>File → Upload notebook</strong> and select
-            <code>debate_colab_gemma4.ipynb</code> provided with this project.
+            <code>debate_ollama_colab.ipynb</code> provided with this project.
           </p>
         </div>
       </li>
@@ -400,37 +400,28 @@
 
       <li>
         <div class="step-body">
-          <strong>Run the install cell</strong>
+          <strong>Run the setup cell</strong>
           <p>
-            Click the play button on the first code cell (labelled
-            <em>"Install dependencies"</em>). This installs vLLM and may take
-            2–3 minutes. You will see a lot of output — that is normal.
+            Click the play button on the first code cell. It installs
+            <strong>Ollama</strong>, starts the Ollama server in the
+            background, and pulls the <code>gemma4:latest</code> model
+            (~5 GB). This may take 3–5 minutes — a lot of output is normal.
+            No runtime restart is needed after this step.
           </p>
-          <pre><code>!pip install vllm -q</code></pre>
+          <pre><code>!apt-get install -y zstd
+!curl -fsSL https://ollama.com/install.sh | sh
+# starts server + pulls gemma4:latest automatically</code></pre>
         </div>
       </li>
 
       <li>
         <div class="step-body">
-          <strong>Restart the runtime</strong>
+          <strong>Confirm the model is ready</strong>
           <p>
-            After installation finishes, go to
-            <strong>Runtime → Restart session</strong>. This is required for
-            newly installed packages to load correctly.
-            <strong>Do not skip this step.</strong>
+            Once the cell finishes you should see Ollama confirm that
+            <code>gemma4:latest</code> has been pulled successfully. No
+            separate "load model" step is required.
           </p>
-        </div>
-      </li>
-
-      <li>
-        <div class="step-body">
-          <strong>Load the model</strong>
-          <p>
-            Run the second cell (<em>"Load model"</em>). This downloads Gemma
-            4 E2B (~5 GB) and loads it into GPU memory. It will take
-            3–5 minutes on the first run. You should see:
-          </p>
-          <pre><code>Model ready: unsloth/gemma-4-E2B-it</code></pre>
         </div>
       </li>
 
