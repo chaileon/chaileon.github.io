@@ -362,6 +362,17 @@
       <p class="callout-title">Before you start</p>
       <p>You need a Google account. All computation runs in the cloud for free —
       no local GPU required.</p>
+      <p style="margin-top:10px;margin-bottom:0">
+        Download the following files from
+        <a href="https://chaileon.github.io/wos/" target="_blank">chaileon.github.io/wos/</a>
+        before opening Colab:
+      </p>
+      <ul style="margin-top:6px;margin-bottom:0">
+        <li><a href="https://chaileon.github.io/wos/debate_ollama_colab.ipynb" target="_blank"><code>debate_ollama_colab.ipynb</code></a> — the notebook</li>
+        <li><a href="https://chaileon.github.io/wos/debate_ollama.py" target="_blank"><code>debate_ollama.py</code></a> — the debate simulator</li>
+        <li><a href="https://chaileon.github.io/wos/topics.json" target="_blank"><code>topics.json</code></a> — debate topics</li>
+        <li><a href="https://chaileon.github.io/wos/persuader_config.json" target="_blank"><code>persuader_config.json</code></a> — default persuader config</li>
+      </ul>
     </div>
 
     <ol class="steps">
@@ -381,7 +392,19 @@
           <strong>Upload the notebook</strong>
           <p>
             Click <strong>File → Upload notebook</strong> and select
-            <code>debate_ollama_colab.ipynb</code> provided with this project.
+            <code>debate_ollama_colab.ipynb</code>.
+          </p>
+        </div>
+      </li>
+
+      <li>
+        <div class="step-body">
+          <strong>Upload the supporting files</strong>
+          <p>
+            In the left sidebar click the <strong>Files</strong> icon, then
+            the upload button, and upload <code>debate_ollama.py</code>,
+            <code>topics.json</code>, and <code>persuader_config.json</code>.
+            These must be in the same directory as the notebook for it to run.
           </p>
         </div>
       </li>
