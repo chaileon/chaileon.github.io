@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paper Summaries</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      max-width: 900px;
+      margin: 48px auto;
+      padding: 0 24px;
+      color: #1a1a1a;
+      line-height: 1.7;
+      background: #fafafa;
+    }
+    h1 { font-size: 1.6rem; margin-bottom: 4px; }
+    .toc { background: #f0f4ff; border-radius: 8px; padding: 16px 20px; margin-bottom: 40px; }
+    .toc h2 { font-size: 1rem; margin: 0 0 10px 0; color: #444; }
+    .toc ol { margin: 0; padding-left: 1.4em; }
+    .toc li { margin-bottom: 4px; }
+    .toc a { color: #0066cc; text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+    .paper { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 28px 32px; margin-bottom: 32px; }
+    .paper h2 { font-size: 1.25rem; margin-top: 0; margin-bottom: 4px; }
+    .meta { color: #666; font-size: 0.85rem; margin-bottom: 20px; }
+    .meta a { color: #0066cc; text-decoration: none; }
+    .meta a:hover { text-decoration: underline; }
+    h3 { font-size: 1rem; margin: 20px 0 4px; color: #222; }
+    ul, ol { padding-left: 1.4em; }
+    li { margin-bottom: 5px; }
+    .highlight {
+      background: #f0faf4;
+      border-left: 4px solid #22c55e;
+      padding: 10px 16px;
+      border-radius: 4px;
+      margin: 12px 0;
+      font-size: 0.95rem;
+    }
+    .warn {
+      background: #fff8f0;
+      border-left: 4px solid #f97316;
+      padding: 10px 16px;
+      border-radius: 4px;
+      margin: 12px 0;
+      font-size: 0.95rem;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 0.88rem;
+      margin: 10px 0;
+    }
+    th, td { border: 1px solid #ddd; padding: 7px 11px; text-align: left; }
+    th { background: #f5f5f5; font-weight: 600; }
+    tr:nth-child(even) { background: #fafafa; }
+    code { background: #f0f0f0; padding: 1px 5px; border-radius: 3px; font-size: 0.88em; }
+    footer { margin-top: 48px; color: #999; font-size: 0.82rem; border-top: 1px solid #eee; padding-top: 16px; }
+    .tag {
+      display: inline-block;
+      background: #e8f0fe;
+      color: #1a56db;
+      border-radius: 4px;
+      padding: 1px 7px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-right: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Paper Summaries</h1>
+<p style="color:#666; margin-bottom:28px;">Last updated 2026-05-05 &nbsp;·&nbsp; 6 papers</p>
+
+<div class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#coral">CORAL: Towards Autonomous Multi-Agent Evolution for Open-Ended Discovery</a></li>
+    <li><a href="#deepseek">DeepSeek-V4: Towards Highly Efficient Million-Token Context Intelligence</a></li>
+    <li><a href="#persuasio">Evaluating the Capabilities of LLMs for Persuasive Dialogue</a></li>
+    <li><a href="#horizon">The Long-Horizon Task Mirage? Diagnosing Where and Why Agentic Systems Break</a></li>
+    <li><a href="#parcae">Parcae: Scaling Laws for Stable Looped Language Models</a></li>
+    <li><a href="#ouro">Scaling Latent Reasoning via Looped Language Models (Ouro)</a></li>
+  </ol>
+</div>
+
+<!-- ============================================================ -->
+<div class="paper" id="coral">
+  <h2>CORAL: Towards Autonomous Multi-Agent Evolution for Open-Ended Discovery</h2>
+  <div class="meta">
+    arXiv: <a href="https://arxiv.org/abs/2604.01658">2604.01658</a> &nbsp;|&nbsp;
+    GitHub: <a href="https://github.com/Human-Agent-Society/CORAL">Human-Agent-Society/CORAL</a> &nbsp;|&nbsp;
+    File: <code>coral_multi_agent_evolution_open_ended_discovery_2604.01658.pdf</code>
+    &nbsp;&nbsp; <span class="tag">Agents</span><span class="tag">Optimization</span>
+  </div>
+
+  <p>CORAL is a framework that lets LLM agents autonomously run open-ended evolutionary search — continuously improving solutions to hard optimization problems without a human specifying the search strategy.</p>
+
+  <h3>Three Evolutionary Paradigms</h3>
+  <table>
+    <tr><th>Paradigm</th><th>Who controls the search?</th></tr>
+    <tr><td>Fixed evolutionary search (baseline)</td><td>Human-designed algorithm</td></tr>
+    <tr><td>Autonomous single-agent evolution</td><td>One LLM agent</td></tr>
+    <tr><td><strong>Autonomous multi-agent evolution (CORAL)</strong></td><td>Multiple agents co-evolving via shared memory</td></tr>
+  </table>
+
+  <h3>Architecture</h3>
+  <ul>
+    <li><strong>Shared Persistent Memory</strong>: structured filesystem (<code>attempts/</code>, <code>notes/</code>, <code>skills/</code>) readable and writable by all agents</li>
+    <li><strong>Asynchronous Multi-Agent Coordination</strong>: agents work in isolated workspaces but coordinate organically via shared artifacts — no rigid message-passing</li>
+    <li><strong>Heartbeat Mechanism</strong>: periodic prompts for reflection, knowledge consolidation, and stagnation-breaking</li>
+  </ul>
+
+  <div class="highlight">
+    <strong>3–10× higher improvement rate</strong> over fixed evolutionary baselines across 11 tasks; converges in 5–20 evaluations vs. 60–100 for baselines. New SOTA on 10 tasks including Kernel Engineering (1,363 → 1,103 cycles).
+  </div>
+
+  <h3>Why It Works</h3>
+  <ul>
+    <li><strong>Cross-agent transfer</strong>: 36% of high-performing attempts build on another agent's work (17% improvement rate vs. 9% average)</li>
+    <li><strong>Exploration diversity</strong>: Jaccard similarity ~0.43 — more than half of each agent's strategy vocabulary is unique</li>
+    <li><strong>Local verification</strong>: testing code locally before formal evaluation yields ~23 pp advantage on compiled-code tasks</li>
+    <li>Gains are structural, not from extra compute — independent parallel runs are weaker than true co-evolution</li>
+  </ul>
+
+  <div class="warn"><strong>Limitations:</strong> relies on frontier LLMs; homogeneous agent initialisation; assumes well-specified evaluators</div>
+</div>
+
+<!-- ============================================================ -->
+<div class="paper" id="deepseek">
+  <h2>DeepSeek-V4: Towards Highly Efficient Million-Token Context Intelligence</h2>
+  <div class="meta">
+    Organization: DeepSeek-AI &nbsp;|&nbsp;
+    Models: <a href="https://huggingface.co/collections/deepseek-ai/deepseek-v4">HuggingFace</a> &nbsp;|&nbsp;
+    File: <code>deepseek-v4-technical-report.pdf</code>
+    &nbsp;&nbsp; <span class="tag">LLM</span><span class="tag">Architecture</span><span class="tag">Long-Context</span>
+  </div>
+
+  <p>DeepSeek-V4 is a family of two Mixture-of-Experts (MoE) models designed to efficiently process one-million-token contexts by dramatically reducing the compute and memory cost of long-context attention.</p>
+
+  <h3>Models</h3>
+  <table>
+    <tr><th>Model</th><th>Total Params</th><th>Activated Params</th><th>Context</th></tr>
+    <tr><td>DeepSeek-V4-Pro</td><td>1.6T</td><td>49B</td><td>1M tokens</td></tr>
+    <tr><td>DeepSeek-V4-Flash</td><td>284B</td><td>13B</td><td>1M tokens</td></tr>
+  </table>
+
+  <h3>Key Architectural Innovations</h3>
+  <ul>
+    <li><strong>Compressed Sparse Attention (CSA)</strong>: compresses KV caches along the sequence dimension, then performs sparse attention — reduces KV cache dramatically at long contexts</li>
+    <li><strong>Heavily Compressed Attention (HCA)</strong>: applies more aggressive KV compression while keeping dense attention — further cuts memory at the cost of some expressivity</li>
+    <li><strong>Manifold-Constrained Hyper-Connections (mHC)</strong>: upgrades conventional residual connections by constraining the residual mapping matrix to the Birkhoff polytope (doubly stochastic matrices), stabilising signal propagation</li>
+    <li><strong>Muon Optimizer</strong>: replaces Adam for faster convergence and improved training stability</li>
+  </ul>
+
+  <div class="highlight">
+    At 1M-token context, DeepSeek-V4-Pro requires only <strong>27% of single-token inference FLOPs</strong> and <strong>10% of KV cache</strong> compared to DeepSeek-V3.2. V4-Flash achieves 10% FLOPs and 7% KV cache.
+  </div>
+
+  <h3>Post-Training Pipeline</h3>
+  <p>Two-stage: (1) domain-specific expert training (SFT + GRPO RL per domain: math, code, agent, instruction-following); (2) unified model consolidation via on-policy distillation from the specialists.</p>
+
+  <h3>Results</h3>
+  <ul>
+    <li><strong>Knowledge</strong>: leads open-source models on SimpleQA; closes gap with Gemini-3.1-Pro but still trails on knowledge benchmarks</li>
+    <li><strong>Reasoning</strong>: outperforms GPT-5.2 and Gemini-3.0-Pro on standard reasoning; ~3–6 months behind GPT-5.4 and Gemini-3.1-Pro</li>
+    <li><strong>Agent</strong>: competitive with Kimi-K2.6 and GLM-5.1; outperforms Claude Sonnet 4.5, approaches Opus 4.5</li>
+    <li><strong>Long-context</strong>: surpasses Gemini-3.1-Pro on academic long-context benchmarks</li>
+  </ul>
+
+  <div class="warn"><strong>Note:</strong> This is a preview release; training on 32–33T diverse tokens.</div>
+</div>
+
+<!-- ============================================================ -->
+<div class="paper" id="persuasio">
+  <h2>Evaluating the Capabilities of LLMs for Persuasive Dialogue</h2>
+  <div class="meta">
+    Authors: Jordan Robinson, Angus R. Williams, Katie Atkinson, Anthony G. Cohn &nbsp;|&nbsp;
+    University of Liverpool / Alan Turing Institute / University of Leeds &nbsp;|&nbsp;
+    File: <code>Evaluating_the_Capabilities_of_LLMs_for_Persuasive_Dialogue.pdf</code>
+    &nbsp;&nbsp; <span class="tag">Evaluation</span><span class="tag">Argumentation</span>
+  </div>
+
+  <p>This paper asks: does sounding persuasive mean arguing well? It introduces <strong>PERSUASIO</strong>, a multi-agent debate platform grounded in formal argumentation theory, and finds a systematic gap between rhetorical fluency and logical soundness in LLMs.</p>
+
+  <h3>Setup</h3>
+  <ul>
+    <li>Platform implements Prakken (2006) formal persuasion dialogue system via LangGraph</li>
+    <li>192 debate transcripts on UK political topic across human-human, human-model, model-model configurations</li>
+    <li>22 interlocutors: 13 humans, 9 LLM variants (GPT-4o, Grok-3, Mistral-Medium in BASE/MAS/MAS+RAG modes)</li>
+    <li>Persuasiveness measured on two axes: <em>logical</em> (automated adjudication via formal dialogue rules) and <em>subjective</em> (9,702 crowdsourced pairwise judgements)</li>
+  </ul>
+
+  <h3>Key Finding: Rhetoric vs. Rigour Decoupling</h3>
+  <div class="highlight">
+    All 9 LLM configurations occupied the <strong>top 9 positions</strong> in subjective persuasiveness, yet showed substantial rank inversions under logical evaluation — where <strong>humans remained competitive</strong> (a human debater ranked #1 logically). MAS and RAG enhancements widened this gap.
+  </div>
+
+  <h3>What This Means</h3>
+  <ul>
+    <li>LLMs are optimised for rhetorical polish (fluency, structural clarity, confident framing) rather than formal argumentative rigour</li>
+    <li>RLHF/instruction tuning rewards rhetorical appeal, which may mask logical weaknesses</li>
+    <li>Multi-agent orchestration and RAG amplify subjective persuasiveness without reliably improving logical coherence</li>
+    <li>Demographic subgroups (age, gender, political leaning) all closely reproduce the subjective ranking, but diverge strongly from the logical one — suggesting subjective judgements are stable but systematically misleading</li>
+  </ul>
+
+  <div class="warn"><strong>Implication:</strong> Benchmarks relying on human preference risk conflating persuasive appeal with argumentative validity, incentivising surface-level polish over reasoning quality.</div>
+</div>
+
+<!-- ============================================================ -->
+<div class="paper" id="horizon">
+  <h2>The Long-Horizon Task Mirage? Diagnosing Where and Why Agentic Systems Break</h2>
+  <div class="meta">
+    Authors: Xinyu Jessica Wang et al. &nbsp;|&nbsp; University of Wisconsin–Madison, UC Berkeley, Georgia Tech &nbsp;|&nbsp;
+    arXiv: 2604.11978 &nbsp;|&nbsp;
+    File: <code>long-horizon-task-mirage.pdf</code>
+    &nbsp;&nbsp; <span class="tag">Agents</span><span class="tag">Benchmark</span><span class="tag">Failure Analysis</span>
+  </div>
+
+  <p>LLM agents perform well on short tasks but break down systematically as task horizons grow. This paper introduces <strong>HORIZON</strong>, a cross-domain diagnostic benchmark, and a 7-category failure taxonomy to characterise <em>where</em> and <em>why</em> agents fail at long horizons.</p>
+
+  <h3>HORIZON Benchmark</h3>
+  <ul>
+    <li>4 domains: Web navigation, OS, Embodied, Database</li>
+    <li>Tasks are parameterised by <strong>Intrinsic Horizon H*</strong> (minimum optimal actions) and <strong>Compositional Depth s</strong> (nested sub-goals)</li>
+    <li>3,100+ trajectories from GPT-5 variants and Claude-4 models</li>
+    <li>LLM-as-a-Judge pipeline for scalable failure attribution (inter-annotator κ=0.61; human–judge κ=0.84)</li>
+  </ul>
+
+  <h3>7-Category Failure Taxonomy</h3>
+  <table>
+    <tr><th>Category</th><th>Description</th></tr>
+    <tr><td>Environment Disturbance</td><td>Agent fails to detect or adapt to environmental changes</td></tr>
+    <tr><td>Instruction Failure</td><td>Misinterprets or fails to follow instructions</td></tr>
+    <tr><td>False Assumptions</td><td>Acts on incorrect beliefs about state or data</td></tr>
+    <tr><td>Planning Error</td><td>Flawed sub-plan or action ordering</td></tr>
+    <tr><td>Catastrophic Forgetting</td><td>Loses track of earlier constraints as horizon grows</td></tr>
+    <tr><td>History Error Accumulation</td><td>Early mistakes compound into trajectory-level failure</td></tr>
+    <tr><td>Memory Limitation</td><td>Context window overflow causes loss of critical info</td></tr>
+  </table>
+
+  <div class="highlight">
+    Performance degrades <strong>non-linearly</strong> with horizon and exhibits a <strong>sharp cliff</strong> beyond small compositional depth s. Planning-related and memory-related failures become dominant at long horizons — suggesting scaling base models alone is insufficient.
+  </div>
+
+  <h3>Key Findings</h3>
+  <ul>
+    <li>Performance gaps between models <em>narrow substantially</em> once the breaking region is entered — long-horizon failure levels the playing field</li>
+    <li>The same extension level s induces markedly different difficulty across domains (Web collapses early; Database sustains longer)</li>
+    <li>Method-level improvements in planning, memory, and execution-time control are needed beyond base-model scaling</li>
+  </ul>
+</div>
+
+<!-- ============================================================ -->
+<div class="paper" id="parcae">
+  <h2>Parcae: Scaling Laws for Stable Looped Language Models</h2>
+  <div class="meta">
+    Authors: Hayden Prairie, Zachary Novack, Taylor Berg-Kirkpatrick, Daniel Y. Fu &nbsp;|&nbsp;
+    UC San Diego / Together AI &nbsp;|&nbsp;
+    arXiv: 2604.12946 &nbsp;|&nbsp;
+    File: <code>parcae-scaling-laws-looped-llm.pdf</code>
+    &nbsp;&nbsp; <span class="tag">Architecture</span><span class="tag">Scaling Laws</span><span class="tag">Looped LLM</span>
+  </div>
+
+  <p>Looped (recurrent-depth) architectures can scale FLOPs without increasing parameters, but prior work was unstable. Parcae diagnoses instability via control theory and proposes a stable looped transformer with principled scaling laws.</p>
+
+  <h3>Why Looped Models Are Unstable</h3>
+  <p>Parcae recasts the looped forward pass as a <strong>Linear Time-Invariant (LTI) dynamical system</strong> over the residual stream. Instability occurs when the spectral radius ρ(<b>A</b>) ≥ 1 in the injection parameter matrix — prior looped architectures (addition-based, concatenation-based) are marginally stable or unconstrained.</p>
+
+  <h3>Parcae's Solution</h3>
+  <ul>
+    <li>Parameterises <b>A</b> as a <em>negative diagonal matrix</em> (via <code>Diag(-exp(log_A))</code>), guaranteeing ρ(<b>A</b>) &lt; 1</li>
+    <li>Normalises the input injection <b>B</b> to prevent late-stage loss spikes</li>
+    <li>Introduces per-sequence depth sampling to stabilise variable-depth training</li>
+  </ul>
+
+  <div class="highlight">
+    Parcae achieves <strong>6.3% lower validation perplexity</strong> than prior large-scale looped models. A 770M Parcae matches a 1.3B Transformer on Core benchmarks with roughly half the parameters.
+  </div>
+
+  <h3>Scaling Laws of Looping</h3>
+  <ul>
+    <li><strong>Training</strong>: looping is an orthogonal scaling axis — compute-optimal training increases both looping and data following empirical power laws</li>
+    <li><strong>Test-time</strong>: additional recurrence follows predictable saturating exponential decay; scaling test-time looping is predictable and converges</li>
+    <li>At 1.3B params, Parcae improves Core by 2.99 pts and Core-Extended by 1.18 pts over matched Transformers</li>
+  </ul>
+</div>
+
+<!-- ============================================================ -->
+<div class="paper" id="ouro">
+  <h2>Scaling Latent Reasoning via Looped Language Models (Ouro)</h2>
+  <div class="meta">
+    Authors: Rui-Jie Zhu, Zixuan Wang et al. &nbsp;|&nbsp; ByteDance Seed, UC Santa Cruz, Princeton, Mila, CMU, Yoshua Bengio &nbsp;|&nbsp;
+    arXiv: 2510.25741 &nbsp;|&nbsp;
+    Project: <a href="http://ouro-llm.github.io">ouro-llm.github.io</a> &nbsp;|&nbsp;
+    File: <code>scaling-latent-reasoning-looped-llm.pdf</code>
+    &nbsp;&nbsp; <span class="tag">Architecture</span><span class="tag">Reasoning</span><span class="tag">Looped LLM</span>
+  </div>
+
+  <p>Instead of reasoning through explicit chain-of-thought text, Ouro builds reasoning into the <em>pre-training</em> architecture via looped computation in latent space — a third scaling axis beyond model size and training data.</p>
+
+  <h3>Key Ideas</h3>
+  <ul>
+    <li><strong>LoopLM Architecture</strong>: a fixed-depth transformer block is applied T times, with shared weights. An exit gate at each step outputs a probability of terminating early</li>
+    <li><strong>Entropy-Regularized Adaptive Computation</strong>: training objective = expected task loss + entropy regularization over the exit distribution. This prevents collapse to always using T<sub>max</sub> steps while allowing easy inputs to exit early</li>
+    <li><strong>Stage II Focused Gate Training</strong>: freeze LM, fine-tune only the exit gate to balance marginal improvement vs. compute cost</li>
+    <li>Trained on <strong>7.7T tokens</strong> to produce Ouro-1.4B and Ouro-2.6B (and Thinking variants via Reasoning SFT)</li>
+  </ul>
+
+  <div class="highlight">
+    Ouro-1.4B matches 4B standard transformers; Ouro-2.6B matches 8B models — <strong>2–3× parameter efficiency</strong>. Ouro-2.6B-Thinking R4 matches or exceeds Qwen3-8B and DeepSeek-7B on math/science benchmarks.
+  </div>
+
+  <h3>Why LoopLM Gains Are Real</h3>
+  <ul>
+    <li>Recurrence does <em>not</em> increase raw knowledge storage (≈2 bits/param for both looped and non-looped) — it improves <strong>knowledge manipulation</strong> (fact composition, multi-hop reasoning)</li>
+    <li>LoopLM produces reasoning traces <em>more aligned with final outputs</em> than CoT, indicating greater causal faithfulness</li>
+    <li>Safety improves monotonically with recurrent steps on HEx-PHI</li>
+  </ul>
+</div>
+
+<footer>
+  Summaries generated 2026-05-05 &nbsp;·&nbsp; Papers directory: <code>/Users/haileongchieu/Documents/papers/</code>
+</footer>
+
+</body>
+</html>
