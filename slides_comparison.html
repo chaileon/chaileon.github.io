@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hormuz Crisis — Prediction vs. Reality</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #0d1117;
+    color: #e6edf3;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .deck { width: 100vw; height: 100vh; position: relative; }
+
+  .slide {
+    display: none;
+    position: absolute;
+    inset: 0;
+    padding: 48px 72px;
+    flex-direction: column;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+  }
+  .slide.active { display: flex; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  :root {
+    --red:    #f85149;
+    --orange: #e3800a;
+    --yellow: #e3b341;
+    --green:  #3fb950;
+    --blue:   #58a6ff;
+    --purple: #bc8cff;
+    --teal:   #39d353;
+    --muted:  #8b949e;
+    --border: #30363d;
+    --card:   #161b22;
+    /* model colours */
+    --gemma:  #58a6ff;
+    --gpt:    #3fb950;
+    --qwen:   #bc8cff;
+    --truth:  #e3b341;
+  }
+
+  /* ── type ── */
+  .label {
+    font-size: 11px; font-weight: 700; letter-spacing: .15em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 10px;
+  }
+  h1 { font-size: 48px; font-weight: 800; line-height: 1.1; color: #f0f6fc; }
+  h2 { font-size: 32px; font-weight: 700; color: #f0f6fc; margin-bottom: 20px; }
+  h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  p, li { font-size: 13px; color: #c9d1d9; line-height: 1.55; }
+  ul { padding-left: 16px; }
+  li { margin-bottom: 3px; }
+
+  .subtitle { font-size: 18px; color: var(--muted); margin-top: 14px; line-height: 1.5; }
+  .divider  { width: 56px; height: 4px; background: var(--truth); border-radius: 2px; margin: 18px 0; }
+
+  /* ── badge / pill ── */
+  .badge {
+    display: inline-block; padding: 3px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+  }
+  .b-truth  { background: rgba(227,179,65,.15);  color: var(--truth); }
+  .b-gemma  { background: rgba(88,166,255,.15);  color: var(--gemma); }
+  .b-gpt    { background: rgba(63,185,80,.15);   color: var(--gpt); }
+  .b-qwen   { background: rgba(188,140,255,.15); color: var(--qwen); }
+  .b-red    { background: rgba(248,81,73,.15);   color: var(--red); }
+  .b-orange { background: rgba(227,128,10,.15);  color: var(--orange); }
+
+  /* ── model colour accents ── */
+  .accent-truth  { color: var(--truth); }
+  .accent-gemma  { color: var(--gemma); }
+  .accent-gpt    { color: var(--gpt); }
+  .accent-qwen   { color: var(--qwen); }
+  .accent-red    { color: var(--red); }
+
+  /* ── cards ── */
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px 20px;
+  }
+  .card-truth  { border-left: 3px solid var(--truth); }
+  .card-gemma  { border-left: 3px solid var(--gemma); }
+  .card-gpt    { border-left: 3px solid var(--gpt); }
+  .card-qwen   { border-left: 3px solid var(--qwen); }
+  .card-red    { border-left: 3px solid var(--red); }
+  .card-green  { border-left: 3px solid var(--green); }
+
+  /* ── grids ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 14px; }
+
+  /* ── big comparison table ── */
+  .ctable { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .ctable th {
+    padding: 9px 12px; font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .07em; border-bottom: 1px solid var(--border); text-align: left;
+  }
+  .ctable td {
+    padding: 9px 12px; border-bottom: 1px solid #21262d;
+    vertical-align: top; color: #c9d1d9; line-height: 1.45;
+  }
+  .ctable tr:last-child td { border-bottom: none; }
+  .ctable td:first-child { color: #f0f6fc; font-weight: 600; font-size: 12px; }
+  .th-truth  { color: var(--truth); }
+  .th-gemma  { color: var(--gemma); }
+  .th-gpt    { color: var(--gpt); }
+  .th-qwen   { color: var(--qwen); }
+
+  /* ── hit / miss icons ── */
+  .hit  { color: var(--green);  font-weight: 700; }
+  .miss { color: var(--red);    font-weight: 700; }
+  .part { color: var(--yellow); font-weight: 700; }
+
+  /* ── timeline strip ── */
+  .timeline { display: flex; flex-direction: column; gap: 8px; }
+  .tevent {
+    display: flex; gap: 14px; align-items: flex-start;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 14px;
+  }
+  .tdate {
+    min-width: 110px; font-size: 11px; font-weight: 700;
+    color: var(--truth); line-height: 1.4;
+  }
+  .tcat {
+    min-width: 90px;
+  }
+  .ttext { font-size: 12.5px; color: #c9d1d9; line-height: 1.45; }
+
+  /* ── scenario callout ── */
+  .callout {
+    background: #1c2128; border: 1px solid var(--border);
+    border-left: 4px solid var(--truth);
+    border-radius: 8px; padding: 16px 20px;
+    font-size: 13px; line-height: 1.6; color: #c9d1d9;
+  }
+  .callout strong { color: #f0f6fc; }
+
+  /* ── stat row ── */
+  .stat-row { display: flex; gap: 16px; }
+  .stat {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 18px; flex: 1; text-align: center;
+  }
+  .stat-val   { font-size: 26px; font-weight: 800; }
+  .stat-label { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+  /* ── scorecard ── */
+  .score-bar-wrap { background: #21262d; border-radius: 4px; height: 8px; margin-top: 6px; overflow: hidden; }
+  .score-bar { height: 100%; border-radius: 4px; }
+
+  /* ── nav ── */
+  .nav {
+    position: fixed; bottom: 24px; right: 36px;
+    display: flex; align-items: center; gap: 12px; z-index: 100;
+  }
+  .nav-btn {
+    width: 38px; height: 38px; border: 1px solid var(--border);
+    background: var(--card); color: #c9d1d9; border-radius: 8px;
+    cursor: pointer; font-size: 17px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s;
+  }
+  .nav-btn:hover { background: #21262d; color: #fff; }
+  .nav-counter { font-size: 12px; color: var(--muted); min-width: 48px; text-align: center; }
+
+  .progress {
+    position: fixed; top: 0; left: 0; height: 3px;
+    background: var(--truth); transition: width .3s ease; z-index: 100;
+  }
+  .slide-tag {
+    position: absolute; top: 20px; right: 36px;
+    font-size: 11px; color: var(--muted); letter-spacing: .05em;
+  }
+
+  /* compact spacing helpers */
+  .mb8  { margin-bottom:  8px; }
+  .mb12 { margin-bottom: 12px; }
+  .mb16 { margin-bottom: 16px; }
+  .mt12 { margin-top: 12px; }
+  .mt16 { margin-top: 16px; }
+  .gap8 { gap: 8px; }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<div class="deck" id="deck">
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 1 · TITLE
+════════════════════════════════════════════════════════ -->
+<div class="slide active">
+  <div class="slide-tag">1 / 12</div>
+  <div class="label">Crisis Simulation · Prediction vs. Reality</div>
+  <div class="divider"></div>
+  <h1>Singapore &amp; the<br><span class="accent-truth">Hormuz Crisis</span></h1>
+  <p class="subtitle">How three AI models predicted Singapore's response —<br>and how they compared to what actually happened</p>
+  <div style="display:flex;gap:10px;margin-top:28px;flex-wrap:wrap">
+    <span class="badge b-truth">Ground Truth</span>
+    <span class="badge b-gemma">Gemma · 16 Apr</span>
+    <span class="badge b-gpt">GPT OSS · 9 Apr</span>
+    <span class="badge b-qwen">Qwen 3.5 · 16 Apr</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 2 · THE SCENARIO
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-tag">2 / 12</div>
+  <div class="label">The Question Posed</div>
+  <h2>Scenario: <span class="accent-truth">US-Israel Strike on Iran, 28 Feb 2026</span></h2>
+  <div class="callout mb12">
+    <strong>Operation Epic Fury (US) + Operation Roaring Lion (Israel)</strong> — coordinated surprise assault on 28 Feb 2026, now on Day 38 with no ceasefire. Nearly 900 strikes in the first 12 hours killed Supreme Leader Khamenei and senior IRGC commanders.
+  </div>
+  <div class="grid-2 mb12" style="gap:12px">
+    <div class="card card-red">
+      <h3 class="accent-red">Immediate Shocks</h3>
+      <ul>
+        <li>Strait of Hormuz closed — tanker transit collapsed from ~130/day to &lt;6</li>
+        <li>Oil surges past $110/bbl — worst energy disruption since the 1970s</li>
+        <li>Multi-front war: Hezbollah (Lebanon) + Houthis (Yemen) engaged</li>
+        <li>US F-15E shot down — first US fighter lost since 2003</li>
+      </ul>
+    </div>
+    <div class="card card-truth">
+      <h3 class="accent-truth">The Stakes for Singapore</h3>
+      <ul>
+        <li>~322% trade-to-GDP ratio — existential supply chain exposure</li>
+        <li>~50% gas supply piped regionally; rest via LNG through Hormuz</li>
+        <li>1990 MOU: US logistics hub — potential retaliation target</li>
+        <li>Trump deadline: reopen Hormuz by 8 April or Iran faces further strikes</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout">
+    <strong>Task given to models:</strong> Simulate Singapore's inter-ministry crisis response as a multi-round war game. Each ministry (MFA, MINDEF, MTI, MSE, MHA) submits position papers; the PM arbitrates and issues binding constraints for refinement.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 3 · GROUND TRUTH TIMELINE
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-tag">3 / 12</div>
+  <div class="label">Ground Truth</div>
+  <h2>What Singapore <span class="accent-truth">Actually Did</span> (Feb–Apr 2026)</h2>
+  <div class="timeline">
+    <div class="tevent">
+      <div class="tdate">28 Feb · MFA</div>
+      <div class="tcat"><span class="badge b-orange">Diplomatic</span></div>
+      <div class="ttext">"Regrets" US-Israel strikes and Iranian retaliation; calls for de-escalation <strong>without condemning any party</strong>.</div>
+    </div>
+    <div class="tevent">
+      <div class="tdate">7–13 Mar</div>
+      <div class="tcat"><span class="badge b-truth">Consular</span></div>
+      <div class="ttext">Four evacuation flights repatriate <strong>218+ Singaporeans</strong> from Riyadh, Jeddah, Muscat; spare seats offered to ASEAN nationals.</div>
+    </div>
+    <div class="tevent">
+      <div class="tdate">11 Mar · UNSC</div>
+      <div class="tcat"><span class="badge b-gpt">Multilateral</span></div>
+      <div class="ttext">Singapore <strong>co-sponsors UNSC Resolution 2817</strong> condemning Iran's attacks on Gulf states and threats to close Hormuz (13-0-2).</div>
+    </div>
+    <div class="tevent">
+      <div class="tdate">12–20 Mar · EMA</div>
+      <div class="tcat"><span class="badge b-orange">Energy</span></div>
+      <div class="ttext">EMA activates <strong>"multiple lines of defence"</strong> — strategic stockpiles, gas-diesel turbine switching, LNG diversification to Australia, US, Mozambique.</div>
+    </div>
+    <div class="tevent">
+      <div class="tdate">2 Apr · PMO</div>
+      <div class="tcat"><span class="badge b-red">Civil Prep</span></div>
+      <div class="ttext">PM Lawrence Wong <strong>publicly</strong> activates Homefront Crisis Ministerial Committee; warns of stagflation; calls disruption <strong>"worst since 1973."</strong></div>
+    </div>
+    <div class="tevent">
+      <div class="tdate">7 Apr · Parliament</div>
+      <div class="tcat"><span class="badge b-truth">Multi-Ministry</span></div>
+      <div class="ttext">Parliament sessions: FM asserts UNCLOS transit rights; DPM quantifies shock (Brent $141, LNG $22/MMBtu); MOF announces <strong>~S$1B support package</strong>; MHA details HCMC workstreams.</div>
+    </div>
+    <div class="tevent">
+      <div class="tdate">14 Apr · MAS</div>
+      <div class="tcat"><span class="badge b-qwen">Monetary</span></div>
+      <div class="ttext">MAS tightens monetary policy — first since 2022. S$NEER appreciation slope increased; inflation forecast raised to 1.5–2.5% for 2026.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 4 · MODEL DOCTRINES AT A GLANCE
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-tag">4 / 12</div>
+  <div class="label">Model Predictions — Overview</div>
+  <h2>Three Models, Three <span class="accent-truth">Doctrines</span></h2>
+  <div class="grid-3 mb16">
+    <div class="card card-gemma">
+      <h3 class="accent-gemma">Gemma · 16 Apr</h3>
+      <div class="mb8"><span class="badge b-gemma">Defensive Stealth</span></div>
+      <p>Survive quietly; project normalcy. Maximum readiness with zero public visibility. The 8 April deadline is a state secret. All measures framed as "routine management."</p>
+    </div>
+    <div class="card card-gpt">
+      <h3 class="accent-gpt">GPT OSS · 9 Apr</h3>
+      <div class="mb8"><span class="badge b-gpt">Structured Transparency</span></div>
+      <p>Survive visibly; build public confidence through institutional process. Publish reserve figures, named alert levels, formal trigger matrices, ASEAN/UN multilateralism.</p>
+    </div>
+    <div class="card card-qwen">
+      <h3 class="accent-qwen">Qwen 3.5 · 16 Apr</h3>
+      <div class="mb8"><span class="badge b-qwen">Armed Neutrality</span></div>
+      <p>Survive at any cost; accept consequences later. Shadow Fleet procurement, covert insurance bypass, rationing from Day 1, US security umbrella assumed gone.</p>
+    </div>
+  </div>
+  <table class="ctable">
+    <thead>
+      <tr>
+        <th>Dimension</th>
+        <th class="th-gemma">Gemma</th>
+        <th class="th-gpt">GPT OSS</th>
+        <th class="th-qwen">Qwen 3.5</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Risk appetite</td>
+        <td>Low — avoid all panic signals</td>
+        <td>Medium — structured visibility</td>
+        <td>High — expose if necessary</td>
+      </tr>
+      <tr>
+        <td>Disruption horizon assumed</td>
+        <td>~6 months</td>
+        <td>≥30 days</td>
+        <td>60–90 days</td>
+      </tr>
+      <tr>
+        <td>US security umbrella</td>
+        <td>Maintained (1990 MOU)</td>
+        <td>Assumed cooperative</td>
+        <td>Assumed <strong>gone</strong></td>
+      </tr>
+      <tr>
+        <td>PM directive tone</td>
+        <td>Political memo, 5 constraints</td>
+        <td>Formal cabinet arbitration doc</td>
+        <td>Military operational order</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 5 · DIPLOMATIC COMPARISON
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-tag">5 / 12</div>
+  <div class="label">Comparison — Diplomacy (MFA)</div>
+  <h2>Diplomatic Posture: <span class="accent-truth">Reality vs. Predictions</span></h2>
+  <table class="ctable mb12">
+    <thead>
+      <tr>
+        <th>Dimension</th>
+        <th class="th-truth">Ground Truth</th>
+        <th class="th-gemma">Gemma</th>
+        <th class="th-gpt">GPT OSS</th>
+        <th class="th-qwen">Qwen 3.5</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Public framing</td>
+        <td>Named Iran; condemned attacks on Gulf civilians; UNCLOS transit passage = non-negotiable right</td>
+        <td>"Technical Maritime Coordination" — no political language</td>
+        <td>Strict neutrality + condemn obstruction of maritime traffic</td>
+        <td>"Unimpeded Navigation under International Law" — belligerents not named</td>
+      </tr>
+      <tr>
+        <td>UNSC / UN role</td>
+        <td><strong>Co-sponsored UNSC Res. 2817</strong>; UNGA joint statement with Fiji, Jamaica, Malta</td>
+        <td>Not pursued</td>
+        <td>UNSC draft by Day 7; UNGA fallback ✓</td>
+        <td>UNSC advocacy (humanitarian corridor); no hard timeline</td>
+      </tr>
+      <tr>
+        <td>ASEAN role</td>
+        <td>FM attended ASEAN FM emergency meeting; condemned attacks</td>
+        <td>Technical energy coordination only; no political bloc</td>
+        <td>ASEAN communiqué by Day 2 ✓</td>
+        <td>Emergency meeting at T+24h; decoupled from operations</td>
+      </tr>
+      <tr>
+        <td>Iran engagement</td>
+        <td>No direct negotiation; declined to negotiate</td>
+        <td>Depoliticised; implicitly excluded</td>
+        <td>Keep embassy open; Swiss-mediated corridor</td>
+        <td>Back-channel via PMO "Firewall Protocol"</td>
+      </tr>
+      <tr>
+        <td>Malacca / transit rights</td>
+        <td>Called Hormuz a "dry run" for Malacca; reaffirmed no-toll commitment</td>
+        <td>JS-SEZ contingency only</td>
+        <td>UNCLOS FoN championed ✓</td>
+        <td>Malacca spillover risk explicitly assumed ✓</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="grid-3" style="gap:12px">
+    <div class="card card-gemma"><h3 class="accent-gemma">Gemma</h3><p><span class="miss">✗</span> Too silent — Singapore publicly named Iran and condemned attacks. Stealth framing contradicted by reality.</p></div>
+    <div class="card card-gpt"><h3 class="accent-gpt">GPT OSS</h3><p><span class="hit">✓</span> Closest: UNSC resolution, ASEAN engagement, multilateral FoN framing — all matched reality.</p></div>
+    <div class="card card-qwen"><h3 class="accent-qwen">Qwen 3.5</h3><p><span class="part">~</span> Right on Malacca framing; wrong on keeping belligerents unnamed — Singapore named Iran directly.</p></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 6 · DEFENCE COMPARISON
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-tag">6 / 12</div>
+  <div class="label">Comparison — Defence (MINDEF)</div>
+  <h2>Defence Posture: <span class="accent-truth">Reality vs. Predictions</span></h2>
+  <table class="ctable mb12">
+    <thead>
+      <tr>
+        <th>Dimension</th>
+        <th class="th-truth">Ground Truth</th>
+        <th class="th-gemma">Gemma</th>
+        <th class="th-gpt">GPT OSS</th>
+        <th class="th-qwen">Qwen 3.5</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Public signaling</td>
+        <td>Chan Chun Sing's "might makes right" speech; signaled readiness to raise defence spending</td>
+        <td>Zero — all movements 100% stealth</td>
+        <td>IADS Level 3 published on internal dashboard; named alert level ✓</td>
+        <td>Op Guardian Shield activated — publicly named</td>
+      </tr>
+      <tr>
+        <td>Troop deployment</td>
+        <td><strong>None.</strong> No troop deployment or reservist recall</td>
+        <td>No deployment; defensive only ✓</td>
+        <td>No troop deployment ✓</td>
+        <td>Active Denial and Interdiction mandate — overly kinetic</td>
+      </tr>
+      <tr>
+        <td>SAF modernisation</td>
+        <td>PM cited Iran war as rationale for accelerating <strong>unmanned &amp; cross-domain integration</strong></td>
+        <td>Low-observability tactical doctrines</td>
+        <td>Not discussed</td>
+        <td>Not discussed</td>
+      </tr>
+      <tr>
+        <td>US security relationship</td>
+        <td>No explicit statement on MOU; no break in ties signaled</td>
+        <td>1990 MOU maintained ✓</td>
+        <td>Assumed cooperative ✓</td>
+        <td>Assumed gone — self-reliance baseline ✗</td>
+      </tr>
+      <tr>
+        <td>FPDA</td>
+        <td>Not publicly invoked</td>
+        <td>Decoupled from 8 Apr timeline</td>
+        <td>Used for multilateral signaling</td>
+        <td>Sensor sharing only; no foreign troops ✓</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="grid-3" style="gap:12px">
+    <div class="card card-gemma"><h3 class="accent-gemma">Gemma</h3><p><span class="miss">✗</span> Predicted total stealth — but Singapore's defence posture was explicitly public (ministerial speeches, PM's HQ visit).</p></div>
+    <div class="card card-gpt"><h3 class="accent-gpt">GPT OSS</h3><p><span class="hit">✓</span> Calibrated visible alert without kinetic action — best match. Correctly predicted no troop deployment.</p></div>
+    <div class="card card-qwen"><h3 class="accent-qwen">Qwen 3.5</h3><p><span class="miss">✗</span> Assumed US umbrella gone; active interdiction mandate — reality was more restrained and diplomatically cautious.</p></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 7 · ENERGY & ECONOMIC COMPARISON
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-tag">7 / 12</div>
+  <div class="label">Comparison — Energy &amp; Economics (MTI / EMA)</div>
+  <h2>Energy &amp; Economic Response: <span class="accent-truth">Reality vs. Predictions</span></h2>
+  <table class="ctable mb12">
+    <thead>
+      <tr>
+        <th>Dimension</th>
+        <th class="th-truth">Ground Truth</th>
+        <th class="th-gemma">Gemma</th>
+        <th class="th-gpt">GPT OSS</th>
+        <th class="th-qwen">Qwen 3.5</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Procurement approach</td>
+        <td>Legal LNG diversification — Australia, US, Mozambique; IEA 400mb emergency release</td>
+        <td>Legal pivot — Americas, West Africa ✓ (direction right)</td>
+        <td>Legal diversification; formal taskforce certifies ✓</td>
+        <td>Covert Shadow Fleet; SWRIF insurance bypass ✗</td>
+      </tr>
+      <tr>
+        <td>Electricity / tariffs</td>
+        <td>Tariff <strong>raised 2.1%</strong> to 29.72¢/kWh — publicly announced</td>
+        <td>Tariffs held flat to avoid panic signals ✗</td>
+        <td>45-day reserves published; tariff not specified ✓/~</td>
+        <td>Rationing effective next morning ✗</td>
+      </tr>
+      <tr>
+        <td>Industrial impact</td>
+        <td>Refinery run-rate cuts; Petrochemical Corp force majeure — publicly acknowledged</td>
+        <td>Tier 2 managed; not announced publicly ✗</td>
+        <td>Deprioritised; cold-chain protected ✓</td>
+        <td>Jurong Island at 10% if grid stressed ✓</td>
+      </tr>
+      <tr>
+        <td>IEA coordination</td>
+        <td>Singapore participates in IEA largest-ever 400mb release ✓</td>
+        <td>Not predicted</td>
+        <td>Not predicted</td>
+        <td>Not predicted</td>
+      </tr>
+      <tr>
+        <td>Fiscal relief</td>
+        <td><strong>~S$1B package</strong>: CIT rebate, S$500 CDC vouchers, S$400–600 cost-of-living payments</td>
+        <td>Not predicted ✗</td>
+        <td>Socioeconomic mitigation mentioned — vague ✗</td>
+        <td>Not predicted ✗</td>
+      </tr>
+      <tr>
+        <td>MAS monetary policy</td>
+        <td>MAS tightened S$NEER slope; first tightening since 2022</td>
+        <td>Not predicted ✗</td>
+        <td>Not predicted ✗</td>
+        <td>Not predicted ✗</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="card card-red mt12">
+    <h3 class="accent-red">Universal Miss</h3>
+    <p>No model predicted the IEA emergency oil release, the S$1B public fiscal package, or MAS monetary tightening — three of the most significant real-world actions.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 8 · PUBLIC COMMUNICATION COMPARISON
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-tag">8 / 12</div>
+  <div class="label">Comparison — Public Communication &amp; Civil Preparedness (MHA / PMO)</div>
+  <h2>Transparency: <span class="accent-truth">Reality vs. Predictions</span></h2>
+  <div class="callout mb12">
+    <strong>What actually happened:</strong> PM Wong <em>publicly</em> activated the Homefront Crisis Ministerial Committee, publicly called the disruption <strong>"worst since 1973,"</strong> publicly warned of stagflation risk, and held full parliamentary sessions where ministers gave specific figures on oil prices, LNG costs, force majeure, and fiscal relief — all on the record.
+  </div>
+  <div class="grid-3" style="gap:12px;margin-bottom:12px">
+    <div class="card card-gemma">
+      <h3 class="accent-gemma">Gemma — Predicted</h3>
+      <ul>
+        <li>8 April deadline = state secret</li>
+        <li>"Stability and Sufficiency" only</li>
+        <li>Stealth reserve releases — no announcement</li>
+        <li>0800h/2000h narrative lock</li>
+        <li>All measures framed as "routine management"</li>
+      </ul>
+      <div style="margin-top:8px"><span class="miss">✗ Verdict: Opposite of reality</span></div>
+    </div>
+    <div class="card card-gpt">
+      <h3 class="accent-gpt">GPT OSS — Predicted</h3>
+      <ul>
+        <li>Publish 45-day reserve figures publicly</li>
+        <li>Named Civil Defence alert (Orange by Day 2)</li>
+        <li>NEIB-V2 unified public template</li>
+        <li>POFMA within 4h; RCRO within 12h</li>
+        <li>Parliamentary / public communication built in</li>
+      </ul>
+      <div style="margin-top:8px"><span class="hit">✓ Verdict: Closest to reality</span></div>
+    </div>
+    <div class="card card-qwen">
+      <h3 class="accent-qwen">Qwen 3.5 — Predicted</h3>
+      <ul>
+        <li>Daily Readiness Brief (public)</li>
+        <li>Rationing announced publicly (0800h)</li>
+        <li>Community Policing Teams pre-deployed</li>
+        <li>Targeted bans only — no total blackout</li>
+        <li>Grievance matrix — racialized vs. economic</li>
+      </ul>
+      <div style="margin-top:8px"><span class="part">~ Verdict: Partial — right on openness, wrong on rationing</span></div>
+    </div>
+  </div>
+  <div class="card card-truth">
+    <h3 class="accent-truth">Key Insight</h3>
+    <p>Reality was <strong>far more transparent</strong> than any model expected. The PM led the public narrative directly and named the crisis explicitly. Only GPT OSS bet on transparency as the dominant posture — and was broadly validated.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 9 · MARITIME COMPARISON
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-tag">9 / 12</div>
+  <div class="label">Comparison — Maritime &amp; Aviation</div>
+  <h2>Maritime Actions: <span class="accent-truth">Reality vs. Predictions</span></h2>
+  <div class="grid-2" style="gap:14px;margin-bottom:12px">
+    <div>
+      <div class="card card-truth mb12">
+        <h3 class="accent-truth">What Actually Happened</h3>
+        <ul style="margin-top:6px">
+          <li>MPA issued shipping advisories to all Singapore-registered operators</li>
+          <li>Information Fusion Centre raised monitoring tempo for 4,230 registry ships</li>
+          <li>Singapore Maritime Week 2026: DPM warned disruptions "increasingly frequent"</li>
+          <li>MPA engaged IMO on safe maritime corridor for stranded seafarers</li>
+          <li>CAAS deferred Sustainable Aviation Fuel levy 6 months (Apr → Oct 2026)</li>
+          <li>FM reaffirmed no-toll commitment for Malacca with Malaysia &amp; Indonesia</li>
+        </ul>
+      </div>
+      <div class="card card-green">
+        <h3 class="accent-gpt">What Models Got Right</h3>
+        <ul style="margin-top:6px">
+          <li><span class="badge b-gemma">Gemma</span> JS-SEZ overland contingency — right direction</li>
+          <li><span class="badge b-gpt">GPT OSS</span> FoN / UNCLOS as core legal frame ✓</li>
+          <li><span class="badge b-qwen">Qwen 3.5</span> Malacca spillover risk explicitly assumed ✓</li>
+          <li>All models: MPA / maritime monitoring role anticipated</li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <div class="card card-red mb12">
+        <h3 class="accent-red">What All Models Missed</h3>
+        <ul style="margin-top:6px">
+          <li>IEA 400mb emergency release — Singapore's active participation</li>
+          <li>IMO engagement on seafarer corridors (humanitarian maritime angle)</li>
+          <li>Aviation fuel levy deferral (CAAS)</li>
+          <li>The "dry run for Malacca" framing as a public diplomatic statement</li>
+          <li>Singapore Maritime Week as a platform for crisis signaling</li>
+        </ul>
+      </div>
+      <div class="card card-qwen">
+        <h3 class="accent-qwen">Qwen's Unique Miss</h3>
+        <p style="margin-top:6px">Shadow Fleet operations predicted — no evidence this occurred. Singapore stayed within legal procurement channels, consistent with its rule-of-law public diplomacy stance.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 10 · SCORECARD
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-tag">10 / 12</div>
+  <div class="label">Evaluation</div>
+  <h2>Model Scorecard: <span class="accent-truth">Hits, Partials, Misses</span></h2>
+  <table class="ctable">
+    <thead>
+      <tr>
+        <th>Domain</th>
+        <th class="th-gemma">Gemma</th>
+        <th class="th-gpt">GPT OSS</th>
+        <th class="th-qwen">Qwen 3.5</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Diplomatic framing (MFA)</td>
+        <td><span class="miss">✗</span> Too silent; reality named Iran directly</td>
+        <td><span class="hit">✓</span> UNSC, ASEAN, FoN — all matched</td>
+        <td><span class="part">~</span> Malacca right; naming wrong</td>
+      </tr>
+      <tr>
+        <td>Defence posture (MINDEF)</td>
+        <td><span class="miss">✗</span> Stealth predicted; reality was public signaling</td>
+        <td><span class="hit">✓</span> Calibrated visible alert, no deployment</td>
+        <td><span class="miss">✗</span> US umbrella gone + kinetic mandate — too aggressive</td>
+      </tr>
+      <tr>
+        <td>Energy procurement (MTI)</td>
+        <td><span class="part">~</span> Correct direction (Americas); stealth wrong</td>
+        <td><span class="hit">✓</span> Legal diversification; reserve transparency</td>
+        <td><span class="miss">✗</span> Shadow Fleet — no evidence; legal channels used</td>
+      </tr>
+      <tr>
+        <td>Public communication (MHA)</td>
+        <td><span class="miss">✗</span> Predicted blackout; reality was PM-led openness</td>
+        <td><span class="hit">✓</span> Transparency bet validated</td>
+        <td><span class="part">~</span> Right on openness; rationing didn't happen</td>
+      </tr>
+      <tr>
+        <td>Fiscal relief (MOF)</td>
+        <td><span class="miss">✗</span> Not predicted</td>
+        <td><span class="miss">✗</span> Vaguely mentioned; no detail</td>
+        <td><span class="miss">✗</span> Not predicted</td>
+      </tr>
+      <tr>
+        <td>Monetary policy (MAS)</td>
+        <td><span class="miss">✗</span> Not predicted</td>
+        <td><span class="miss">✗</span> Not predicted</td>
+        <td><span class="miss">✗</span> Not predicted</td>
+      </tr>
+      <tr>
+        <td>IEA coordination</td>
+        <td><span class="miss">✗</span> Not predicted</td>
+        <td><span class="miss">✗</span> Not predicted</td>
+        <td><span class="miss">✗</span> Not predicted</td>
+      </tr>
+      <tr>
+        <td>Malacca / transit framing</td>
+        <td><span class="part">~</span> JS-SEZ contingency only</td>
+        <td><span class="hit">✓</span> UNCLOS FoN championed</td>
+        <td><span class="hit">✓</span> Malacca spillover risk assumed</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="stat-row mt12">
+    <div class="stat"><div class="stat-val accent-gemma">1 / 8</div><div class="stat-label">Gemma — clear hits</div></div>
+    <div class="stat"><div class="stat-val accent-gpt">5 / 8</div><div class="stat-label">GPT OSS — clear hits</div></div>
+    <div class="stat"><div class="stat-val accent-qwen">2 / 8</div><div class="stat-label">Qwen 3.5 — clear hits</div></div>
+    <div class="stat"><div class="stat-val accent-red">3 / 8</div><div class="stat-label">Domains all models missed</div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 11 · KEY INSIGHTS
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-tag">11 / 12</div>
+  <div class="label">Analysis</div>
+  <h2>What Reality Revealed About <span class="accent-truth">Each Model's Blind Spots</span></h2>
+  <div class="grid-3 mb16" style="gap:14px">
+    <div class="card card-gemma">
+      <h3 class="accent-gemma">Gemma's Blind Spot</h3>
+      <p><strong>Underestimated institutional confidence.</strong> Gemma bet that transparency would cause panic. Singapore bet the opposite — and won. PM-led public communication stabilised sentiment, while stealth would have created an information vacuum exploited by misinformation.</p>
+    </div>
+    <div class="card card-gpt">
+      <h3 class="accent-gpt">GPT OSS's Blind Spot</h3>
+      <p><strong>Missed the economic relief dimension.</strong> GPT OSS correctly predicted the transparency and multilateral posture — but entirely missed the ~S$1B direct fiscal relief package, MAS monetary tightening, and IEA coordination. It modelled process without modelling household-level impact.</p>
+    </div>
+    <div class="card card-qwen">
+      <h3 class="accent-qwen">Qwen 3.5's Blind Spot</h3>
+      <p><strong>Overestimated Singapore's willingness to break rules.</strong> Shadow Fleet, SWRIF bypass, and covert procurement assumed Singapore would sacrifice its rule-of-law reputation for survival. Reality: Singapore stayed conspicuously legal and used that as diplomatic leverage.</p>
+    </div>
+  </div>
+  <div class="grid-2" style="gap:14px">
+    <div class="card card-truth">
+      <h3 class="accent-truth">What All Models Got Wrong</h3>
+      <ul style="margin-top:6px">
+        <li>None predicted the S$1B fiscal relief package or MAS tightening</li>
+        <li>None predicted IEA emergency oil release participation</li>
+        <li>None modelled aviation sector response (SAF levy deferral)</li>
+        <li>All overestimated crisis duration / severity of domestic supply shock</li>
+      </ul>
+    </div>
+    <div class="card card-green">
+      <h3 class="accent-gpt">What All Models Got Right</h3>
+      <ul style="margin-top:6px">
+        <li>Energy diversification away from Gulf — correct direction</li>
+        <li>MPA / maritime monitoring elevated — anticipated</li>
+        <li>JS-SEZ / Malaysia bilateral importance — all flagged</li>
+        <li>No military deployment or reservist recall — all predicted correctly</li>
+        <li>Malacca Strait as strategic concern — all flagged</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 12 · CONCLUSION
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-tag">12 / 12</div>
+  <div class="label">Conclusion</div>
+  <h2>Takeaways: <span class="accent-truth">Prediction vs. Reality</span></h2>
+  <div class="callout mb16">
+    <strong>Reality chose the GPT OSS doctrine</strong> — structured transparency, multilateral rule-of-law diplomacy, calibrated visible defence signaling, and legal energy diversification. Singapore's actual posture was more open, more institutionally confident, and more fiscally activist than any model anticipated.
+  </div>
+  <div class="grid-3" style="gap:14px;margin-bottom:14px">
+    <div class="card card-gpt">
+      <h3 class="accent-gpt">GPT OSS · Best Predictor</h3>
+      <p>Correctly identified: UNSC multilateralism, transparency over stealth, calibrated alert without deployment, legal procurement channels, and rule-of-law as leverage.</p>
+    </div>
+    <div class="card card-qwen">
+      <h3 class="accent-qwen">Qwen 3.5 · Right Risks, Wrong Response</h3>
+      <p>Correctly identified the US security gap risk and Malacca spillover concern — but concluded Singapore would go covert. It didn't. Legal visibility was the chosen shield.</p>
+    </div>
+    <div class="card card-gemma">
+      <h3 class="accent-gemma">Gemma · Inverted Reality</h3>
+      <p>The "Narrative Lock" and stealth posture were the mirror image of what happened. Singapore's government communicated loudly and clearly — because credibility required it.</p>
+    </div>
+  </div>
+  <div class="card card-red">
+    <h3 class="accent-red">The Universal Gap: Economic Statecraft</h3>
+    <p>All three models focused on crisis <em>management</em> — stockpiles, defence posture, narrative control. None anticipated the <strong>proactive fiscal and monetary response</strong>: S$1B household support, MAS tightening, IEA coordination, aviation levy deferral. Singapore treated the crisis as an opportunity to demonstrate institutional competence — not just to survive it.</p>
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<div class="nav">
+  <button class="nav-btn" onclick="navigate(-1)">&#8592;</button>
+  <span class="nav-counter" id="counter">1 / 12</span>
+  <button class="nav-btn" onclick="navigate(1)">&#8594;</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  function navigate(dir) {
+    slides[current].classList.remove('active');
+    current = Math.max(0, Math.min(total - 1, current + dir));
+    slides[current].classList.add('active');
+    document.getElementById('counter').textContent = (current + 1) + ' / ' + total;
+    document.getElementById('progress').style.width = ((current + 1) / total * 100) + '%';
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') navigate(1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                     navigate(-1);
+  });
+
+  document.getElementById('progress').style.width = (1 / total * 100) + '%';
+</script>
+</body>
+</html>
