@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gemma — With vs. Without Playbook</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #0d1117;
+    color: #e6edf3;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .deck { width: 100vw; height: 100vh; position: relative; }
+
+  .slide {
+    display: none;
+    position: absolute;
+    inset: 0;
+    padding: 48px 72px;
+    flex-direction: column;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+  }
+  .slide.active { display: flex; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  :root {
+    --red:    #f85149;
+    --orange: #e3800a;
+    --yellow: #e3b341;
+    --green:  #3fb950;
+    --blue:   #58a6ff;
+    --purple: #bc8cff;
+    --muted:  #8b949e;
+    --border: #30363d;
+    --card:   #161b22;
+    --without: #f85149;
+    --with:    #3fb950;
+    --truth:   #e3b341;
+    --playbook: #bc8cff;
+  }
+
+  .label {
+    font-size: 11px; font-weight: 700; letter-spacing: .15em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 10px;
+  }
+  h1 { font-size: 46px; font-weight: 800; line-height: 1.1; color: #f0f6fc; }
+  h2 { font-size: 30px; font-weight: 700; color: #f0f6fc; margin-bottom: 18px; }
+  h3 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  p, li { font-size: 12.5px; color: #c9d1d9; line-height: 1.55; }
+  ul { padding-left: 16px; }
+  li { margin-bottom: 3px; }
+
+  .subtitle { font-size: 17px; color: var(--muted); margin-top: 14px; line-height: 1.5; }
+  .divider  { width: 56px; height: 4px; background: var(--playbook); border-radius: 2px; margin: 18px 0; }
+
+  .badge {
+    display: inline-block; padding: 3px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+  }
+  .b-without  { background: rgba(248,81,73,.15);   color: var(--without); }
+  .b-with     { background: rgba(63,185,80,.15);   color: var(--with); }
+  .b-truth    { background: rgba(227,179,65,.15);  color: var(--truth); }
+  .b-playbook { background: rgba(188,140,255,.15); color: var(--playbook); }
+  .b-blue     { background: rgba(88,166,255,.15);  color: var(--blue); }
+
+  .accent-without  { color: var(--without); }
+  .accent-with     { color: var(--with); }
+  .accent-truth    { color: var(--truth); }
+  .accent-playbook { color: var(--playbook); }
+  .accent-blue     { color: var(--blue); }
+
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 18px;
+  }
+  .card-without  { border-left: 3px solid var(--without); }
+  .card-with     { border-left: 3px solid var(--with); }
+  .card-truth    { border-left: 3px solid var(--truth); }
+  .card-playbook { border-left: 3px solid var(--playbook); }
+  .card-blue     { border-left: 3px solid var(--blue); }
+  .card-green    { border-left: 3px solid var(--green); }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+
+  .ctable { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .ctable th {
+    padding: 8px 12px; font-size: 10.5px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .07em; border-bottom: 1px solid var(--border); text-align: left;
+  }
+  .ctable td {
+    padding: 8px 12px; border-bottom: 1px solid #21262d;
+    vertical-align: top; color: #c9d1d9; line-height: 1.45;
+  }
+  .ctable tr:last-child td { border-bottom: none; }
+  .ctable td:first-child { color: #f0f6fc; font-weight: 600; font-size: 11.5px; }
+  .th-without { color: var(--without); }
+  .th-with    { color: var(--with); }
+  .th-truth   { color: var(--truth); }
+
+  .hit  { color: var(--green);  font-weight: 700; }
+  .miss { color: var(--red);    font-weight: 700; }
+  .part { color: var(--yellow); font-weight: 700; }
+
+  .move-strip {
+    display: flex; gap: 8px; align-items: stretch;
+  }
+  .move-box {
+    flex: 1; background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px 10px; text-align: center;
+  }
+  .move-num {
+    font-size: 22px; font-weight: 800; color: var(--playbook); line-height: 1;
+  }
+  .move-title { font-size: 11px; font-weight: 700; color: #f0f6fc; margin: 4px 0; }
+  .move-desc  { font-size: 10.5px; color: var(--muted); line-height: 1.4; }
+
+  .callout {
+    background: #1c2128; border: 1px solid var(--border);
+    border-left: 4px solid var(--playbook);
+    border-radius: 8px; padding: 14px 18px;
+    font-size: 12.5px; line-height: 1.6; color: #c9d1d9;
+  }
+  .callout strong { color: #f0f6fc; }
+
+  .stat-row { display: flex; gap: 14px; }
+  .stat {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 16px; flex: 1; text-align: center;
+  }
+  .stat-val   { font-size: 24px; font-weight: 800; }
+  .stat-label { font-size: 10.5px; color: var(--muted); margin-top: 3px; }
+
+  .change-row {
+    display: flex; gap: 10px; align-items: center;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 14px; margin-bottom: 8px;
+  }
+  .change-domain { min-width: 160px; font-size: 11.5px; font-weight: 700; color: #f0f6fc; }
+  .change-arrow  { font-size: 14px; color: var(--muted); flex-shrink: 0; }
+  .change-before { flex: 1; font-size: 11.5px; color: var(--without); }
+  .change-after  { flex: 1; font-size: 11.5px; color: var(--with); }
+
+  .nav {
+    position: fixed; bottom: 24px; right: 36px;
+    display: flex; align-items: center; gap: 12px; z-index: 100;
+  }
+  .nav-btn {
+    width: 38px; height: 38px; border: 1px solid var(--border);
+    background: var(--card); color: #c9d1d9; border-radius: 8px;
+    cursor: pointer; font-size: 17px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s;
+  }
+  .nav-btn:hover { background: #21262d; color: #fff; }
+  .nav-counter { font-size: 12px; color: var(--muted); min-width: 48px; text-align: center; }
+
+  .progress {
+    position: fixed; top: 0; left: 0; height: 3px;
+    background: var(--playbook); transition: width .3s ease; z-index: 100;
+  }
+  .slide-tag {
+    position: absolute; top: 20px; right: 36px;
+    font-size: 11px; color: var(--muted); letter-spacing: .05em;
+  }
+
+  .mb8  { margin-bottom:  8px; }
+  .mb12 { margin-bottom: 12px; }
+  .mb14 { margin-bottom: 14px; }
+  .mb16 { margin-bottom: 16px; }
+  .mt10 { margin-top: 10px; }
+  .mt12 { margin-top: 12px; }
+  .mt14 { margin-top: 14px; }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<div class="deck" id="deck">
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 1 · TITLE
+════════════════════════════════════════════════════════ -->
+<div class="slide active">
+  <div class="slide-tag">1 / 10</div>
+  <div class="label">Gemma — Playbook Effect</div>
+  <div class="divider"></div>
+  <h1>Does the Playbook<br><span class="accent-playbook">Change Everything?</span></h1>
+  <p class="subtitle">
+    Gemma ran the Hormuz Crisis simulation twice —<br>
+    once without context, once grounded in Singapore's decision playbook.<br>
+    The doctrine shifted completely.
+  </p>
+  <div style="display:flex;gap:10px;margin-top:28px;flex-wrap:wrap">
+    <span class="badge b-playbook">Singapore Playbook</span>
+    <span class="badge b-without">Without Playbook · 16 Apr</span>
+    <span class="badge b-with">With Playbook · 3 May</span>
+    <span class="badge b-truth">Ground Truth</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 2 · WHAT IS THE PLAYBOOK
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-tag">2 / 10</div>
+  <div class="label">The Playbook</div>
+  <h2>Singapore's <span class="accent-playbook">5-Move Crisis Sequence</span></h2>
+  <div class="move-strip mb14">
+    <div class="move-box">
+      <div class="move-num">1</div>
+      <div class="move-title">Contain &amp; Legalise</div>
+      <div class="move-desc">Reach for an existing statute before declaring emergency. ISA, POFMA, FICA, MRHA — purpose-built tools for almost every scenario.</div>
+    </div>
+    <div class="move-box">
+      <div class="move-num">2</div>
+      <div class="move-title">Preemptive Narrative Control</div>
+      <div class="move-desc">State speaks first, in volume, from the highest podium, in all four official languages. PM national broadcast for Tier-1 crises.</div>
+    </div>
+    <div class="move-box">
+      <div class="move-num">3</div>
+      <div class="move-title">Calibrated Openness</div>
+      <div class="move-desc">Assert principle (UNCLOS, rules-based order), decline escalation, disburse targeted financial relief within weeks using pre-built fiscal infrastructure.</div>
+    </div>
+    <div class="move-box">
+      <div class="move-num">4</div>
+      <div class="move-title">Elite Technocratic Consensus</div>
+      <div class="move-desc">Decisions consolidated through the Administrative Service pipeline. No public cabinet disagreement — iron rule. Dissent resolved internally first.</div>
+    </div>
+    <div class="move-box">
+      <div class="move-num">5</div>
+      <div class="move-title">Codify &amp; Institutionalise</div>
+      <div class="move-desc">Every significant crisis generates permanent institutional change within 18–36 months: new legislation, upgraded capacity, revised doctrine.</div>
+    </div>
+  </div>
+  <div class="grid-2" style="gap:12px">
+    <div class="card card-playbook">
+      <h3 class="accent-playbook">Will Reliably Do</h3>
+      <ul style="margin-top:6px">
+        <li>Default to legalism — statute, not discretion</li>
+        <li>Narrative control before substance</li>
+        <li>Targeted financial relief when citizens are affected</li>
+        <li>Calibrated assertiveness externally — principled, never submissive</li>
+        <li>Maintain both US security and China economic relationships simultaneously</li>
+      </ul>
+    </div>
+    <div class="card card-without">
+      <h3 class="accent-without">Will Not Do</h3>
+      <ul style="margin-top:6px">
+        <li>Declare Article 150 emergency unless mass violence is ongoing</li>
+        <li>Allow cabinet cracks to become publicly visible during a crisis</li>
+        <li>Choose between the US and China — hedging is the strategy</li>
+        <li>Tolerate racial inflammatory content without legal response</li>
+        <li>Apologise to another government for asserting sovereign rights</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 3 · WITHOUT PLAYBOOK DOCTRINE
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-tag">3 / 10</div>
+  <div class="label">Gemma — Without Playbook · 16 Apr</div>
+  <h2>Doctrine: <span class="accent-without">"Defensive Stealth &amp; Narrative Lock"</span></h2>
+  <div class="callout mb14" style="border-left-color: var(--without)">
+    Singapore acts decisively on every front — militarily, economically, diplomatically — but keeps <strong>all of it invisible to the public</strong>. The 8 April deadline is treated as a state secret. A whole-of-government "Narrative Lock" synchronises messaging across agencies twice daily.
+  </div>
+  <div class="grid-3" style="gap:12px;margin-bottom:12px">
+    <div class="card card-without">
+      <h3 class="accent-without">MFA — "Technical Shield"</h3>
+      <ul style="margin-top:5px">
+        <li>No political language; "Technical Maritime Coordination" only</li>
+        <li>Permitted lexicon: "Global Commons," "Maritime Stability," "Supply Chain Continuity"</li>
+        <li>No UNSC engagement; no ASEAN bloc-building</li>
+        <li>Primary lever: pharmaceutical tariff carve-out from the US</li>
+      </ul>
+    </div>
+    <div class="card card-without">
+      <h3 class="accent-without">MINDEF — "Defensive Stealth"</h3>
+      <ul style="margin-top:5px">
+        <li>RSF posture 100% classified</li>
+        <li>Readiness spikes masked as routine exercises</li>
+        <li>P-8A patrols scaled up under minimised electronic signature</li>
+        <li>FPDA decoupled from 8 April timeline</li>
+      </ul>
+    </div>
+    <div class="card card-without">
+      <h3 class="accent-without">MHA — "Absolute Narrative Control"</h3>
+      <ul style="margin-top:5px">
+        <li>8 April deadline scrubbed from all community-facing comms</li>
+        <li>All measures framed as "routine management"</li>
+        <li>0800h / 2000h narrative sync calls across all ministries</li>
+        <li>Stealth SPR releases — no public announcement of drawdowns</li>
+      </ul>
+    </div>
+  </div>
+  <div class="grid-2" style="gap:12px">
+    <div class="card card-blue">
+      <h3 class="accent-blue">PM's 5 Binding Constraints</h3>
+      <ul style="margin-top:5px">
+        <li><strong>Lexicon Lock</strong> — "peace," "justice," "reparations" banned publicly</li>
+        <li><strong>Defensive Stealth</strong> — MINDEF posture 100% classified</li>
+        <li><strong>Survival Floor</strong> — water and defence are the only Tier 1 fuel consumers</li>
+        <li><strong>Deadline Blackout</strong> — 8 April never mentioned publicly</li>
+        <li><strong>Pharma Red Line</strong> — US tariff carve-out is the mandatory bilateral objective</li>
+      </ul>
+    </div>
+    <div class="card card-without">
+      <h3 class="accent-without">Central Bet</h3>
+      <p style="margin-top:5px">Singapore can convert its logistical utility to the US (1990 MOU) into an economic concession (pharmaceutical tariff exemption) while maintaining public neutrality. <strong>Rated: medium confidence.</strong></p>
+      <p style="margin-top:8px">Transparency rejected as a hoarding catalyst. Deadline concealment rated as less harmful than exposure.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 4 · WITH PLAYBOOK DOCTRINE
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-tag">4 / 10</div>
+  <div class="label">Gemma — With Playbook · 3 May</div>
+  <h2>Doctrine: <span class="accent-with">"Law, Not Politics — The Competence Bet"</span></h2>
+  <div class="callout mb14" style="border-left-color: var(--with)">
+    A <strong>National Statement for immediate public release</strong>. Singapore decouples the political outcomes of the war from the legal necessity of open seas. Three explicit "bets" are stated publicly. The PM leads the communication directly.
+  </div>
+  <div class="grid-3" style="gap:12px;margin-bottom:12px">
+    <div class="card card-with">
+      <h3 class="accent-with">MFA — UNCLOS Frame</h3>
+      <ul style="margin-top:5px">
+        <li>"Reopening Hormuz is a mandatory requirement of international law"</li>
+        <li>Coordinating ASEAN-wide statement on universal transit rights</li>
+        <li>Framing Hormuz reopening as the definitive success metric for US operation</li>
+        <li>Malacca explicitly linked: "dry run for our own lifeline"</li>
+      </ul>
+    </div>
+    <div class="card card-with">
+      <h3 class="accent-with">MINDEF — Visible Maritime Protection</h3>
+      <ul style="margin-top:5px">
+        <li>Tiered Maritime Protection Framework publicly activated</li>
+        <li>RSN providing "targeted, low-visibility" escorts for critical vessels</li>
+        <li>"Total domain awareness" framing publicly stated</li>
+        <li>Singapore Strait saturated with surveillance assets</li>
+      </ul>
+    </div>
+    <div class="card card-with">
+      <h3 class="accent-with">MTI / MHA — Competence Delivery</h3>
+      <ul style="margin-top:5px">
+        <li>SPR drawdown publicly authorised and announced</li>
+        <li>"Volume-first" energy procurement strategy named publicly</li>
+        <li>Desalination plants designated Critical Priority 1</li>
+        <li>S$10B AI/R&amp;D pool designated contingency fund — publicly acknowledged trade-off</li>
+      </ul>
+    </div>
+  </div>
+  <div class="grid-3" style="gap:12px">
+    <div class="card card-playbook">
+      <h3 class="accent-playbook">The UNCLOS Bet</h3>
+      <p style="margin-top:5px">Framing reopening as a legal requirement — not a political victory — provides a diplomatic off-ramp for all parties to de-escalate.</p>
+    </div>
+    <div class="card card-playbook">
+      <h3 class="accent-playbook">The Deterrence Bet</h3>
+      <p style="margin-top:5px">Total domain awareness + disciplined naval presence in the Singapore Strait will deter opportunistic proxy actors from sympathy attacks.</p>
+    </div>
+    <div class="card card-playbook">
+      <h3 class="accent-playbook">The Competence Bet</h3>
+      <p style="margin-top:5px">Visible, decisive action — drawdown reserves, secure supply chains — preempts panic-buying and maintains the HDB social contract.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 5 · SIDE-BY-SIDE SHIFT
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-tag">5 / 10</div>
+  <div class="label">Head-to-Head</div>
+  <h2>The Shift: <span class="accent-playbook">Dimension by Dimension</span></h2>
+  <div class="change-row" style="background:#161b22;border-color:#30363d;margin-bottom:6px">
+    <div class="change-domain" style="color:var(--muted)">Domain</div>
+    <div class="change-arrow"></div>
+    <div class="change-before" style="color:var(--without);font-weight:700;font-size:11px">WITHOUT PLAYBOOK</div>
+    <div class="change-after"  style="color:var(--with);font-weight:700;font-size:11px">WITH PLAYBOOK</div>
+  </div>
+  <div class="change-row">
+    <div class="change-domain">Communication posture</div>
+    <div class="change-arrow">→</div>
+    <div class="change-before">Total stealth — all actions "routine management"</div>
+    <div class="change-after">PM-led National Statement for immediate public release</div>
+  </div>
+  <div class="change-row">
+    <div class="change-domain">Diplomatic frame</div>
+    <div class="change-arrow">→</div>
+    <div class="change-before">"Technical Maritime Coordination" — no political language</div>
+    <div class="change-after">"Law, Not Politics" — UNCLOS explicitly invoked</div>
+  </div>
+  <div class="change-row">
+    <div class="change-domain">ASEAN engagement</div>
+    <div class="change-arrow">→</div>
+    <div class="change-before">Technical energy coordination only; no political bloc</div>
+    <div class="change-after">ASEAN-wide statement on universal transit rights coordinated</div>
+  </div>
+  <div class="change-row">
+    <div class="change-domain">MINDEF posture</div>
+    <div class="change-arrow">→</div>
+    <div class="change-before">100% classified; readiness masked as routine exercises</div>
+    <div class="change-after">Tiered Maritime Protection Framework publicly activated</div>
+  </div>
+  <div class="change-row">
+    <div class="change-domain">Energy / SPR</div>
+    <div class="change-arrow">→</div>
+    <div class="change-before">Stealth drawdowns — no public announcement</div>
+    <div class="change-after">SPR drawdown publicly authorised and named</div>
+  </div>
+  <div class="change-row">
+    <div class="change-domain">Strategic trade-offs</div>
+    <div class="change-arrow">→</div>
+    <div class="change-before">Hidden; 8 April deadline a state secret</div>
+    <div class="change-after">Explicitly named — S$10B AI fund as contingency, publicly stated</div>
+  </div>
+  <div class="change-row">
+    <div class="change-domain">Primary US lever</div>
+    <div class="change-arrow">→</div>
+    <div class="change-before">Pharmaceutical tariff carve-out (covert trade)</div>
+    <div class="change-after">Hormuz reopening as the definitive US "win" — aligned interests</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 6 · DIPLOMATIC COMPARISON
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-tag">6 / 10</div>
+  <div class="label">Comparison — Diplomacy &amp; Maritime</div>
+  <h2>Diplomacy: <span class="accent-truth">How Each Aligned with Reality</span></h2>
+  <table class="ctable mb12">
+    <thead>
+      <tr>
+        <th>Dimension</th>
+        <th class="th-truth">Ground Truth</th>
+        <th class="th-without">Without Playbook</th>
+        <th class="th-with">With Playbook</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Public framing</td>
+        <td>Named Iran; UNCLOS transit = non-negotiable; "dry run for Malacca"</td>
+        <td><span class="miss">✗</span> "Technical Maritime Coordination" — no political language</td>
+        <td><span class="hit">✓</span> "Law, Not Politics" — UNCLOS explicitly invoked; Malacca linked</td>
+      </tr>
+      <tr>
+        <td>UNSC / UN</td>
+        <td>Co-sponsored UNSC Res. 2817; UNGA joint statement</td>
+        <td><span class="miss">✗</span> Not pursued</td>
+        <td><span class="part">~</span> ASEAN-wide statement coordinated; UNSC not explicitly mentioned</td>
+      </tr>
+      <tr>
+        <td>ASEAN role</td>
+        <td>FM attended ASEAN FM emergency meeting; condemned attacks</td>
+        <td><span class="miss">✗</span> Technical energy coordination only; no political bloc</td>
+        <td><span class="hit">✓</span> ASEAN-wide transit rights statement coordinated</td>
+      </tr>
+      <tr>
+        <td>Iran engagement</td>
+        <td>No direct negotiation; declined to engage politically</td>
+        <td><span class="hit">✓</span> Depoliticised; no direct engagement</td>
+        <td><span class="hit">✓</span> No political commentary on belligerents; legal frame only</td>
+      </tr>
+      <tr>
+        <td>US relationship</td>
+        <td>MOU maintained; no rupture signaled</td>
+        <td><span class="miss">✗</span> Framed as transactional — pharma tariff in exchange for logistics</td>
+        <td><span class="hit">✓</span> Interests aligned — Hormuz reopening framed as US "win"</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="grid-2" style="gap:12px">
+    <div class="card card-without">
+      <h3 class="accent-without">Without Playbook</h3>
+      <p><span class="miss">✗</span> Diplomatic posture was technically depoliticised but strategically hollow — no multilateral engagement, no ASEAN, no UNSC. Singapore's real instinct is to mobilise institutions, not go quiet.</p>
+    </div>
+    <div class="card card-with">
+      <h3 class="accent-with">With Playbook</h3>
+      <p><span class="hit">✓</span> UNCLOS as the legal frame, ASEAN coordination, aligned US interests — all match reality. The playbook's Rule 1 (rules-based order is existential) drove the entire diplomatic posture.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 7 · DEFENCE & ENERGY COMPARISON
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-tag">7 / 10</div>
+  <div class="label">Comparison — Defence &amp; Energy</div>
+  <h2>Defence &amp; Energy: <span class="accent-truth">How Each Aligned with Reality</span></h2>
+  <table class="ctable mb12">
+    <thead>
+      <tr>
+        <th>Dimension</th>
+        <th class="th-truth">Ground Truth</th>
+        <th class="th-without">Without Playbook</th>
+        <th class="th-with">With Playbook</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Defence public signaling</td>
+        <td>Chan Chun Sing "might makes right" speech; readiness to raise spending</td>
+        <td><span class="miss">✗</span> Zero — all movements 100% stealth, labelled routine</td>
+        <td><span class="part">~</span> Maritime Protection Framework publicly activated; escorts acknowledged</td>
+      </tr>
+      <tr>
+        <td>Troop deployment</td>
+        <td>None — no reservist recall, no deployment</td>
+        <td><span class="hit">✓</span> No deployment; defensive only</td>
+        <td><span class="hit">✓</span> Naval escorts only — no ground deployment</td>
+      </tr>
+      <tr>
+        <td>Energy procurement</td>
+        <td>Legal LNG diversification — Australia, US, Mozambique; IEA release</td>
+        <td><span class="part">~</span> Americas / West Africa pivot correct in direction; stealth wrong</td>
+        <td><span class="hit">✓</span> "Volume-first" non-Gulf procurement publicly committed</td>
+      </tr>
+      <tr>
+        <td>SPR / reserves</td>
+        <td>EMA activates "multiple lines of defence"; stockpile drawdown</td>
+        <td><span class="miss">✗</span> Stealth drawdowns — no public signal; panic risk cited as reason</td>
+        <td><span class="hit">✓</span> SPR drawdown publicly authorised — competence signal, not panic trigger</td>
+      </tr>
+      <tr>
+        <td>Fiscal relief</td>
+        <td>~S$1B package — CIT rebate, CDC vouchers, cost-of-living payments</td>
+        <td><span class="miss">✗</span> Not predicted</td>
+        <td><span class="part">~</span> S$10B contingency fund named; direct household relief not specified</td>
+      </tr>
+      <tr>
+        <td>IEA coordination</td>
+        <td>Singapore participates in largest-ever 400mb IEA release</td>
+        <td><span class="miss">✗</span> Not predicted</td>
+        <td><span class="miss">✗</span> Not predicted</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="card card-truth mt12">
+    <h3 class="accent-truth">Shared Blind Spot</h3>
+    <p>Neither run predicted IEA emergency oil release participation, MAS monetary tightening, or the aviation levy deferral — the economic statecraft layer was absent in both versions.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 8 · PUBLIC COMMUNICATION
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-tag">8 / 10</div>
+  <div class="label">Comparison — Public Communication</div>
+  <h2>Transparency: <span class="accent-truth">The Starkest Difference</span></h2>
+  <div class="callout mb14">
+    <strong>Ground truth:</strong> PM Wong publicly activated the Homefront Crisis Ministerial Committee, called the disruption "worst since 1973," warned of stagflation, and held parliamentary sessions where ministers gave specific figures on oil, LNG, and fiscal relief — all on the record.
+  </div>
+  <div class="grid-2" style="gap:14px;margin-bottom:12px">
+    <div class="card card-without">
+      <h3 class="accent-without">Without Playbook — Predicted</h3>
+      <ul style="margin-top:6px">
+        <li>8 April deadline = state secret; never mentioned publicly</li>
+        <li>All actions framed as "routine management"</li>
+        <li>Stealth reserve releases — no public announcement</li>
+        <li>0800h / 2000h whole-of-government narrative sync</li>
+        <li>Transparency rejected as a hoarding / panic catalyst</li>
+      </ul>
+      <div style="margin-top:10px"><span class="miss">✗ Opposite of reality</span></div>
+    </div>
+    <div class="card card-with">
+      <h3 class="accent-with">With Playbook — Predicted</h3>
+      <ul style="margin-top:6px">
+        <li>National Statement for immediate public release</li>
+        <li>PM personally frames the three strategic bets publicly</li>
+        <li>SPR drawdown and energy pivot publicly committed</li>
+        <li>Trade-offs named explicitly (S$10B AI fund as contingency)</li>
+        <li>MRHA / POFMA tools publicly invoked for social cohesion</li>
+      </ul>
+      <div style="margin-top:10px"><span class="hit">✓ Aligned with PM-led openness</span></div>
+    </div>
+  </div>
+  <div class="card card-playbook">
+    <h3 class="accent-playbook">What the Playbook Unlocked</h3>
+    <p>Move 2 of the playbook — "Preemptive Narrative Control" — flipped Gemma's model entirely. Without it, Gemma assumed transparency creates panic. With it, Gemma understood that Singapore's legitimacy contract requires <strong>visible competence delivery</strong>: the government must be seen to act decisively, or the social contract erodes faster than any supply shock.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 9 · SCORECARD
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-tag">9 / 10</div>
+  <div class="label">Evaluation</div>
+  <h2>Scorecard: <span class="accent-truth">Hits, Partials, Misses</span></h2>
+  <table class="ctable mb12">
+    <thead>
+      <tr>
+        <th>Domain</th>
+        <th class="th-without">Without Playbook</th>
+        <th class="th-with">With Playbook</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Diplomatic framing</td>
+        <td><span class="miss">✗</span> "Technical Shield" — too silent; Singapore named Iran directly</td>
+        <td><span class="hit">✓</span> UNCLOS frame, ASEAN coordination, aligned US interests</td>
+      </tr>
+      <tr>
+        <td>Defence posture</td>
+        <td><span class="miss">✗</span> Total stealth — reality was public ministerial signaling</td>
+        <td><span class="part">~</span> Maritime Protection Framework public; escorts acknowledged</td>
+      </tr>
+      <tr>
+        <td>Energy procurement</td>
+        <td><span class="part">~</span> Right direction (non-Gulf); stealth framing wrong</td>
+        <td><span class="hit">✓</span> "Volume-first" non-Gulf pivot publicly committed</td>
+      </tr>
+      <tr>
+        <td>SPR / reserves</td>
+        <td><span class="miss">✗</span> Stealth releases; transparency rejected</td>
+        <td><span class="hit">✓</span> Drawdown publicly authorised — matched EMA "multiple lines" activation</td>
+      </tr>
+      <tr>
+        <td>Public communication</td>
+        <td><span class="miss">✗</span> Narrative lock predicted; reality was PM-led openness</td>
+        <td><span class="hit">✓</span> PM-led national statement; explicit trade-offs named</td>
+      </tr>
+      <tr>
+        <td>Fiscal household relief</td>
+        <td><span class="miss">✗</span> Not predicted</td>
+        <td><span class="part">~</span> Contingency fund named; S$1B direct relief package not predicted</td>
+      </tr>
+      <tr>
+        <td>MAS monetary tightening</td>
+        <td><span class="miss">✗</span> Not predicted</td>
+        <td><span class="miss">✗</span> Not predicted</td>
+      </tr>
+      <tr>
+        <td>IEA / multilateral coordination</td>
+        <td><span class="miss">✗</span> Not predicted</td>
+        <td><span class="miss">✗</span> Not predicted</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="stat-row">
+    <div class="stat"><div class="stat-val accent-without">1 / 8</div><div class="stat-label">Without Playbook — clear hits</div></div>
+    <div class="stat"><div class="stat-val accent-with">4 / 8</div><div class="stat-label">With Playbook — clear hits</div></div>
+    <div class="stat"><div class="stat-val accent-playbook">+3</div><div class="stat-label">Additional domains correct</div></div>
+    <div class="stat"><div class="stat-val accent-truth">2 / 8</div><div class="stat-label">Domains both runs missed</div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 10 · KEY INSIGHTS
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-tag">10 / 10</div>
+  <div class="label">Conclusion</div>
+  <h2>What the Playbook <span class="accent-playbook">Changed — and Didn't</span></h2>
+  <div class="callout mb14">
+    <strong>The single biggest shift:</strong> Without the playbook, Gemma assumed transparency causes panic and chose stealth. With it, Gemma understood that Singapore's legitimacy rests on <strong>visible competence delivery</strong> — and flipped its entire doctrine to match.
+  </div>
+  <div class="grid-3 mb14" style="gap:12px">
+    <div class="card card-with">
+      <h3 class="accent-with">What the Playbook Fixed</h3>
+      <ul style="margin-top:6px">
+        <li>Transparency vs. stealth — correct direction unlocked</li>
+        <li>UNCLOS as the legal frame — rules-based instinct restored</li>
+        <li>ASEAN multilateral engagement — institutional reflex added</li>
+        <li>SPR publicly authorised — competence signal, not panic</li>
+        <li>US alignment through shared legal interest, not transactional bargain</li>
+      </ul>
+    </div>
+    <div class="card card-playbook">
+      <h3 class="accent-playbook">Why It Worked</h3>
+      <ul style="margin-top:6px">
+        <li>The playbook's 5-move sequence directly counter-programmed Gemma's stealth instinct</li>
+        <li>Move 2 (Preemptive Narrative Control) — PM speaks first, loudly</li>
+        <li>Move 3 (Calibrated Openness) — assert principle, disburse relief, keep channels open</li>
+        <li>Foreign policy Rule 1: rules-based order is Singapore's existential interest</li>
+      </ul>
+    </div>
+    <div class="card card-without">
+      <h3 class="accent-without">What the Playbook Didn't Fix</h3>
+      <ul style="margin-top:6px">
+        <li>IEA emergency oil release — multilateral economic coordination missed</li>
+        <li>MAS monetary tightening — macro policy response absent</li>
+        <li>S$1B direct household fiscal relief — not predicted in either run</li>
+        <li>Aviation levy deferral — sector-specific response not modelled</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card card-truth">
+    <h3 class="accent-truth">The Remaining Gap: Economic Statecraft</h3>
+    <p>Both runs focused on crisis <em>management</em> — posture, narrative, supply chains. Neither modelled Singapore's proactive use of fiscal and monetary tools as institutional confidence signals. The playbook grounded the political and diplomatic instincts well; the economic statecraft layer requires a separate grounding document to surface.</p>
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<div class="nav">
+  <button class="nav-btn" onclick="navigate(-1)">&#8592;</button>
+  <span class="nav-counter" id="counter">1 / 10</span>
+  <button class="nav-btn" onclick="navigate(1)">&#8594;</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  function navigate(dir) {
+    slides[current].classList.remove('active');
+    current = Math.max(0, Math.min(total - 1, current + dir));
+    slides[current].classList.add('active');
+    document.getElementById('counter').textContent = (current + 1) + ' / ' + total;
+    document.getElementById('progress').style.width = ((current + 1) / total * 100) + '%';
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') navigate(1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                     navigate(-1);
+  });
+
+  document.getElementById('progress').style.width = (1 / total * 100) + '%';
+</script>
+</body>
+</html>
