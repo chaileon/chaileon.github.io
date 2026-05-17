@@ -32,7 +32,7 @@ from pathlib import Path
 import requests
 
 OLLAMA_URL = "http://localhost:11434"
-MODEL = "gemma4:latest"
+MODEL = "gemma4:e4b"
 
 # ════════════════════════════════════════════════════════════════════════════
 #  PERSUADER SYSTEM PROMPT — edit this to change the persuader's strategy.
