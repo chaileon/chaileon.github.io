@@ -438,11 +438,13 @@
 
       <li>
         <div class="step-body">
-          <strong>Confirm the model is ready</strong>
+          <strong>Load the model</strong>
           <p>
-            Once the cell finishes you should see Ollama confirm that the
-            model has been pulled successfully. No separate "load model"
-            step is required.
+            Run the second code cell. It pulls <code>gemma4:e4b</code> and
+            waits until the model is fully loaded into GPU memory before
+            continuing. This may take several minutes. You will see
+            <em>"Model not loaded yet. Waiting..."</em> until it is ready,
+            followed by <em>"model loaded"</em>.
           </p>
         </div>
       </li>
