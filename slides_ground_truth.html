@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Singapore Hormuz Response — Ground Truth</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #0d1117;
+    color: #e6edf3;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .deck { width: 100vw; height: 100vh; position: relative; }
+
+  .slide {
+    display: none;
+    position: absolute;
+    inset: 0;
+    padding: 44px 68px;
+    flex-direction: column;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+  }
+  .slide.active { display: flex; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  :root {
+    --red:       #f85149;
+    --orange:    #e3800a;
+    --yellow:    #e3b341;
+    --green:     #3fb950;
+    --blue:      #58a6ff;
+    --purple:    #bc8cff;
+    --teal:      #2dd4bf;
+    --muted:     #8b949e;
+    --border:    #30363d;
+    --card:      #161b22;
+    --truth:     #e3b341;
+    --diplo:     #58a6ff;
+    --defence:   #f85149;
+    --energy:    #e3800a;
+    --civil:     #3fb950;
+    --maritime:  #2dd4bf;
+    --fiscal:    #bc8cff;
+    --monetary:  #e3b341;
+  }
+
+  .label {
+    font-size: 11px; font-weight: 700; letter-spacing: .15em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 10px;
+  }
+  h1 { font-size: 46px; font-weight: 800; line-height: 1.1; color: #f0f6fc; }
+  h2 { font-size: 29px; font-weight: 700; color: #f0f6fc; margin-bottom: 16px; }
+  h3 { font-size: 13.5px; font-weight: 700; margin-bottom: 5px; }
+  p, li { font-size: 12.5px; color: #c9d1d9; line-height: 1.55; }
+  ul { padding-left: 16px; }
+  li { margin-bottom: 3px; }
+
+  .subtitle { font-size: 16px; color: var(--muted); margin-top: 14px; line-height: 1.5; }
+  .divider  { width: 56px; height: 4px; background: var(--truth); border-radius: 2px; margin: 18px 0; }
+
+  .badge {
+    display: inline-block; padding: 2px 9px; border-radius: 20px;
+    font-size: 10.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+  }
+  .b-diplo    { background: rgba(88,166,255,.15);   color: var(--diplo); }
+  .b-defence  { background: rgba(248,81,73,.15);    color: var(--defence); }
+  .b-energy   { background: rgba(227,128,10,.15);   color: var(--energy); }
+  .b-civil    { background: rgba(63,185,80,.15);    color: var(--civil); }
+  .b-maritime { background: rgba(45,212,191,.15);   color: var(--maritime); }
+  .b-fiscal   { background: rgba(188,140,255,.15);  color: var(--fiscal); }
+  .b-monetary { background: rgba(227,179,65,.15);   color: var(--monetary); }
+  .b-truth    { background: rgba(227,179,65,.15);   color: var(--truth); }
+
+  .accent-truth    { color: var(--truth); }
+  .accent-diplo    { color: var(--diplo); }
+  .accent-defence  { color: var(--defence); }
+  .accent-energy   { color: var(--energy); }
+  .accent-civil    { color: var(--civil); }
+  .accent-maritime { color: var(--maritime); }
+  .accent-fiscal   { color: var(--fiscal); }
+  .accent-monetary { color: var(--monetary); }
+
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 13px 17px;
+  }
+  .card-diplo    { border-left: 3px solid var(--diplo); }
+  .card-defence  { border-left: 3px solid var(--defence); }
+  .card-energy   { border-left: 3px solid var(--energy); }
+  .card-civil    { border-left: 3px solid var(--civil); }
+  .card-maritime { border-left: 3px solid var(--maritime); }
+  .card-fiscal   { border-left: 3px solid var(--fiscal); }
+  .card-monetary { border-left: 3px solid var(--monetary); }
+  .card-truth    { border-left: 3px solid var(--truth); }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
+
+  /* timeline */
+  .timeline { display: flex; flex-direction: column; gap: 7px; }
+  .tevent {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 9px 13px;
+  }
+  .tdate  { min-width: 120px; font-size: 11px; font-weight: 700; color: var(--truth); line-height: 1.4; }
+  .tcat   { min-width: 88px; }
+  .ttext  { font-size: 12px; color: #c9d1d9; line-height: 1.45; }
+  .ttext strong { color: #f0f6fc; }
+
+  .callout {
+    background: #1c2128; border: 1px solid var(--border);
+    border-left: 4px solid var(--truth);
+    border-radius: 8px; padding: 13px 17px;
+    font-size: 12.5px; line-height: 1.6; color: #c9d1d9;
+  }
+  .callout strong { color: #f0f6fc; }
+
+  .stat-row { display: flex; gap: 12px; }
+  .stat {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 14px; flex: 1; text-align: center;
+  }
+  .stat-val   { font-size: 22px; font-weight: 800; }
+  .stat-label { font-size: 10px; color: var(--muted); margin-top: 3px; line-height: 1.4; }
+
+  /* phase strip */
+  .phase-strip { display: flex; gap: 0; margin-bottom: 14px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+  .phase-box   { flex: 1; padding: 10px 12px; text-align: center; background: var(--card); border-right: 1px solid var(--border); }
+  .phase-box:last-child { border-right: none; }
+  .phase-date  { font-size: 10px; font-weight: 700; color: var(--muted); }
+  .phase-name  { font-size: 12px; font-weight: 700; color: #f0f6fc; margin: 3px 0; }
+  .phase-desc  { font-size: 10.5px; color: var(--muted); line-height: 1.35; }
+
+  .nav {
+    position: fixed; bottom: 24px; right: 36px;
+    display: flex; align-items: center; gap: 12px; z-index: 100;
+  }
+  .nav-btn {
+    width: 38px; height: 38px; border: 1px solid var(--border);
+    background: var(--card); color: #c9d1d9; border-radius: 8px;
+    cursor: pointer; font-size: 17px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s;
+  }
+  .nav-btn:hover { background: #21262d; color: #fff; }
+  .nav-counter { font-size: 12px; color: var(--muted); min-width: 48px; text-align: center; }
+
+  .progress {
+    position: fixed; top: 0; left: 0; height: 3px;
+    background: var(--truth); transition: width .3s ease; z-index: 100;
+  }
+  .slide-tag {
+    position: absolute; top: 20px; right: 36px;
+    font-size: 11px; color: var(--muted); letter-spacing: .05em;
+  }
+
+  .mb8  { margin-bottom:  8px; }
+  .mb10 { margin-bottom: 10px; }
+  .mb12 { margin-bottom: 12px; }
+  .mb14 { margin-bottom: 14px; }
+  .mb16 { margin-bottom: 16px; }
+  .mt10 { margin-top: 10px; }
+  .mt12 { margin-top: 12px; }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+<div class="deck" id="deck">
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 1 · TITLE
+════════════════════════════════════════════════════════ -->
+<div class="slide active">
+  <div class="slide-tag">1 / 9</div>
+  <div class="label">Ground Truth · Feb–Apr 2026</div>
+  <div class="divider"></div>
+  <h1>Singapore's <span class="accent-truth">Hormuz Response</span></h1>
+  <p class="subtitle">
+    What the Singapore government actually did, ministry by ministry,<br>
+    from the first strike on 28 February to late April 2026.
+  </p>
+  <div style="display:flex;gap:10px;margin-top:28px;flex-wrap:wrap">
+    <span class="badge b-diplo">Diplomatic</span>
+    <span class="badge b-defence">Defence</span>
+    <span class="badge b-energy">Energy</span>
+    <span class="badge b-civil">Civil Preparedness</span>
+    <span class="badge b-fiscal">Fiscal Relief</span>
+    <span class="badge b-maritime">Maritime</span>
+    <span class="badge b-monetary">Monetary</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 2 · PHASES OVERVIEW
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-tag">2 / 9</div>
+  <div class="label">Overview</div>
+  <h2>Four Phases of <span class="accent-truth">Singapore's Response</span></h2>
+  <div class="phase-strip">
+    <div class="phase-box">
+      <div class="phase-date">28 Feb – 13 Mar</div>
+      <div class="phase-name">Immediate Response</div>
+      <div class="phase-desc">First statements, evacuation flights, UNSC co-sponsorship, IEA emergency release</div>
+    </div>
+    <div class="phase-box">
+      <div class="phase-date">12 Mar – 31 Mar</div>
+      <div class="phase-name">Energy Stabilisation</div>
+      <div class="phase-desc">EMA activates multiple lines of defence, LNG diversification, tariff raised 2.1%</div>
+    </div>
+    <div class="phase-box">
+      <div class="phase-date">2 Apr – 9 Apr</div>
+      <div class="phase-name">Public Escalation</div>
+      <div class="phase-desc">HCMC activated, full parliamentary sessions, S$1B relief package, PM visits defence HQ</div>
+    </div>
+    <div class="phase-box">
+      <div class="phase-date">14 Apr – 22 Apr</div>
+      <div class="phase-name">Institutionalisation</div>
+      <div class="phase-desc">MAS tightens monetary policy, UNGA statement, Singapore Maritime Week crisis framing</div>
+    </div>
+  </div>
+  <div class="stat-row mb12">
+    <div class="stat"><div class="stat-val accent-diplo">7</div><div class="stat-label">Diplomatic actions (MFA, UNSC, ASEAN, UNGA)</div></div>
+    <div class="stat"><div class="stat-val accent-defence">2</div><div class="stat-label">Defence posture signals (no deployment)</div></div>
+    <div class="stat"><div class="stat-val accent-energy">4</div><div class="stat-label">Energy security actions (EMA, MTI, IEA)</div></div>
+    <div class="stat"><div class="stat-val accent-fiscal">1</div><div class="stat-label">Fiscal relief package (~S$1B)</div></div>
+    <div class="stat"><div class="stat-val accent-maritime">3</div><div class="stat-label">Maritime / aviation actions (MPA, CAAS, IMO)</div></div>
+    <div class="stat"><div class="stat-val accent-monetary">1</div><div class="stat-label">Monetary policy tightening (MAS)</div></div>
+  </div>
+  <div class="callout">
+    <strong>Central posture:</strong> Singapore acted across every domain simultaneously — but always through existing legal tools, with maximum institutional visibility, and without a single troop deployment or reservist recall.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 3 · FULL TIMELINE (Feb – mid Mar)
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-tag">3 / 9</div>
+  <div class="label">Timeline · 28 Feb – 13 Mar</div>
+  <h2>Phase 1: <span class="accent-truth">Immediate Response</span></h2>
+  <div class="timeline">
+    <div class="tevent">
+      <div class="tdate">27 Feb · MINDEF</div>
+      <div class="tcat"><span class="badge b-defence">Defence</span></div>
+      <div class="ttext">Chan Chun Sing warns of a <strong>"might makes right"</strong> world; signals readiness to raise defence spending if needed.</div>
+    </div>
+    <div class="tevent">
+      <div class="tdate">28 Feb · MFA</div>
+      <div class="tcat"><span class="badge b-diplo">Diplomatic</span></div>
+      <div class="ttext">"Regrets" US-Israel strikes and Iranian retaliation; calls for de-escalation <strong>without condemning any party</strong>.</div>
+    </div>
+    <div class="tevent">
+      <div class="tdate">7–13 Mar · MFA / MINDEF</div>
+      <div class="tcat"><span class="badge b-diplo">Consular</span></div>
+      <div class="ttext">Four evacuation flights (2× SIA charters, 2× RSAF A330 MRTT) repatriate <strong>218+ Singaporeans</strong> from Riyadh, Jeddah, Muscat; spare seats offered to ASEAN nationals.</div>
+    </div>
+    <div class="tevent">
+      <div class="tdate">11 Mar · UNSC</div>
+      <div class="tcat"><span class="badge b-diplo">Multilateral</span></div>
+      <div class="ttext">Singapore <strong>co-sponsors UNSC Resolution 2817</strong> condemning Iran's attacks on Gulf states and threats to close Hormuz (adopted 13-0-2).</div>
+    </div>
+    <div class="tevent">
+      <div class="tdate">11 Mar · IEA</div>
+      <div class="tcat"><span class="badge b-energy">Energy</span></div>
+      <div class="ttext">IEA triggers <strong>largest-ever 400 mb</strong> coordinated emergency oil release; Singapore participates through the IEA Regional Cooperation Centre in Singapore.</div>
+    </div>
+    <div class="tevent">
+      <div class="tdate">13 Mar · MFA / ASEAN</div>
+      <div class="tcat"><span class="badge b-diplo">Regional</span></div>
+      <div class="ttext">FM Balakrishnan attends ASEAN FM emergency meeting; <strong>condemns Iran's attacks on Gulf civilian targets</strong>; calls for ceasefire and humanitarian access.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 4 · TIMELINE (mid Mar – 31 Mar)
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-tag">4 / 9</div>
+  <div class="label">Timeline · 12 Mar – 31 Mar</div>
+  <h2>Phase 2: <span class="accent-truth">Energy Stabilisation</span></h2>
+  <div class="timeline mb12">
+    <div class="tevent">
+      <div class="tdate">12–20 Mar · MTI / EMA</div>
+      <div class="tcat"><span class="badge b-energy">Energy</span></div>
+      <div class="ttext">Minister Tan See Leng confirms ~50% of gas supply is piped regionally and <strong>unaffected</strong>; EMA activates <strong>"multiple lines of defence"</strong> — strategic stockpiles, gas-diesel turbine switching, LNG diversification to Australia, US, Mozambique.</div>
+    </div>
+    <div class="tevent">
+      <div class="tdate">Mar · MPA</div>
+      <div class="tcat"><span class="badge b-maritime">Maritime</span></div>
+      <div class="ttext">MPA issues shipping advisories to all Singapore-registered vessel operators; Information Fusion Centre raises monitoring tempo for <strong>~4,230 registry ships</strong>.</div>
+    </div>
+    <div class="tevent">
+      <div class="tdate">25 Mar · CAAS</div>
+      <div class="tcat"><span class="badge b-fiscal">Fiscal</span></div>
+      <div class="ttext">Sustainable Aviation Fuel levy <strong>deferred six months</strong> (Apr → Oct 2026) citing oil-price shock from the conflict.</div>
+    </div>
+    <div class="tevent">
+      <div class="tdate">31 Mar · EMA</div>
+      <div class="tcat"><span class="badge b-energy">Energy</span></div>
+      <div class="ttext">Electricity tariff <strong>raised 2.1% to 29.72¢/kWh</strong> for Q2 2026; EMA warns of further "sharper increases" in subsequent quarters.</div>
+    </div>
+  </div>
+  <div class="grid-2" style="gap:12px">
+    <div class="card card-energy">
+      <h3 class="accent-energy">Energy Posture: Calibrated Openness</h3>
+      <p>Singapore publicly acknowledged the shock — tariff raised, EMA activates named protocols — but framed it as managed, not emergency. The ~50% regionally-piped gas was the key stabilising fact surfaced early to pre-empt panic.</p>
+    </div>
+    <div class="card card-maritime">
+      <h3 class="accent-maritime">Maritime: Monitoring Before Posturing</h3>
+      <p>MPA elevated monitoring tempo across ~4,230 ships — one of the largest registry fleets in the world — without any kinetic action. Information superiority over posturing.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 5 · TIMELINE (2 Apr – 9 Apr)
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-tag">5 / 9</div>
+  <div class="label">Timeline · 2 Apr – 9 Apr</div>
+  <h2>Phase 3: <span class="accent-truth">Public Escalation — Parliament Week</span></h2>
+  <div class="timeline">
+    <div class="tevent">
+      <div class="tdate">2 Apr · PMO</div>
+      <div class="tcat"><span class="badge b-civil">Civil Prep</span></div>
+      <div class="ttext">PM Lawrence Wong publicly activates <strong>Homefront Crisis Ministerial Committee</strong>; warns of stagflation risk; calls disruption <strong>"worst since 1973."</strong></div>
+    </div>
+    <div class="tevent">
+      <div class="tdate">7 Apr · MFA (Parliament)</div>
+      <div class="tcat"><span class="badge b-diplo">Diplomatic</span></div>
+      <div class="ttext">FM Balakrishnan asserts <strong>UNCLOS Article 44</strong> transit passage is a non-negotiable right; confirms Singapore <strong>declined to negotiate with Iran</strong>; calls Hormuz a potential <strong>"dry run" for Malacca</strong>.</div>
+    </div>
+    <div class="tevent">
+      <div class="tdate">7 Apr · MTI (Parliament)</div>
+      <div class="tcat"><span class="badge b-energy">Energy</span></div>
+      <div class="ttext">DPM Gan quantifies shock: <strong>Brent doubled to US$141/bbl, LNG doubled to US$22/MMBtu</strong>; confirms refinery run-rate cuts and Petrochemical Corp force majeure; outlines energy diversification plan.</div>
+    </div>
+    <div class="tevent">
+      <div class="tdate">7 Apr · MOF (Parliament)</div>
+      <div class="tcat"><span class="badge b-fiscal">Fiscal</span></div>
+      <div class="ttext">Acting Minister Jeffrey Siow announces <strong>~S$1B support package</strong>: CIT rebate raised to 50%, S$500 CDC Vouchers (June 2026), S$400–600 cost-of-living payments to 2.4M Singaporeans, S$200 grant to platform workers. <strong>Fuel duty cuts explicitly rejected.</strong></div>
+    </div>
+    <div class="tevent">
+      <div class="tdate">7 Apr · MHA (Parliament)</div>
+      <div class="tcat"><span class="badge b-civil">Civil Prep</span></div>
+      <div class="ttext">Shanmugam details HCMC workstreams; ICA checkpoint security checks increased; police patrols stepped up at areas of concern.</div>
+    </div>
+    <div class="tevent">
+      <div class="tdate">9 Apr · PMO / MINDEF</div>
+      <div class="tcat"><span class="badge b-defence">Defence</span></div>
+      <div class="ttext">PM Wong visits 6th Division HQ; cites Iran war and Ukraine as rationale for <strong>accelerating unmanned and cross-domain SAF integration</strong>. <strong>No troop deployment or reservist recall announced.</strong></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 6 · TIMELINE (Apr 14 – Apr 22)
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-tag">6 / 9</div>
+  <div class="label">Timeline · 14 Apr – 22 Apr</div>
+  <h2>Phase 4: <span class="accent-truth">Institutionalisation</span></h2>
+  <div class="timeline mb12">
+    <div class="tevent">
+      <div class="tdate">14 Apr · MAS</div>
+      <div class="tcat"><span class="badge b-monetary">Monetary</span></div>
+      <div class="ttext">MAS tightens monetary policy — <strong>first since 2022</strong> — slight increase in S$NEER appreciation slope; raises inflation forecasts to <strong>1.5–2.5% for 2026</strong>; cites Hormuz shipping constraint and commodity price surge.</div>
+    </div>
+    <div class="tevent">
+      <div class="tdate">16 Apr · MFA / UNGA</div>
+      <div class="tcat"><span class="badge b-diplo">Multilateral</span></div>
+      <div class="ttext">Ambassador Burhan Gafoor delivers joint statement with <strong>Fiji, Jamaica and Malta</strong> at UNGA calling for unimpeded transit passage in Hormuz; states <strong>"for small states, rule of law is a matter of survival."</strong></div>
+    </div>
+    <div class="tevent">
+      <div class="tdate">21 Apr · MPA / MOT</div>
+      <div class="tcat"><span class="badge b-maritime">Maritime</span></div>
+      <div class="ttext">Singapore Maritime Week 2026 opens; DPM Gan warns disruptions will be <strong>"increasingly frequent"</strong>; MPA engages IMO on safe maritime corridor for stranded seafarers.</div>
+    </div>
+    <div class="tevent">
+      <div class="tdate">22 Apr · MFA</div>
+      <div class="tcat"><span class="badge b-diplo">Diplomatic</span></div>
+      <div class="ttext">FM Balakrishnan at CNBC Converge Live reiterates Hormuz as <strong>"dry run" warning</strong>; reaffirms Singapore–Malaysia–Indonesia <strong>no-toll commitment for Malacca Straits</strong>.</div>
+    </div>
+  </div>
+  <div class="callout">
+    <strong>Pattern:</strong> Phase 4 was not wind-down — it was entrenchment. MAS tightening, UNGA coalition-building, and Maritime Week framing all converted the acute crisis response into durable institutional signals about Singapore's future posture on maritime security and small-state sovereignty.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 7 · DIPLOMATIC DEEP DIVE
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-tag">7 / 9</div>
+  <div class="label">Deep Dive — Diplomacy</div>
+  <h2>Diplomatic Posture: <span class="accent-diplo">Principled Assertiveness</span></h2>
+  <div class="grid-2 mb12" style="gap:12px">
+    <div class="card card-diplo">
+      <h3 class="accent-diplo">The Legal Frame</h3>
+      <ul style="margin-top:6px">
+        <li>UNCLOS Article 44: transit passage through international straits is a <strong>non-negotiable right</strong>, not a toll or privilege</li>
+        <li>Singapore declined to engage Iran politically — no negotiation, no back-channel</li>
+        <li>Hormuz explicitly framed as a <strong>"dry run" for Malacca</strong> — the stakes made explicit</li>
+        <li>Rule of law framed as a matter of <strong>survival for small states</strong>, not abstract principle</li>
+      </ul>
+    </div>
+    <div class="card card-diplo">
+      <h3 class="accent-diplo">Multilateral Escalation</h3>
+      <ul style="margin-top:6px">
+        <li><strong>UNSC Res. 2817</strong> co-sponsored (13-0-2): condemned Iran's attacks on Gulf states</li>
+        <li><strong>ASEAN FM emergency meeting</strong>: named Iran, called for ceasefire</li>
+        <li><strong>UNGA joint statement</strong> with Fiji, Jamaica, Malta: unimpeded transit passage</li>
+        <li>Named Iran publicly — no "technical" language; blocs mobilised at every level</li>
+      </ul>
+    </div>
+  </div>
+  <div class="grid-3" style="gap:12px">
+    <div class="card card-diplo">
+      <h3 class="accent-diplo">Bilateral (US)</h3>
+      <p>No explicit statement on 1990 MOU; no rupture signaled. Singapore's interests and US interests aligned on Hormuz reopening — no transactional bargain needed.</p>
+    </div>
+    <div class="card card-diplo">
+      <h3 class="accent-diplo">Regional (ASEAN / Malacca)</h3>
+      <p>Singapore–Malaysia–Indonesia no-toll commitment for Malacca reaffirmed publicly. Hormuz framed as a precedent-setting case for all chokepoints globally.</p>
+    </div>
+    <div class="card card-diplo">
+      <h3 class="accent-diplo">Consular</h3>
+      <p>218+ Singaporeans evacuated across four flights; ASEAN nationals given spare seats. Practical care for citizens demonstrated within the first two weeks.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 8 · ECONOMIC RESPONSE
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-tag">8 / 9</div>
+  <div class="label">Deep Dive — Economic Response</div>
+  <h2>Economic Statecraft: <span class="accent-truth">The Surprise Layer</span></h2>
+  <div class="callout mb12">
+    <strong>The shock:</strong> Brent doubled to <strong>US$141/bbl</strong>, LNG doubled to <strong>US$22/MMBtu</strong>. Refinery run-rate cuts and Petrochemical Corporation force majeure confirmed publicly in Parliament. DPM called it the "worst energy disruption since 1973."
+  </div>
+  <div class="grid-2 mb12" style="gap:12px">
+    <div class="card card-energy">
+      <h3 class="accent-energy">Energy Actions</h3>
+      <ul style="margin-top:6px">
+        <li>IEA 400mb emergency release — Singapore participates (largest ever)</li>
+        <li>EMA activates "multiple lines of defence": stockpiles, gas-diesel switching, LNG pivot to Australia, US, Mozambique</li>
+        <li>Tariff raised 2.1% to 29.72¢/kWh — publicly announced, not suppressed</li>
+        <li>~50% regionally piped gas confirmed unaffected — key stabilising fact surfaced early</li>
+      </ul>
+    </div>
+    <div class="card card-fiscal">
+      <h3 class="accent-fiscal">Fiscal Relief — ~S$1B Package</h3>
+      <ul style="margin-top:6px">
+        <li>Corporate Income Tax rebate raised to <strong>50%</strong></li>
+        <li>S$500 CDC Vouchers brought forward to June 2026</li>
+        <li>S$400–600 cost-of-living payments to <strong>2.4 million</strong> Singaporeans</li>
+        <li>S$200 grant to platform workers</li>
+        <li>Fuel duty cuts <strong>explicitly rejected</strong> — price signal preserved</li>
+      </ul>
+    </div>
+  </div>
+  <div class="grid-2" style="gap:12px">
+    <div class="card card-monetary">
+      <h3 class="accent-monetary">Monetary Policy (MAS · 14 Apr)</h3>
+      <p>First tightening since 2022. S$NEER appreciation slope increased; 2026 inflation forecast raised to 1.5–2.5%. MAS chose to tighten — not ease — signalling confidence in economic resilience and prioritising inflation control over short-term growth cushioning.</p>
+    </div>
+    <div class="card card-maritime">
+      <h3 class="accent-maritime">Aviation — CAAS Lever</h3>
+      <p>SAF levy deferred six months (Apr → Oct 2026). A targeted, sector-specific measure to absorb the jet fuel shock without broad subsidy — consistent with Singapore's preference for precision instruments over blanket relief.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 9 · KEY THEMES
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-tag">9 / 9</div>
+  <div class="label">Synthesis</div>
+  <h2>Five Themes Across <span class="accent-truth">Singapore's Response</span></h2>
+  <div class="grid-2 mb12" style="gap:12px">
+    <div>
+      <div class="card card-diplo mb10">
+        <h3 class="accent-diplo">1 — Legal frame over political comment</h3>
+        <p>Singapore never commented on the legitimacy of the strikes. It anchored every statement to UNCLOS, international law, and the rules-based order — making the legal argument a shield for the practical interest.</p>
+      </div>
+      <div class="card card-civil mb10">
+        <h3 class="accent-civil">2 — Visible competence as the stability signal</h3>
+        <p>PM activated HCMC publicly, named the crisis "worst since 1973," and held full parliamentary sessions with specific figures. Transparency was the tool — not the risk.</p>
+      </div>
+      <div class="card card-energy">
+        <h3 class="accent-energy">3 — Multilateral amplification of bilateral interests</h3>
+        <p>UNSC, ASEAN FM meeting, UNGA coalition with small states — every bilateral interest (Hormuz, Malacca) was multilateralised to make Singapore's position harder to ignore and easier to sustain.</p>
+      </div>
+    </div>
+    <div>
+      <div class="card card-fiscal mb10">
+        <h3 class="accent-fiscal">4 — Economic statecraft as institutional confidence</h3>
+        <p>The S$1B fiscal package, MAS tightening, IEA participation, and SAF levy deferral were not just crisis management — they were signals that Singapore's institutions could absorb and respond to the shock without improvisation.</p>
+      </div>
+      <div class="card card-defence mb10">
+        <h3 class="accent-defence">5 — Defence signalling without deployment</h3>
+        <p>Chan Chun Sing's "might makes right" speech and PM's HQ visit signalled readiness and acceleration of SAF modernisation — but no troops deployed, no reservists recalled. Words did the deterrence work.</p>
+      </div>
+      <div class="card card-truth">
+        <h3 class="accent-truth">The Synthesis</h3>
+        <p>Singapore treated the Hormuz crisis as an opportunity to demonstrate institutional competence — not merely survive it. Every action served a dual purpose: address the immediate shock and reinforce the long-term credibility of the Singapore model.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<div class="nav">
+  <button class="nav-btn" onclick="navigate(-1)">&#8592;</button>
+  <span class="nav-counter" id="counter">1 / 9</span>
+  <button class="nav-btn" onclick="navigate(1)">&#8594;</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  function navigate(dir) {
+    slides[current].classList.remove('active');
+    current = Math.max(0, Math.min(total - 1, current + dir));
+    slides[current].classList.add('active');
+    document.getElementById('counter').textContent = (current + 1) + ' / ' + total;
+    document.getElementById('progress').style.width = ((current + 1) / total * 100) + '%';
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') navigate(1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                     navigate(-1);
+  });
+
+  document.getElementById('progress').style.width = (1 / total * 100) + '%';
+</script>
+</body>
+</html>
