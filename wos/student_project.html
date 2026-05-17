@@ -426,14 +426,13 @@
           <strong>Run the setup cell</strong>
           <p>
             Click the play button on the first code cell. It installs
-            <strong>Ollama</strong>, starts the Ollama server in the
-            background, and pulls the <code>gemma4:latest</code> model
-            (~5 GB). This may take 3–5 minutes — a lot of output is normal.
+            <strong>Ollama</strong> and starts the Ollama server in the
+            background. This may take 3–5 minutes — a lot of output is normal.
             No runtime restart is needed after this step.
           </p>
           <pre><code>!apt-get install -y zstd
 !curl -fsSL https://ollama.com/install.sh | sh
-# starts server + pulls gemma4:latest automatically</code></pre>
+# starts server automatically</code></pre>
         </div>
       </li>
 
@@ -441,9 +440,9 @@
         <div class="step-body">
           <strong>Confirm the model is ready</strong>
           <p>
-            Once the cell finishes you should see Ollama confirm that
-            <code>gemma4:latest</code> has been pulled successfully. No
-            separate "load model" step is required.
+            Once the cell finishes you should see Ollama confirm that the
+            model has been pulled successfully. No separate "load model"
+            step is required.
           </p>
         </div>
       </li>
