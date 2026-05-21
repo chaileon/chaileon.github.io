@@ -414,7 +414,7 @@
           <strong>Switch to a GPU runtime</strong>
           <p>
             Go to <strong>Runtime → Change runtime type</strong>, set
-            <em>Hardware accelerator</em> to <strong>T4 GPU</strong>, and
+            <em>Hardware accelerator</em> to <strong>L4 GPU</strong>, and
             click <strong>Save</strong>. The language model requires a GPU to
             run in reasonable time.
           </p>
@@ -426,25 +426,24 @@
           <strong>Run the setup cell</strong>
           <p>
             Click the play button on the first code cell. It installs
-            <strong>Ollama</strong> and starts the Ollama server in the
-            background. This may take 3–5 minutes — a lot of output is normal.
+            <strong>Ollama</strong>, starts the Ollama server in the
+            background, and pulls the <code>gemma4:latest</code> model
+            (~5 GB). This may take 3–5 minutes — a lot of output is normal.
             No runtime restart is needed after this step.
           </p>
           <pre><code>!apt-get install -y zstd
 !curl -fsSL https://ollama.com/install.sh | sh
-# starts server automatically</code></pre>
+# starts server + pulls gemma4:latest automatically</code></pre>
         </div>
       </li>
 
       <li>
         <div class="step-body">
-          <strong>Load the model</strong>
+          <strong>Confirm the model is ready</strong>
           <p>
-            Run the second code cell. It pulls <code>gemma4:e4b</code> and
-            waits until the model is fully loaded into GPU memory before
-            continuing. This may take several minutes. You will see
-            <em>"Model not loaded yet. Waiting..."</em> until it is ready,
-            followed by <em>"model loaded"</em>.
+            Once the cell finishes you should see Ollama confirm that
+            <code>gemma4:latest</code> has been pulled successfully. No
+            separate "load model" step is required.
           </p>
         </div>
       </li>
@@ -698,12 +697,91 @@ Rules:
   </div>
 
 
+  <!-- ══════════════════════════════════════════════════════ -->
+  <h2>7 &nbsp; Grading Rubric</h2>
+
+  <div class="card">
+    <table>
+      <tr><th>Component</th><th>Weight</th><th>Criteria</th></tr>
+      <tr>
+        <td>System prompt design &amp; rationale</td>
+        <td><span class="badge badge-blue">30 %</span></td>
+        <td>Is the strategy clearly articulated? Is there a coherent theory
+            behind the design choices?</td>
+      </tr>
+      <tr>
+        <td>Experimental results</td>
+        <td><span class="badge badge-blue">25 %</span></td>
+        <td>Are results complete (≥ 5 topics × 2 versions)? Are the JSON
+            outputs included?</td>
+      </tr>
+      <tr>
+        <td>Iteration quality</td>
+        <td><span class="badge badge-blue">20 %</span></td>
+        <td>Does version 2 show evidence of learning from version 1? Is the
+            change principled rather than random?</td>
+      </tr>
+      <tr>
+        <td>Reflection</td>
+        <td><span class="badge badge-blue">25 %</span></td>
+        <td>Does the reflection show genuine analysis? Are conclusions grounded
+            in the observed scores rather than general claims?</td>
+      </tr>
+    </table>
+
+    <div class="callout callout-green" style="margin-top:20px">
+      <p class="callout-title">Note on scores</p>
+      <p>
+        You are <strong>not</strong> graded on achieving a high persuasion
+        score. A thoughtful design with a modest score and an insightful
+        reflection earns full marks. A prompt that scores well by accident
+        with no analytical write-up does not.
+      </p>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <h2>8 &nbsp; Estimated Parameters of Frontier Models</h2>
+
+  <div class="card">
+    <p>
+      The model powering this project — <code>gemma4:latest</code> — is a
+      compact open-weight model. For context, the table below shows estimated
+      parameter counts for recent frontier models, as inferred by the
+      <em>Incompressible Knowledge Probes</em> method
+      (Wallat et al., arXiv&nbsp;2604.24827).
+    </p>
+
+    <div class="callout callout-amber">
+      <p class="callout-title">These are estimates, not official figures</p>
+      <p>
+        None of the major labs publicly disclose parameter counts. These
+        estimates are derived by probing factual memorisation capacity across
+        many models and extrapolating from open-weight calibration points.
+      </p>
+    </div>
+
+    <table>
+      <tr><th>Model</th><th>Estimated Parameters</th></tr>
+      <tr><td>GPT-5</td><td>~4.1 T</td></tr>
+      <tr><td>o3</td><td>~3.0 T</td></tr>
+      <tr><td>Grok-3</td><td>~2.1 T</td></tr>
+      <tr><td>Claude Sonnet 4.6</td><td>~1.7 T</td></tr>
+      <tr><td>Claude Opus 4</td><td>~1.4 T</td></tr>
+      <tr><td>Gemini 2.5 Pro</td><td>~1.2 T</td></tr>
+      <tr><td>GPT-4o</td><td>~720 B</td></tr>
+      <tr><td>Gemini 2.5 Flash</td><td>~207 B</td></tr>
+      <tr><td>Claude 3.5 Haiku</td><td>~158 B</td></tr>
+    </table>
+
+    <p style="margin-top:14px;font-size:13px;color:#6b7280">
+      Source: Wallat et al. (2025), "Incompressible Knowledge Probes: Estimating
+      Black-Box LLM Parameter Counts via Factual Capacity", arXiv&nbsp;2604.24827.
+    </p>
+  </div>
 
 </div><!-- /page-wrap -->
-
-<footer>
-  <p>Designing a Persuasive AI Debater — Student Project</p>
-</footer>
 
 </body>
 </html>
