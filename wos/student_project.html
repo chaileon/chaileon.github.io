@@ -427,13 +427,13 @@
           <p>
             Click the play button on the first code cell. It installs
             <strong>Ollama</strong>, starts the Ollama server in the
-            background, and pulls the <code>gemma4:latest</code> model
+            background, and pulls the <code>gemma4:e4b</code> model
             (~5 GB). This may take 3–5 minutes — a lot of output is normal.
             No runtime restart is needed after this step.
           </p>
           <pre><code>!apt-get install -y zstd
 !curl -fsSL https://ollama.com/install.sh | sh
-# starts server + pulls gemma4:latest automatically</code></pre>
+# starts server + pulls gemma4:e4b automatically</code></pre>
         </div>
       </li>
 
@@ -442,7 +442,7 @@
           <strong>Confirm the model is ready</strong>
           <p>
             Once the cell finishes you should see Ollama confirm that
-            <code>gemma4:latest</code> has been pulled successfully. No
+            <code>gemma4:e4b</code> has been pulled successfully. No
             separate "load model" step is required.
           </p>
         </div>
@@ -746,7 +746,7 @@ Rules:
 
   <div class="card">
     <p>
-      The model powering this project — <code>gemma4:latest</code> — is a
+      The model powering this project — <code>gemma4:e4b</code> — is a
       compact open-weight model. For context, the table below shows estimated
       parameter counts for recent frontier models, as inferred by the
       <em>Incompressible Knowledge Probes</em> method
