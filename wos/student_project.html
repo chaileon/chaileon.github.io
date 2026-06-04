@@ -423,13 +423,12 @@
 
       <li>
         <div class="step-body">
-          <strong>Run the setup cell</strong>
+          <strong>Run Cells 1–2 to set-up Ollama</strong>
           <p>
-            Click the play button on the first code cell. It installs
-            <strong>Ollama</strong>, starts the Ollama server in the
-            background, and pulls the <code>gemma4:e4b</code> model
-            (~5 GB). This may take 3–5 minutes — a lot of output is normal.
-            No runtime restart is needed after this step.
+            Cell 1 installs <strong>Ollama</strong> and starts the server.
+            Cell 2 loads the <code>gemma4:e4b</code> model (~5 GB). This
+            may take 3–5 minutes — a lot of output is normal. No runtime
+            restart is needed after this step.
           </p>
           <pre><code>!apt-get install -y zstd
 !curl -fsSL https://ollama.com/install.sh | sh
@@ -452,8 +451,9 @@
         <div class="step-body">
           <strong>Edit your persuader system prompt</strong>
           <p>
-            Find the cell labelled <em>"PERSUADER SYSTEM PROMPT"</em>.
-            This is where you write your strategy. See
+            Open <code>debate_ollama.py</code> and find the
+            <em>"PERSUADER SYSTEM PROMPT"</em> section. This is where you
+            write your strategy. See
             <a href="#sec-task">Section 5</a> for guidance.
           </p>
         </div>
@@ -647,6 +647,21 @@ Rules:
           <span><strong>Reflection (300–500 words)</strong> — What patterns
           did you notice? What strategies worked across all topics vs. only
           some? What would you try next?</span>
+      </li>
+      <li><span class="check-box"></span>
+          <span><strong>Held-out evaluation</strong> — You will be given a
+          new set of 5 topics not seen during development. Run your best
+          prompt on these topics and include the
+          <code>debate_results.json</code> output. Does your approach
+          generalise, or do certain topic types expose weaknesses in your
+          strategy?</span>
+      </li>
+      <li><span class="check-box"></span>
+          <span><strong>Model comparison</strong> — Switch to a different
+          model in <code>debate_ollama.py</code> and re-run your best
+          prompt on the same 5 topics. Compare the persuasion scores against
+          your earlier results and briefly discuss (100–200 words) how the
+          choice of model affected outcomes.</span>
       </li>
     </ul>
   </div>
