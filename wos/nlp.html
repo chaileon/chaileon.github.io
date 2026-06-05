@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Natural Language Processing — World of Science 2026</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/theme/night.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/highlight/monokai.css">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Space+Grotesk:wght@500;700&display=swap');
+
+    :root {
+      --accent:  #7ee8fa;
+      --accent2: #f9ca24;
+      --accent3: #ff6b6b;
+      --text-main:  #e8eaf0;
+      --text-muted: #8892a4;
+    }
+
+    .reveal {
+      font-family: 'Inter', sans-serif;
+      font-size: 28px;
+      color: var(--text-main);
+    }
+
+    .reveal h1, .reveal h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      letter-spacing: -0.02em;
+      text-transform: none;
+      color: var(--accent);
+      text-shadow: 0 0 24px rgba(126,232,250,0.2);
+    }
+
+    .reveal h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      color: var(--accent2);
+      text-transform: none;
+    }
+
+    .reveal ul { list-style: none; padding-left: 0; }
+    .reveal ul li { margin: 0.3em 0; }
+    .reveal ul li::before { content: "▸ "; color: var(--accent); }
+
+    .reveal .box {
+      background: rgba(126,232,250,0.08);
+      border-left: 4px solid var(--accent);
+      border-radius: 6px;
+      padding: 0.5em 0.9em;
+      margin: 0.5em 0;
+      font-size: 0.82em;
+    }
+    .reveal .box-yellow {
+      background: rgba(249,202,36,0.10);
+      border-left: 4px solid var(--accent2);
+      border-radius: 6px;
+      padding: 0.5em 0.9em;
+      margin: 0.5em 0;
+      font-size: 0.82em;
+    }
+    .reveal .box-red {
+      background: rgba(255,107,107,0.10);
+      border-left: 4px solid var(--accent3);
+      border-radius: 6px;
+      padding: 0.5em 0.9em;
+      margin: 0.5em 0;
+      font-size: 0.82em;
+    }
+
+    .reveal .big-emoji { font-size: 2.8em; display: block; margin: 0.15em auto; text-align: center; }
+
+    .reveal .cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.4em;
+      align-items: start;
+    }
+
+    .reveal .cols3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1em;
+      align-items: start;
+    }
+
+    .reveal .pill {
+      display: inline-block;
+      background: var(--accent);
+      color: #0d1117;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 0.05em 0.65em;
+      font-size: 0.75em;
+      margin-right: 0.3em;
+      vertical-align: middle;
+    }
+
+    .reveal .caption {
+      font-size: 0.52em;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-top: 0.4em;
+    }
+
+    .reveal .section-label {
+      font-size: 0.65em;
+      font-family: 'Space Grotesk', sans-serif;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.3em;
+    }
+
+    .reveal .divider-title { font-size: 1.8em; margin-top: 0.2em; }
+
+    .reveal .two-side {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1em;
+      text-align: left;
+      font-size: 0.85em;
+    }
+    .reveal .two-side .side-left {
+      border-right: 1px solid rgba(126,232,250,0.2);
+      padding-right: 1em;
+    }
+    .reveal .two-side .side-right { padding-left: 0.5em; }
+    .reveal .two-side h4 { color: var(--accent2); margin: 0 0 0.3em 0; font-size: 1em; }
+
+    .reveal .mono {
+      font-family: 'Courier New', monospace;
+      background: rgba(126,232,250,0.08);
+      padding: 0.1em 0.4em;
+      border-radius: 4px;
+      font-size: 0.85em;
+    }
+
+    .reveal .slide-number { font-size: 14px; color: var(--text-muted); }
+
+    /* lab cards */
+    .reveal .lab-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(126,232,250,0.2);
+      border-radius: 8px;
+      padding: 0.5em 0.7em;
+      font-size: 0.78em;
+    }
+    .reveal .lab-card h4 { color: var(--accent); margin: 0 0 0.25em; font-size: 1em; }
+  </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ═══════════════════════════════════════════
+     SECTION 1 — Intro
+     ═══════════════════════════════════════════ -->
+
+<!-- Slide 1 — Title -->
+<section data-background-gradient="linear-gradient(135deg, #0d1117 0%, #0a1a2e 50%, #0d1117 100%)">
+  <p class="section-label">World of Science 2026</p>
+  <h1 style="font-size:1.5em;">Natural Language Processing</h1>
+  <h3 style="font-size:0.9em; margin-top:0.2em;">From Chomsky to ChatGPT and Beyond</h3>
+  <p style="margin-top:2em; font-size:0.65em; color:var(--text-muted);">Hai Leong Chieu &nbsp;·&nbsp; May 2026</p>
+  <aside class="notes">
+    NLP is the subfield of AI concerned with enabling computers to understand, generate, and reason
+    about human language. It sits at the intersection of linguistics, computer science, and
+    statistics. Today we'll trace its history from formal grammar theory through the current
+    revolution of large language models.
+  </aside>
+</section>
+
+<!-- Slide 2 — What is NLP -->
+<section data-background-color="#0d1117">
+  <h2>What Is NLP?</h2>
+  <ul>
+    <li>Getting computers to <strong style="color:var(--accent)">understand and generate</strong> human language</li>
+    <li>Human language is ambiguous, context-dependent, and constantly evolving</li>
+    <li>Classic tasks: translation, summarisation, question answering, sentiment analysis</li>
+    <li>Modern framing: a single large model that does <em>all of these at once</em></li>
+  </ul>
+  <div class="box">
+     Language is ambiguos in many ways, making it hard for computers before large language models, e.g., ambiguity in word sense <br>
+    "The bank by the river was steep." vs "The bank refused my loan."<br>
+  </div>
+  <aside class="notes">
+    The word-sense disambiguation example is a classic NLP motivating problem. Humans resolve
+    this instantly from context; early NLP systems needed hand-crafted disambiguation rules for
+    every ambiguous word.
+  </aside>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SECTION 2 — Classical NLP
+     ═══════════════════════════════════════════ -->
+
+<!-- Slide 3 — Section divider -->
+<section data-background-color="#0a1a2e">
+  <span class="big-emoji">📜</span>
+  <p class="section-label">Section 1</p>
+  <h2 class="divider-title">Classical NLP</h2>
+  <p style="font-size:0.7em; color:var(--text-muted);">Rules, grammars, and the linguistics era</p>
+</section>
+
+<!-- Slide 4 — Chomsky -->
+<section data-background-color="#0a1a2e">
+  <h2><span class="pill">1957</span> Chomsky &amp; Formal Language Theory</h2>
+  <ul>
+    <li>Noam Chomsky publishes <em>Syntactic Structures</em> — language has underlying structure</li>
+    <li>Proposes the <strong style="color:var(--accent)">Chomsky Hierarchy</strong>: a classification of formal grammars by expressive power</li>
+    <li>Regular → Context-Free → Context-Sensitive → Unrestricted</li>
+    <li>Argues that human language acquisition cannot be explained by behaviorism alone — there must be an innate <strong style="color:var(--accent)">Universal Grammar</strong></li>
+  </ul>
+  <div class="box-yellow">
+    Huge influence on early NLP: if language has formal structure, maybe we can write programs to
+    parse it systematically.
+  </div>
+  <aside class="notes">
+    Chomsky's debate with behaviorist B.F. Skinner is one of the most famous in 20th-century
+    science. Chomsky argued children couldn't learn language from data alone — they must have
+    innate linguistic knowledge. Ironically, modern LLMs suggest you CAN learn a lot from data
+    alone, which has re-opened this debate.
+  </aside>
+</section>
+
+<!-- Slide 5 — Regular Expressions -->
+<section data-background-color="#0a1a2e">
+  <h2>Regular Expressions: The Simplest NLP Tool</h2>
+  <div class="cols" style="align-items:start; gap:1.2em;">
+    <div style="font-size:0.84em;">
+      <ul>
+        <li>Lowest level of the Chomsky Hierarchy — <strong style="color:var(--accent)">regular languages</strong></li>
+        <li>A pattern language for matching character sequences</li>
+        <li>Still the first tool every NLP engineer reaches for: tokenisation, preprocessing, rule-based extraction</li>
+        <li>Recognised by a <strong style="color:var(--accent)">finite automaton</strong> — no memory beyond current state</li>
+      </ul>
+      <div class="box-red" style="margin-top:0.6em; font-size:0.85em;">
+        <strong>Key limitation:</strong> regex cannot count.<br>
+        Matching balanced brackets <span class="mono">((()))</span> requires knowing the nesting depth — that needs a <em>stack</em>, which regular languages don't have.<br>
+        → This is exactly what CFGs solve.
+      </div>
+    </div>
+    <div>
+      <p style="font-size:0.72em; color:var(--text-muted); margin:0 0 0.3em;">NLP examples in Python regex:</p>
+      <pre style="background:#0d1117; border:1px solid #2a3040; border-radius:6px;
+                  padding:0.6em 0.8em; font-size:0.65em; line-height:1.7;
+                  color:#e8eaf0; overflow:hidden; text-align:left; margin:0;">
+<span style="color:#8892a4;"># Tokenise words</span>
+<span style="color:#7ee8fa;">\b\w+\b</span>
+
+<span style="color:#8892a4;"># Possible proper noun (NER bootstrap)</span>
+<span style="color:#7ee8fa;">\b[A-Z][a-z]+\b</span>
+
+<span style="color:#8892a4;"># Date patterns</span>
+<span style="color:#f9ca24;">\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}</span>
+
+<span style="color:#8892a4;"># Negation words</span>
+<span style="color:#f9ca24;">\b(not?|never|hardly)\b</span>
+
+<span style="color:#8892a4;"># Email address</span>
+<span style="color:#ff6b6b;">[\w.+\-]+@[\w\-]+\.\w+</span>
+
+<span style="color:#8892a4;"># Fails: can't validate nested quotes</span>
+<span style="color:#8892a4;"># "She said 'he said "hello"'"</span></pre>
+    </div>
+  </div>
+  <aside class="notes">
+    Regular expressions were formalised by Stephen Kleene in 1951, before Chomsky's hierarchy.
+    In NLP, regex is still used heavily in production systems for fast rule-based matching —
+    spaCy's EntityRuler, for example, lets you define regex patterns for custom NER. The finite
+    automaton equivalence means regex can be compiled into extremely fast state machines.
+    The inability to match a^n b^n (n "a"s followed by n "b"s) is the classic proof that
+    regular languages are insufficient for natural language syntax — nested sentences, relative
+    clauses, and recursive noun phrases all require at least context-free power.
+  </aside>
+</section>
+
+<!-- Slide 6 — Context-Free Grammars -->
+<section data-background-color="#0a1a2e">
+  <h2>Context-Free Grammars (CFGs)</h2>
+  <div class="cols" style="align-items:start; gap:1.5em;">
+    <div>
+      <ul style="font-size:0.88em;">
+        <li>A set of <strong style="color:var(--accent)">rewrite rules</strong> describing valid sentence structures</li>
+        <li>S → NP VP &nbsp;&nbsp; (sentence = noun phrase + verb phrase)</li>
+        <li>NP → Det N &nbsp;&nbsp; ("the cat")</li>
+        <li>VP → V NP &nbsp;&nbsp; ("chased the mouse")</li>
+        <li>Parsers use CFGs to build <strong style="color:var(--accent)">parse trees</strong> — hierarchical structure of sentences</li>
+      </ul>
+      <div class="box" style="margin-top:0.6em; font-size:0.78em;">
+        Used heavily in compilers too — programming languages are defined by CFGs.
+      </div>
+    </div>
+    <!-- Parse tree SVG -->
+    <svg viewBox="0 0 220 200" xmlns="http://www.w3.org/2000/svg"
+         style="width:100%; font-family:Inter,sans-serif;">
+      <!-- S -->
+      <rect x="85" y="5" width="50" height="24" rx="5" fill="#1e0a3c" stroke="#7ee8fa" stroke-width="1.5"/>
+      <text x="110" y="21" text-anchor="middle" fill="#7ee8fa" font-size="13" font-weight="bold">S</text>
+      <!-- S → NP, VP -->
+      <line x1="110" y1="29" x2="60"  y2="55" stroke="#7ee8fa" stroke-width="1.2"/>
+      <line x1="110" y1="29" x2="160" y2="55" stroke="#7ee8fa" stroke-width="1.2"/>
+      <!-- NP -->
+      <rect x="30" y="55" width="50" height="24" rx="5" fill="#1e0a3c" stroke="#f9ca24" stroke-width="1.5"/>
+      <text x="55" y="71" text-anchor="middle" fill="#f9ca24" font-size="13" font-weight="bold">NP</text>
+      <!-- VP -->
+      <rect x="130" y="55" width="50" height="24" rx="5" fill="#1e0a3c" stroke="#f9ca24" stroke-width="1.5"/>
+      <text x="155" y="71" text-anchor="middle" fill="#f9ca24" font-size="13" font-weight="bold">VP</text>
+      <!-- NP → Det N -->
+      <line x1="55" y1="79" x2="30"  y2="105" stroke="#f9ca24" stroke-width="1.2"/>
+      <line x1="55" y1="79" x2="75"  y2="105" stroke="#f9ca24" stroke-width="1.2"/>
+      <rect x="8"  y="105" width="40" height="22" rx="4" fill="#1e0a3c" stroke="#8892a4" stroke-width="1"/>
+      <text x="28" y="120" text-anchor="middle" fill="#e8eaf0" font-size="11">Det</text>
+      <rect x="53" y="105" width="40" height="22" rx="4" fill="#1e0a3c" stroke="#8892a4" stroke-width="1"/>
+      <text x="73" y="120" text-anchor="middle" fill="#e8eaf0" font-size="11">N</text>
+      <!-- VP → V NP -->
+      <line x1="155" y1="79" x2="130" y2="105" stroke="#f9ca24" stroke-width="1.2"/>
+      <line x1="155" y1="79" x2="185" y2="105" stroke="#f9ca24" stroke-width="1.2"/>
+      <rect x="108" y="105" width="40" height="22" rx="4" fill="#1e0a3c" stroke="#8892a4" stroke-width="1"/>
+      <text x="128" y="120" text-anchor="middle" fill="#e8eaf0" font-size="11">V</text>
+      <rect x="162" y="105" width="40" height="22" rx="4" fill="#1e0a3c" stroke="#8892a4" stroke-width="1"/>
+      <text x="182" y="120" text-anchor="middle" fill="#e8eaf0" font-size="11">NP</text>
+      <!-- Leaf words -->
+      <text x="28"  y="148" text-anchor="middle" fill="#8892a4" font-size="10">The</text>
+      <text x="73"  y="148" text-anchor="middle" fill="#8892a4" font-size="10">cat</text>
+      <text x="128" y="148" text-anchor="middle" fill="#8892a4" font-size="10">chased</text>
+      <text x="182" y="148" text-anchor="middle" fill="#8892a4" font-size="10">mouse</text>
+      <text x="110" y="185" text-anchor="middle" fill="#8892a4" font-size="9" font-style="italic">"The cat chased [the] mouse"</text>
+    </svg>
+  </div>
+  <aside class="notes">
+    CFG parsers were the backbone of NLP systems from the 1960s through the 1990s. The problem:
+    real natural language constantly violates CFG assumptions — sentences can be ambiguous in
+    exponentially many ways, and handling all edge cases requires enormous hand-crafted rule sets.
+  </aside>
+</section>
+
+<!-- Slide 6 — POS Tagging + Penn Treebank -->
+<section data-background-color="#0a1a2e">
+  <h2>Part-of-Speech Tagging &amp; the Penn Treebank</h2>
+  <div class="cols" style="align-items:start; gap:1.2em;">
+    <div>
+      <ul style="font-size:0.84em;">
+        <li>Assign a <strong style="color:var(--accent)">grammatical label</strong> to every word: noun, verb, adjective…</li>
+        <li><span class="pill">1993</span> <strong style="color:var(--accent)">Penn Treebank</strong> (Univ. of Pennsylvania): 1M+ words of Wall Street Journal text, manually annotated</li>
+        <li>Defines <strong style="color:var(--accent)">45 POS tags</strong> — the standard tagset used for decades</li>
+        <li>Enabled the shift from hand-written rules to <strong>statistical</strong> taggers (HMMs, then CRFs)</li>
+        <li>Funded by DARPA over ~8 years; annotators parsed only 300–400 words per hour — today a pre-trained model tags a million words in seconds</li>
+      </ul>
+      <div class="box" style="font-size:0.75em; margin-top:0.5em;">
+        Same word, three tags: &nbsp;<span class="mono">light</span> as NN / JJ / VB
+      </div>
+    </div>
+    <!-- POS tag sample + tag table -->
+    <div style="font-size:0.78em;">
+      <p style="color:var(--text-muted); margin:0 0 0.3em;">Example (Penn Treebank tags):</p>
+      <div class="box" style="font-size:1em; line-height:2; letter-spacing:0.01em;">
+        <span style="color:#7ee8fa;">The</span><sub style="color:#8892a4;font-size:0.7em;">DT</sub>&nbsp;
+        <span style="color:#f9ca24;">cat</span><sub style="color:#8892a4;font-size:0.7em;">NN</sub>&nbsp;
+        <span style="color:#ff6b6b;">quickly</span><sub style="color:#8892a4;font-size:0.7em;">RB</sub>&nbsp;
+        <span style="color:#7ee8fa;">sat</span><sub style="color:#8892a4;font-size:0.7em;">VBD</sub>&nbsp;
+        <span style="color:#f9ca24;">on</span><sub style="color:#8892a4;font-size:0.7em;">IN</sub>&nbsp;
+        <span style="color:#7ee8fa;">the</span><sub style="color:#8892a4;font-size:0.7em;">DT</sub>&nbsp;
+        <span style="color:#f9ca24;">mat</span><sub style="color:#8892a4;font-size:0.7em;">NN</sub>
+      </div>
+      <p style="color:var(--text-muted); margin:0.6em 0 0.25em;">Selected tags from the 45-tag set:</p>
+      <table style="border-collapse:collapse; width:100%; font-size:0.9em;">
+        <tr>
+          <td style="padding:0.1em 0.4em; color:#7ee8fa;">DT</td><td style="color:#8892a4;">Determiner</td>
+          <td style="padding:0.1em 0.4em; color:#7ee8fa;">NN</td><td style="color:#8892a4;">Noun (sg)</td>
+        </tr>
+        <tr>
+          <td style="padding:0.1em 0.4em; color:#f9ca24;">VBD</td><td style="color:#8892a4;">Verb, past tense</td>
+          <td style="padding:0.1em 0.4em; color:#f9ca24;">VBZ</td><td style="color:#8892a4;">Verb, 3rd sg present</td>
+        </tr>
+        <tr>
+          <td style="padding:0.1em 0.4em; color:#ff6b6b;">JJ</td><td style="color:#8892a4;">Adjective</td>
+          <td style="padding:0.1em 0.4em; color:#ff6b6b;">RB</td><td style="color:#8892a4;">Adverb</td>
+        </tr>
+        <tr>
+          <td style="padding:0.1em 0.4em; color:#7ee8fa;">IN</td><td style="color:#8892a4;">Preposition</td>
+          <td style="padding:0.1em 0.4em; color:#7ee8fa;">NNP</td><td style="color:#8892a4;">Proper noun</td>
+        </tr>
+        <tr>
+          <td style="padding:0.1em 0.4em; color:#f9ca24;">PRP</td><td style="color:#8892a4;">Personal pronoun</td>
+          <td style="padding:0.1em 0.4em; color:#f9ca24;">MD</td><td style="color:#8892a4;">Modal (will, can…)</td>
+        </tr>
+        <tr>
+          <td style="padding:0.1em 0.4em; color:#ff6b6b;">CD</td><td style="color:#8892a4;">Cardinal number</td>
+          <td style="padding:0.1em 0.4em; color:#ff6b6b;">CC</td><td style="color:#8892a4;">Coord. conjunction</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <aside class="notes">
+    The Penn Treebank project ran from 1989–1996 at UPenn, led by Mitchell Marcus, funded by
+    DARPA and AFOSR. It contains ~4.5 million words across WSJ, Brown corpus, and other sources.
+    Annotators worked at 300–400 words per hour — the scale of manual effort across 8 years
+    implies tens of thousands of person-hours, though no total cost figure was publicly disclosed.
+    The 45-tag POS tagset includes separate tags for different verb forms (VB, VBD, VBG, VBN,
+    VBP, VBZ). The full tagset also includes punctuation tags.
+  </aside>
+</section>
+
+<!-- Slide 6b — Full CFG parse to POS + lexicon -->
+<section data-background-color="#0a1a2e">
+  <h2>Full Parse: CFG → POS Tags → Words</h2>
+  <div class="cols" style="align-items:center; gap:1em;">
+    <div style="font-size:0.8em;">
+      <p style="color:var(--text-muted); margin:0 0 0.3em;">Grammar rules used:</p>
+      <div class="box" style="line-height:1.9; font-size:0.95em;">
+        S &nbsp;→ NP VP<br>
+        NP → DT NN<br>
+        VP → VBD PP<br>
+        PP → IN NP<br>
+        <span style="color:var(--accent2);">DT → "the" | "The"</span><br>
+        <span style="color:var(--accent2);">NN → "cat" | "mat"</span><br>
+        <span style="color:var(--accent2);">VBD → "sat"</span><br>
+        <span style="color:var(--accent2);">IN &nbsp;→ "on"</span>
+      </div>
+      <div class="box-yellow" style="margin-top:0.5em; font-size:0.95em;">
+        The <strong>lexicon</strong> (yellow rules) maps POS tags to actual words. Parsing works top-down from S, or bottom-up from words.
+      </div>
+    </div>
+    <!-- Full parse tree SVG -->
+    <svg viewBox="0 0 440 225" xmlns="http://www.w3.org/2000/svg"
+         style="width:100%; display:block; font-family:Inter,sans-serif;">
+
+      <!-- ── Level 0: S ── -->
+      <rect x="185" y="4" width="36" height="22" rx="4" fill="#1e0a3c" stroke="#7ee8fa" stroke-width="1.8"/>
+      <text x="203" y="19" text-anchor="middle" fill="#7ee8fa" font-size="13" font-weight="bold">S</text>
+
+      <!-- S → NP, VP -->
+      <line x1="203" y1="26" x2="70"  y2="48" stroke="#7ee8fa" stroke-width="1.2"/>
+      <line x1="203" y1="26" x2="300" y2="48" stroke="#7ee8fa" stroke-width="1.2"/>
+
+      <!-- ── Level 1: NP, VP ── -->
+      <rect x="48"  y="48" width="44" height="22" rx="4" fill="#1e0a3c" stroke="#f9ca24" stroke-width="1.8"/>
+      <text x="70"  y="63" text-anchor="middle" fill="#f9ca24" font-size="13" font-weight="bold">NP</text>
+      <rect x="278" y="48" width="44" height="22" rx="4" fill="#1e0a3c" stroke="#f9ca24" stroke-width="1.8"/>
+      <text x="300" y="63" text-anchor="middle" fill="#f9ca24" font-size="13" font-weight="bold">VP</text>
+
+      <!-- NP → DT, NN -->
+      <line x1="70" y1="70" x2="40"  y2="93" stroke="#f9ca24" stroke-width="1.2"/>
+      <line x1="70" y1="70" x2="105" y2="93" stroke="#f9ca24" stroke-width="1.2"/>
+
+      <!-- VP → VBD, PP -->
+      <line x1="300" y1="70" x2="220" y2="93" stroke="#f9ca24" stroke-width="1.2"/>
+      <line x1="300" y1="70" x2="355" y2="93" stroke="#f9ca24" stroke-width="1.2"/>
+
+      <!-- ── Level 2: DT, NN, VBD, PP ── -->
+      <rect x="20"  y="93" width="40" height="22" rx="4" fill="#162030" stroke="#7ee8fa" stroke-width="1.5"/>
+      <text x="40"  y="108" text-anchor="middle" fill="#7ee8fa" font-size="12">DT</text>
+      <rect x="84"  y="93" width="40" height="22" rx="4" fill="#162030" stroke="#7ee8fa" stroke-width="1.5"/>
+      <text x="104" y="108" text-anchor="middle" fill="#7ee8fa" font-size="12">NN</text>
+      <rect x="198" y="93" width="44" height="22" rx="4" fill="#162030" stroke="#7ee8fa" stroke-width="1.5"/>
+      <text x="220" y="108" text-anchor="middle" fill="#7ee8fa" font-size="12">VBD</text>
+      <rect x="333" y="93" width="44" height="22" rx="4" fill="#1e0a3c" stroke="#f9ca24" stroke-width="1.8"/>
+      <text x="355" y="108" text-anchor="middle" fill="#f9ca24" font-size="13" font-weight="bold">PP</text>
+
+      <!-- PP → IN, NP -->
+      <line x1="355" y1="115" x2="300" y2="138" stroke="#f9ca24" stroke-width="1.2"/>
+      <line x1="355" y1="115" x2="400" y2="138" stroke="#f9ca24" stroke-width="1.2"/>
+
+      <!-- ── Level 3: IN, NP ── -->
+      <rect x="278" y="138" width="44" height="22" rx="4" fill="#162030" stroke="#7ee8fa" stroke-width="1.5"/>
+      <text x="300" y="153" text-anchor="middle" fill="#7ee8fa" font-size="12">IN</text>
+      <rect x="378" y="138" width="44" height="22" rx="4" fill="#1e0a3c" stroke="#f9ca24" stroke-width="1.8"/>
+      <text x="400" y="153" text-anchor="middle" fill="#f9ca24" font-size="13" font-weight="bold">NP</text>
+
+      <!-- NP → DT, NN -->
+      <line x1="400" y1="160" x2="372" y2="182" stroke="#f9ca24" stroke-width="1.2"/>
+      <line x1="400" y1="160" x2="418" y2="182" stroke="#f9ca24" stroke-width="1.2"/>
+
+      <!-- ── Level 4: DT, NN (inner NP) ── -->
+      <rect x="352" y="182" width="40" height="22" rx="4" fill="#162030" stroke="#7ee8fa" stroke-width="1.5"/>
+      <text x="372" y="197" text-anchor="middle" fill="#7ee8fa" font-size="12">DT</text>
+      <rect x="398" y="182" width="40" height="22" rx="4" fill="#162030" stroke="#7ee8fa" stroke-width="1.5"/>
+      <text x="418" y="197" text-anchor="middle" fill="#7ee8fa" font-size="12">NN</text>
+
+      <!-- ── Lexicon lines (POS → word) ── -->
+      <line x1="40"  y1="115" x2="40"  y2="183" stroke="#f9ca24" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="104" y1="115" x2="104" y2="183" stroke="#f9ca24" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="220" y1="115" x2="220" y2="183" stroke="#f9ca24" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="300" y1="160" x2="300" y2="183" stroke="#f9ca24" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="372" y1="204" x2="372" y2="212" stroke="#f9ca24" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="418" y1="204" x2="418" y2="212" stroke="#f9ca24" stroke-width="1" stroke-dasharray="3,2"/>
+
+      <!-- ── Leaf words ── -->
+      <text x="40"  y="196" text-anchor="middle" fill="#f9ca24" font-size="11" font-style="italic">The</text>
+      <text x="104" y="196" text-anchor="middle" fill="#f9ca24" font-size="11" font-style="italic">cat</text>
+      <text x="220" y="196" text-anchor="middle" fill="#f9ca24" font-size="11" font-style="italic">sat</text>
+      <text x="300" y="196" text-anchor="middle" fill="#f9ca24" font-size="11" font-style="italic">on</text>
+      <text x="372" y="222" text-anchor="middle" fill="#f9ca24" font-size="11" font-style="italic">the</text>
+      <text x="418" y="222" text-anchor="middle" fill="#f9ca24" font-size="11" font-style="italic">mat</text>
+    </svg>
+  </div>
+  <aside class="notes">
+    The dashed yellow lines represent lexical rules — the bottom of the grammar where syntactic
+    categories link to actual vocabulary items. In a real grammar there would be thousands of
+    these lexical rules, one per word-tag pair. The parse can be read top-down (prediction) or
+    bottom-up (recognition). Ambiguous sentences can have multiple valid parse trees —
+    "I saw the man with the telescope" has two: did I use the telescope, or did the man have it?
+    This "PP attachment ambiguity" is one of the central challenges of parsing.
+  </aside>
+</section>
+
+<!-- Slide 6c — Dependency Parsing -->
+<section data-background-color="#0a1a2e">
+  <h2>Dependency Parsing</h2>
+  <div class="cols" style="align-items:start; gap:1.2em;">
+    <div style="font-size:0.84em;">
+      <ul>
+        <li>Represent sentences as <strong style="color:var(--accent)">binary head–dependent relations</strong>, each labelled</li>
+        <li>Each word has exactly one head; arcs can point left or right</li>
+        <li><strong style="color:var(--accent)">Universal Dependencies</strong> (UD): same label set across 100+ languages</li>
+      </ul>
+      <div class="box-yellow" style="margin-top:0.5em; font-size:0.85em;">
+        <strong>Relative clauses: a striking contrast</strong><br>
+        English: noun <strong style="color:var(--accent);">then</strong> relative clause<br>
+        <span style="color:#8892a4;">"The book <u>I bought</u> was expensive"</span><br><br>
+        Chinese: relative clause <strong style="color:var(--accent3);">then</strong> noun<br>
+        <span style="color:#8892a4;">「<u>我买的</u> 书 很贵」(I-bought-DE book very-expensive)</span>
+      </div>
+      <div class="box" style="margin-top:0.4em; font-size:0.82em;">
+        The arc for <em>acl</em> (adjectival clause) points <strong style="color:var(--accent);">→ right</strong> in English and <strong style="color:var(--accent3);">← left</strong> in Chinese — same label, opposite direction.
+      </div>
+    </div>
+    <!-- Dependency arc diagrams: relative clause contrast -->
+    <div style="display:flex; flex-direction:column; gap:1em;">
+
+      <!-- English: "The book I bought was expensive" -->
+      <p style="font-size:0.66em; color:var(--accent); margin:0; font-weight:600;">
+        English — relative clause <em>after</em> noun
+      </p>
+      <svg viewBox="0 0 445 152" xmlns="http://www.w3.org/2000/svg"
+           style="width:100%; display:block; font-family:Inter,sans-serif;">
+        <line x1="5" y1="118" x2="440" y2="118" stroke="#2a3040" stroke-width="1"/>
+        <!-- words -->
+        <text x="28"  y="134" text-anchor="middle" fill="#8892a4" font-size="12">The</text>
+        <text x="88"  y="134" text-anchor="middle" fill="#e8eaf0" font-size="12">book</text>
+        <text x="152" y="134" text-anchor="middle" fill="#e8eaf0" font-size="12">I</text>
+        <text x="218" y="134" text-anchor="middle" fill="#7ee8fa" font-size="12" font-weight="bold">bought</text>
+        <text x="295" y="134" text-anchor="middle" fill="#8892a4" font-size="12">was</text>
+        <text x="385" y="134" text-anchor="middle" fill="#f9ca24" font-size="12" font-weight="bold">expensive</text>
+        <!-- ROOT ↓ to expensive -->
+        <line x1="385" y1="9" x2="385" y2="116" stroke="#7ee8fa" stroke-width="1.4" stroke-dasharray="4,2"/>
+        <polygon points="380,116 385,124 390,116" fill="#7ee8fa"/>
+        <text x="385" y="7" text-anchor="middle" fill="#7ee8fa" font-size="9">ROOT</text>
+        <!-- expensive → was (cop) -->
+        <path d="M 375,118 C 375,98 305,98 305,118" fill="none" stroke="#8892a4" stroke-width="1.2"/>
+        <polygon points="301,114 305,123 309,114" fill="#8892a4"/>
+        <text x="342" y="93" text-anchor="middle" fill="#8892a4" font-size="9">cop</text>
+        <!-- expensive → book (nsubj): long leftward arc -->
+        <path d="M 368,118 C 368,22 95,22 95,118" fill="none" stroke="#7ee8fa" stroke-width="1.4"/>
+        <polygon points="91,114 95,123 99,114" fill="#7ee8fa"/>
+        <text x="232" y="17" text-anchor="middle" fill="#7ee8fa" font-size="9">nsubj</text>
+        <!-- book → The (det) -->
+        <path d="M 81,118 C 81,100 35,100 35,118" fill="none" stroke="#8892a4" stroke-width="1.2"/>
+        <polygon points="31,114 35,123 39,114" fill="#8892a4"/>
+        <text x="57" y="95" text-anchor="middle" fill="#8892a4" font-size="9">det</text>
+        <!-- book → bought (acl:relcl): RIGHTWARD arc — key contrast -->
+        <path d="M 95,118 C 95,65 211,65 211,118" fill="none" stroke="#ff6b6b" stroke-width="2"/>
+        <polygon points="207,114 211,123 215,114" fill="#ff6b6b"/>
+        <text x="153" y="58" text-anchor="middle" fill="#ff6b6b" font-size="10" font-weight="bold">acl →</text>
+        <!-- bought → I (nsubj) -->
+        <path d="M 210,118 C 210,98 159,98 159,118" fill="none" stroke="#8892a4" stroke-width="1.2"/>
+        <polygon points="155,114 159,123 163,114" fill="#8892a4"/>
+        <text x="185" y="93" text-anchor="middle" fill="#8892a4" font-size="9">nsubj</text>
+      </svg>
+
+      <!-- Chinese: 我买的书很贵 -->
+      <p style="font-size:0.66em; color:var(--accent3); margin:0; font-weight:600;">
+        Chinese — relative clause <em>before</em> noun (我买的书很贵)
+      </p>
+      <svg viewBox="0 0 445 152" xmlns="http://www.w3.org/2000/svg"
+           style="width:100%; display:block; font-family:Inter,sans-serif;">
+        <line x1="5" y1="100" x2="440" y2="100" stroke="#2a3040" stroke-width="1"/>
+        <!-- Chinese chars -->
+        <text x="42"  y="113" text-anchor="middle" fill="#e8eaf0"  font-size="14">我</text>
+        <text x="118" y="113" text-anchor="middle" fill="#7ee8fa"  font-size="14" font-weight="bold">买</text>
+        <text x="192" y="113" text-anchor="middle" fill="#8892a4"  font-size="14">的</text>
+        <text x="268" y="113" text-anchor="middle" fill="#e8eaf0"  font-size="14">书</text>
+        <text x="340" y="113" text-anchor="middle" fill="#8892a4"  font-size="14">很</text>
+        <text x="408" y="113" text-anchor="middle" fill="#f9ca24"  font-size="14" font-weight="bold">贵</text>
+        <!-- pinyin + gloss -->
+        <text x="42"  y="126" text-anchor="middle" fill="#8892a4" font-size="8">wǒ / I</text>
+        <text x="118" y="126" text-anchor="middle" fill="#8892a4" font-size="8">mǎi / bought</text>
+        <text x="192" y="126" text-anchor="middle" fill="#8892a4" font-size="8">de / DE</text>
+        <text x="268" y="126" text-anchor="middle" fill="#8892a4" font-size="8">shū / book</text>
+        <text x="340" y="126" text-anchor="middle" fill="#8892a4" font-size="8">hěn / very</text>
+        <text x="408" y="126" text-anchor="middle" fill="#8892a4" font-size="8">guì / expensive</text>
+        <!-- ROOT ↓ to 贵 -->
+        <line x1="408" y1="9" x2="408" y2="98" stroke="#7ee8fa" stroke-width="1.4" stroke-dasharray="4,2"/>
+        <polygon points="403,98 408,106 413,98" fill="#7ee8fa"/>
+        <text x="408" y="7" text-anchor="middle" fill="#7ee8fa" font-size="9">ROOT</text>
+        <!-- 贵 → 很 (advmod) -->
+        <path d="M 400,100 C 400,82 348,82 348,100" fill="none" stroke="#8892a4" stroke-width="1.2"/>
+        <polygon points="344,96 348,105 352,96" fill="#8892a4"/>
+        <text x="376" y="77" text-anchor="middle" fill="#8892a4" font-size="9">advmod</text>
+        <!-- 贵 → 书 (nsubj): leftward arc -->
+        <path d="M 393,100 C 393,22 275,22 275,100" fill="none" stroke="#7ee8fa" stroke-width="1.4"/>
+        <polygon points="271,96 275,105 279,96" fill="#7ee8fa"/>
+        <text x="337" y="17" text-anchor="middle" fill="#7ee8fa" font-size="9">nsubj</text>
+        <!-- 书 → 买 (acl): LEFTWARD arc — key contrast -->
+        <path d="M 260,100 C 260,48 125,48 125,100" fill="none" stroke="#ff6b6b" stroke-width="2"/>
+        <polygon points="121,96 125,105 129,96" fill="#ff6b6b"/>
+        <text x="193" y="41" text-anchor="middle" fill="#ff6b6b" font-size="10" font-weight="bold">← acl</text>
+        <!-- 买 → 我 (nsubj) -->
+        <path d="M 110,100 C 110,80 49,80 49,100" fill="none" stroke="#8892a4" stroke-width="1.2"/>
+        <polygon points="45,96 49,105 53,96" fill="#8892a4"/>
+        <text x="80" y="75" text-anchor="middle" fill="#8892a4" font-size="9">nsubj</text>
+        <!-- 买 → 的 (mark) -->
+        <path d="M 126,100 C 126,80 185,80 185,100" fill="none" stroke="#8892a4" stroke-width="1.2"/>
+        <polygon points="181,96 185,105 189,96" fill="#8892a4"/>
+        <text x="156" y="75" text-anchor="middle" fill="#8892a4" font-size="9">mark</text>
+      </svg>
+
+      <p style="font-size:0.62em; color:var(--accent2); margin:0; text-align:right;">
+        ↑ acl arc points → right in English, ← left in Chinese — same label, mirrored structure
+      </p>
+    </div>
+  </div>
+  <aside class="notes">
+    The relative clause example beautifully captures a deep typological difference. English is
+    head-initial for relative clauses: the head noun comes first, the modifying clause follows.
+    Chinese (and Japanese, Korean, Turkish…) are head-final: modifiers precede the head noun.
+    The particle 的 (de) marks the right boundary of the Chinese relative clause — it has no
+    English equivalent. In UD both languages use "acl" (adjectival clause) as the relation label,
+    but the arc points right in English (dependent after head) and left in Chinese (dependent
+    before head). Modern neural parsers (Biaffine parser, Dozat &amp; Manning 2017) handle both
+    directions natively, achieving >95% UAS on standard benchmarks in under 50ms per sentence.
+  </aside>
+</section>
+
+<!-- Slide 7 — Named Entity Recognition -->
+<section data-background-color="#0a1a2e">
+  <h2>Named Entity Recognition (NER)</h2>
+  <ul>
+    <li>Identify and classify <strong style="color:var(--accent)">real-world entities</strong> in text: people, places, organisations, dates, amounts…</li>
+  </ul>
+  <div class="box" style="font-size:0.85em; margin:0.5em 0; line-height:1.9;">
+    <span style="background:rgba(126,232,250,0.2); padding:0.1em 0.3em; border-radius:3px; color:#7ee8fa;">[Barack Obama]<sub style="font-size:0.7em;">PER</sub></span> visited
+    <span style="background:rgba(249,202,36,0.2); padding:0.1em 0.3em; border-radius:3px; color:#f9ca24;">[Singapore]<sub style="font-size:0.7em;">LOC</sub></span> in
+    <span style="background:rgba(255,107,107,0.2); padding:0.1em 0.3em; border-radius:3px; color:#ff6b6b;">[November 2012]<sub style="font-size:0.7em;">DATE</sub></span> to meet leaders from
+    <span style="background:rgba(249,202,36,0.2); padding:0.1em 0.3em; border-radius:3px; color:#f9ca24;">[ASEAN]<sub style="font-size:0.7em;">ORG</sub></span>.
+  </div>
+  <ul>
+    <li>Applications: information extraction, search, financial analysis, clinical NLP</li>
+    <li>Classical: hand-crafted gazetteers + rules → statistical sequence models (CRFs) → transformers</li>
+    <li>Key challenge: <strong style="color:var(--accent3)">ambiguity</strong> — "Apple" could be a company, a fruit, or a person's name</li>
+  </ul>
+  <aside class="notes">
+    NER was one of the main shared tasks at MUC (Message Understanding Conferences) in the 1990s,
+    which drove a lot of early NLP progress. CRFs (Conditional Random Fields) dominated from
+    ~2003–2018. Today, BERT-based models achieve F1 > 93% on standard benchmarks.
+  </aside>
+</section>
+
+<!-- Slide 8 — Coreference -->
+<section data-background-color="#0a1a2e">
+  <h2>Coreference Resolution</h2>
+  <ul>
+    <li>Determine which words or phrases refer to the <strong style="color:var(--accent)">same entity</strong> in a text</li>
+  </ul>
+  <div class="box-yellow" style="font-size:0.85em; margin: 0.5em 0; line-height:2;">
+    <span style="background:rgba(126,232,250,0.2); padding:0.1em 0.3em; border-radius:3px; color:#7ee8fa;">The scientist</span>
+    ran the experiment.
+    <span style="background:rgba(126,232,250,0.2); padding:0.1em 0.3em; border-radius:3px; color:#7ee8fa;">She</span>
+    found that
+    <span style="background:rgba(249,202,36,0.2); padding:0.1em 0.3em; border-radius:3px; color:#f9ca24;">the result</span>
+    confirmed
+    <span style="background:rgba(249,202,36,0.2); padding:0.1em 0.3em; border-radius:3px; color:#f9ca24;">it</span>
+    was valid.
+  </div>
+  <ul>
+    <li>Critical for: reading comprehension, summarisation, dialogue systems</li>
+    <li>Winograd Schema challenge: pronoun resolution requiring world knowledge</li>
+  </ul>
+  <div class="box" style="font-size:0.82em;">
+    "The trophy didn't fit in the suitcase because <strong>it</strong> was too big." — what is "it"?<br>
+    Humans know instantly. Classical NLP systems almost always got it wrong.
+  </div>
+  <aside class="notes">
+    The Winograd Schema Challenge was proposed as an alternative to the Turing Test — pronoun
+    resolution that requires genuine world knowledge. "The trophy didn't fit in the suitcase because
+    it was too big" — the answer (trophy) requires reasoning about physical size relationships. GPT
+    models now solve most Winograd schemas correctly.
+  </aside>
+</section>
+
+<!-- Slide 9 — Statistical NLP -->
+<section data-background-color="#0a1a2e">
+  <h2>Statistical NLP: Rules → Data</h2>
+  <ul>
+    <li><span class="pill">1990s</span> The field shifts from hand-crafted rules to <strong style="color:var(--accent)">learning from data</strong></li>
+    <li>Key idea: count how often patterns appear in large text corpora — use probabilities</li>
+    <li><strong>n-gram language models</strong>: predict next word from the previous n words</li>
+    <li><strong>Hidden Markov Models</strong>: sequence labelling (POS, NER)</li>
+    <li><strong>Support Vector Machines</strong>: text classification</li>
+  </ul>
+  <div class="box-yellow">
+    The IBM machine translation papers (1990–93) showed that a model trained purely on statistics,
+    with no linguistic knowledge, could outperform hand-crafted rule systems. A turning point.
+  </div>
+  <aside class="notes">
+    Fred Jelinek's famous quote: "Every time I fire a linguist, the performance of the speech
+    recognizer goes up." Brutal — but it captured the empirical finding that data-driven statistical
+    models consistently beat hand-engineered linguistic systems when given enough data.
+  </aside>
+</section>
+
+<!-- Slide 9b — IBM Translation Models -->
+<section data-background-color="#0a1a2e">
+  <h2><span class="pill">1990–93</span> IBM Statistical Translation Models</h2>
+  <div class="cols" style="align-items:start; gap:1.2em;">
+    <div>
+      <ul style="font-size:0.86em;">
+        <li>Fred Jelinek's team at IBM Watson Research Center</li>
+        <li>Key insight: treat translation as a <strong style="color:var(--accent)">noisy channel</strong> problem</li>
+        <li>Trained on the <strong style="color:var(--accent)">Canadian Hansards</strong> — 2.2 million French/English sentence pairs from Parliament</li>
+        <li>No bilingual dictionary, no grammar rules — only parallel text</li>
+        <li><strong>EM algorithm</strong> discovers word alignments automatically from data</li>
+        <li>IBM Models 1–5: progressively richer alignment assumptions</li>
+      </ul>
+      <div class="box-yellow" style="font-size:0.82em; margin-top:0.5em;">
+        <strong>The noisy channel:</strong><br>
+        P(English | French) ∝ <span style="color:var(--accent);">P(French | English)</span> × <span style="color:var(--accent2);">P(English)</span><br>
+        <span style="color:var(--accent); font-size:0.9em;">translation model</span> &nbsp;×&nbsp; <span style="color:var(--accent2); font-size:0.9em;">language model</span>
+      </div>
+    </div>
+    <div style="font-size:0.82em;">
+      <div class="box" style="margin-bottom:0.5em;">
+        <strong>IBM Model 1</strong> — learn P(foreign word | English word) for all pairs. Every alignment equally likely.<br><br>
+        <strong>IBM Model 2</strong> — add absolute position bias: word at position <em>i</em> tends to align near position <em>j</em>.<br><br>
+        <strong>IBM Model 3</strong> — add <em>fertility</em>: one source word can generate multiple target words<br>
+        <span style="color:#8892a4; font-size:0.9em;">e.g. French "ne … pas" ← English "not"</span>
+      </div>
+      <div class="box-red" style="font-size:0.9em;">
+        "Every time I fire a linguist, the performance of the speech recogniser goes up."<br>
+        <span style="color:#8892a4;">— Fred Jelinek, IBM</span>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">
+    Brown, Della Pietra, Della Pietra, and Mercer (1993) "The Mathematics of Statistical Machine
+    Translation" in Computational Linguistics. The Canadian Hansards were ideal training data:
+    every speech is recorded in both official languages, giving perfectly aligned sentence pairs.
+    The EM algorithm iterates: (E-step) assign soft alignments given current parameters;
+    (M-step) re-estimate parameters from those soft counts. After many iterations, the model
+    converges on meaningful word-to-word translation probabilities.
+  </aside>
+</section>
+
+<!-- Slide 9c — Word Alignment -->
+<section data-background-color="#0a1a2e">
+  <h2>Word Alignment: The Hidden Variable</h2>
+  <div class="cols" style="align-items:center; gap:1.2em;">
+    <div style="font-size:0.84em;">
+      <ul>
+        <li>Alignment = a mapping from each target word to a source word</li>
+        <li>Never observed in training — a <strong style="color:var(--accent)">latent variable</strong> inferred by EM</li>
+        <li>Languages differ in word order — alignments frequently <strong style="color:var(--accent3)">cross</strong></li>
+      </ul>
+      <div class="box-yellow" style="margin-top:0.5em; font-size:0.85em;">
+        English adjective precedes noun: <em>"black cat"</em><br>
+        French adjective follows noun: <em>"chat noir"</em><br>
+        The alignment lines for these two words <strong>cross</strong> — the model must learn this from data alone.
+      </div>
+      <div class="box" style="margin-top:0.4em; font-size:0.82em;">
+        IBM models → phrase-based MT (Koehn et al. 2003) → neural MT (2014) → Transformer (2017).<br>
+        The statistical era laid the foundations for everything that followed.
+      </div>
+    </div>
+    <!-- Word alignment crossing diagram -->
+    <svg viewBox="0 0 320 175" xmlns="http://www.w3.org/2000/svg"
+         style="width:100%; max-width:320px; display:block; margin:auto; font-family:Inter,sans-serif;">
+
+      <!-- Labels -->
+      <text x="160" y="14" text-anchor="middle" fill="#8892a4" font-size="10">English (source)</text>
+      <text x="160" y="162" text-anchor="middle" fill="#8892a4" font-size="10">French (target)</text>
+
+      <!-- English word boxes (top) -->
+      <rect x="15"  y="20" width="52" height="26" rx="5" fill="#162030" stroke="#7ee8fa" stroke-width="1.5"/>
+      <text x="41"  y="37" text-anchor="middle" fill="#7ee8fa" font-size="13">The</text>
+
+      <rect x="110" y="20" width="60" height="26" rx="5" fill="#162030" stroke="#ff6b6b" stroke-width="1.5"/>
+      <text x="140" y="37" text-anchor="middle" fill="#ff6b6b" font-size="13">black</text>
+
+      <rect x="225" y="20" width="52" height="26" rx="5" fill="#162030" stroke="#f9ca24" stroke-width="1.5"/>
+      <text x="251" y="37" text-anchor="middle" fill="#f9ca24" font-size="13">cat</text>
+
+      <!-- French word boxes (bottom) -->
+      <rect x="15"  y="122" width="52" height="26" rx="5" fill="#162030" stroke="#7ee8fa" stroke-width="1.5"/>
+      <text x="41"  y="139" text-anchor="middle" fill="#7ee8fa" font-size="13">Le</text>
+
+      <rect x="110" y="122" width="60" height="26" rx="5" fill="#162030" stroke="#f9ca24" stroke-width="1.5"/>
+      <text x="140" y="139" text-anchor="middle" fill="#f9ca24" font-size="13">chat</text>
+
+      <rect x="225" y="122" width="60" height="26" rx="5" fill="#162030" stroke="#ff6b6b" stroke-width="1.5"/>
+      <text x="255" y="139" text-anchor="middle" fill="#ff6b6b" font-size="13">noir</text>
+
+      <!-- Alignment lines -->
+      <!-- The → Le (straight, cyan) -->
+      <line x1="41"  y1="46" x2="41"  y2="122" stroke="#7ee8fa" stroke-width="2"/>
+
+      <!-- black → noir (diagonal right, crosses cat→chat) -->
+      <line x1="140" y1="46" x2="255" y2="122" stroke="#ff6b6b" stroke-width="2"/>
+
+      <!-- cat → chat (diagonal left, crosses black→noir) -->
+      <line x1="251" y1="46" x2="140" y2="122" stroke="#f9ca24" stroke-width="2"/>
+
+      <!-- "CROSS" label at intersection -->
+      <circle cx="196" cy="84" r="10" fill="#1a0a0a" stroke="#ff6b6b" stroke-width="1.5"/>
+      <text x="196" y="88" text-anchor="middle" fill="#ff6b6b" font-size="9" font-weight="bold">✕</text>
+    </svg>
+  </div>
+  <aside class="notes">
+    The crossing alignment (called a "non-monotonic" alignment) is common between English and
+    French for adjective-noun pairs, and extremely common for English-Japanese or English-Chinese
+    where word order differences are far more radical. IBM Model 1 allows any alignment; Models
+    2–5 progressively penalise or model long-distance reorderings. The fertility concept in Model 3
+    handles morphologically rich languages where one English word maps to several target tokens.
+  </aside>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SECTION 3 — The Neural Turn
+     ═══════════════════════════════════════════ -->
+
+<!-- Slide 10 — Section divider -->
+<section data-background-color="#1a1200">
+  <span class="big-emoji">⚡</span>
+  <p class="section-label">Section 2</p>
+  <h2 class="divider-title">The Neural Turn</h2>
+  <p style="font-size:0.7em; color:var(--text-muted);">Word embeddings, sequence models, and the Transformer</p>
+</section>
+
+<!-- Slide 11 — Word embeddings -->
+<section data-background-color="#1a1200">
+  <h2><span class="pill">2013</span> Word Embeddings: Meaning as a Vector</h2>
+  <ul>
+    <li>Word2Vec (Google, 2013): map every word to a <strong style="color:var(--accent)">dense vector</strong> in high-dimensional space</li>
+    <li>Words with similar meanings end up close together in that space</li>
+    <li>Arithmetic works on meaning:</li>
+  </ul>
+  <div class="box" style="font-size:0.88em; text-align:center;">
+    <span class="mono">king</span> − <span class="mono">man</span> + <span class="mono">woman</span> ≈ <span class="mono" style="color:var(--accent);">queen</span>
+  </div>
+  <ul>
+    <li>The network never "reads" a definition — it learns meaning from context patterns alone</li>
+    <li>GloVe (Stanford, 2014), FastText (Facebook, 2016) followed with improvements</li>
+    <li>Problem: one fixed vector per word — <em>"bank"</em> gets one representation regardless of context</li>
+  </ul>
+  <aside class="notes">
+    Word2Vec was a watershed moment. The king-queen analogy showed that neural networks were
+    encoding genuine semantic relationships. The limitation — one vector per word — was solved
+    by ELMo (2018) and then BERT (2018), which produce context-dependent representations.
+  </aside>
+</section>
+
+<!-- Slide 12 — Transformers for NLP -->
+<section data-background-color="#1a1200">
+  <h2><span class="pill">2017</span> The Transformer Changes Everything</h2>
+  <div class="cols" style="align-items:start;">
+    <ul style="font-size:0.88em;">
+      <li>"Attention Is All You Need" (Vaswani et al., Google, 2017)</li>
+      <li>Replaces recurrent networks — processes <strong style="color:var(--accent)">all words in parallel</strong></li>
+      <li><strong>Self-attention</strong>: every word attends to every other word simultaneously</li>
+      <li>Enables training on far larger datasets — no sequential bottleneck</li>
+      <li>Originally for machine translation — quickly taken over every NLP task</li>
+    </ul>
+    <div>
+      <div class="box-yellow" style="font-size:0.82em;">
+        Before Transformers, translating a 100-word sentence required 100 sequential steps.
+        Transformers process all 100 words at once.
+      </div>
+      <div class="box" style="font-size:0.82em; margin-top:0.5em;">
+        <strong>Encoder</strong>: reads and understands text (BERT family)<br>
+        <strong>Decoder</strong>: generates text (GPT family)<br>
+        <strong>Both</strong>: translation (original Transformer, T5)
+      </div>
+    </div>
+  </div>
+  <aside class="notes">
+    The parallelism is the key practical advantage — it means you can use GPUs/TPUs maximally
+    efficiently. RNNs were fundamentally sequential. The attention mechanism also handles
+    long-range dependencies much better than LSTMs.
+  </aside>
+</section>
+
+<!-- Slide 13 — BERT vs GPT -->
+<section data-background-color="#1a1200">
+  <h2><span class="pill">2018</span> Two Paradigms: BERT vs GPT</h2>
+  <div class="two-side">
+    <div class="side-left">
+      <h4>BERT (Google)</h4>
+      <ul>
+        <li>Bidirectional encoder</li>
+        <li>Trained by predicting <strong>masked</strong> words: "The [MASK] sat on the mat"</li>
+        <li>Great at understanding — classification, NER, question answering</li>
+        <li>Cannot generate new text</li>
+      </ul>
+    </div>
+    <div class="side-right">
+      <h4>GPT (OpenAI)</h4>
+      <ul>
+        <li>Left-to-right decoder</li>
+        <li>Trained by predicting the <strong>next</strong> word</li>
+        <li>Great at generating text</li>
+        <li>Scales to become a general-purpose system</li>
+      </ul>
+    </div>
+  </div>
+  <div class="box" style="margin-top:0.8em;">
+    In 2018–2020, BERT dominated NLP benchmarks. By 2022–25, the GPT paradigm won — generation
+    at scale turned out to be the more powerful approach.
+  </div>
+  <aside class="notes">
+    BERT achieved state-of-the-art on 11 NLP tasks simultaneously when released — a stunning result.
+    But the autoregressive (GPT-style) approach turned out to scale better and be more flexible.
+    The debate is essentially resolved now: most frontier models are decoder-only.
+  </aside>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SECTION 4 — Modern Architectures
+     ═══════════════════════════════════════════ -->
+
+<!-- Slide 14 — Section divider -->
+<section data-background-color="#0a1628">
+  <span class="big-emoji">🏗️</span>
+  <p class="section-label">Section 3</p>
+  <h2 class="divider-title">Modern Architectures</h2>
+  <p style="font-size:0.7em; color:var(--text-muted);">Scaling laws and Mixture of Experts</p>
+</section>
+
+<!-- Slide 15 — Scaling laws -->
+<section data-background-color="#0a1628">
+  <h2>Scaling Laws</h2>
+  <ul>
+    <li>Kaplan et al. (OpenAI, 2020): model performance follows <strong style="color:var(--accent)">predictable power laws</strong> with scale</li>
+    <li>More parameters + more data + more compute → reliably better models</li>
+    <li>Chinchilla (DeepMind, 2022): earlier models were <em>undertrained</em> — optimal ratio is roughly <strong style="color:var(--accent)">20 tokens per parameter</strong></li>
+    <li>This shifted the field: train smaller models on much more data</li>
+  </ul>
+  <div class="box-yellow">
+    LLaMA 3 (8B parameters) trained on 15 trillion tokens outperforms GPT-3 (175B parameters)
+    trained on 300B tokens. Size isn't everything — training data volume matters enormously.
+  </div>
+  <aside class="notes">
+    The Chinchilla result was a wake-up call: GPT-3 and its contemporaries were massively
+    under-trained relative to their size. The compute-optimal strategy requires matching data
+    volume to model size. This led to the "efficient but data-heavy" approach seen in LLaMA 3,
+    Qwen 2.5, and DeepSeek V3.
+  </aside>
+</section>
+
+<!-- Slide 16 — MoE concept -->
+<section data-background-color="#0a1628">
+  <h2>Mixture of Experts (MoE): The Idea</h2>
+  <ul>
+    <li>Instead of one large dense neural network, use <strong style="color:var(--accent)">many specialised sub-networks</strong> ("experts")</li>
+    <li>A learned <strong>router</strong> selects which 2–4 experts to activate for each input token</li>
+    <li>Only the selected experts do work — most of the model sits idle for any given token</li>
+  </ul>
+  <div class="box">
+    <strong>Analogy:</strong> A hospital with 20 specialist doctors. Each patient sees only 2–3 relevant
+    specialists. The hospital has huge total capacity, but each patient's visit is fast and cheap.
+  </div>
+  <ul>
+    <li>Result: massive total parameters with only a fraction active — <strong style="color:var(--accent)">fast and cheap at inference</strong></li>
+  </ul>
+  <aside class="notes">
+    MoE isn't new — it dates back to 1991 (Jacobs et al.). But scaling it to transformers
+    required solving routing instability and load balancing (making sure all experts get used,
+    not just a few favourites). Google's Switch Transformer (2021) was the breakthrough paper.
+  </aside>
+</section>
+
+<!-- Slide — Mixture of Experts (MoE) -->
+<section data-background-color="#0a1628">
+  <h2>⚡ Mixture of Experts (MoE)</h2>
+  <ul style="font-size:0.84em; margin-bottom:0.35em;">
+    <li>Standard Transformer: every token passes through <strong>one</strong> large feed-forward network (FFN) — all parameters active</li>
+    <li>MoE replaces the FFN with <strong style="color:var(--accent)">N parallel "expert" sub-networks</strong> + a lightweight <strong style="color:var(--accent)">router</strong></li>
+    <li>Router = a small classifier that picks the <strong>top-K experts</strong> for each token (typically K=2 of 8–64)</li>
+    <li>Result: <strong style="color:var(--accent3)">huge total parameters, tiny active parameter count</strong> — knowledge scales, compute does not</li>
+  </ul>
+
+  <svg viewBox="0 0 580 128" xmlns="http://www.w3.org/2000/svg"
+       style="width:100%;display:block;font-family:Inter,sans-serif;">
+
+    <!-- LEFT: Dense -->
+    <text x="128" y="13" text-anchor="middle" fill="#8892a4" font-size="11">Dense (standard)</text>
+    <rect x="10"  y="52" width="48" height="26" rx="4" fill="#1e3350" stroke="#7ee8fa" stroke-width="1.3"/>
+    <text x="34"  y="69" text-anchor="middle" fill="#7ee8fa" font-size="10">token</text>
+    <line x1="58" y1="65" x2="72" y2="65" stroke="#7ee8fa" stroke-width="1.5"/>
+    <polygon points="70,61 76,65 70,69" fill="#7ee8fa"/>
+    <rect x="76"  y="38" width="100" height="54" rx="5" fill="rgba(249,202,36,0.20)" stroke="#f9ca24" stroke-width="2"/>
+    <text x="126" y="61" text-anchor="middle" fill="#f9ca24" font-size="12" font-weight="bold">FFN</text>
+    <text x="126" y="76" text-anchor="middle" fill="#f9ca24" font-size="9">all params active</text>
+    <line x1="176" y1="65" x2="190" y2="65" stroke="#7ee8fa" stroke-width="1.5"/>
+    <polygon points="188,61 194,65 188,69" fill="#7ee8fa"/>
+    <rect x="194" y="52" width="48" height="26" rx="4" fill="#1e3350" stroke="#7ee8fa" stroke-width="1.3"/>
+    <text x="218" y="69" text-anchor="middle" fill="#7ee8fa" font-size="10">output</text>
+    <text x="128" y="104" text-anchor="middle" fill="#8892a4" font-size="9" font-style="italic">every parameter used per token</text>
+
+    <!-- DIVIDER -->
+    <line x1="270" y1="4" x2="270" y2="122" stroke="rgba(126,232,250,0.18)" stroke-width="1"/>
+
+    <!-- RIGHT: MoE -->
+    <text x="452" y="13" text-anchor="middle" fill="#8892a4" font-size="11">MoE (sparse)</text>
+    <rect x="282" y="52" width="48" height="26" rx="4" fill="#1e3350" stroke="#7ee8fa" stroke-width="1.3"/>
+    <text x="306" y="69" text-anchor="middle" fill="#7ee8fa" font-size="10">token</text>
+    <line x1="330" y1="65" x2="344" y2="65" stroke="#7ee8fa" stroke-width="1.5"/>
+    <polygon points="342,61 348,65 342,69" fill="#7ee8fa"/>
+    <rect x="348" y="52" width="54" height="26" rx="4" fill="rgba(126,232,250,0.14)" stroke="#7ee8fa" stroke-width="1.8"/>
+    <text x="375" y="68" text-anchor="middle" fill="#7ee8fa" font-size="11" font-weight="bold">Router</text>
+    <!-- arrows router → experts -->
+    <line x1="402" y1="60" x2="428" y2="26"  stroke="#f9ca24" stroke-width="1.5"/>
+    <polygon points="425,23 432,29 426,22" fill="#f9ca24"/>
+    <line x1="402" y1="65" x2="428" y2="55"  stroke="#f9ca24" stroke-width="1.5"/>
+    <polygon points="425,52 432,58 426,51" fill="#f9ca24"/>
+    <line x1="402" y1="70" x2="428" y2="86"  stroke="#4a4a5a" stroke-width="1" opacity="0.45"/>
+    <line x1="402" y1="72" x2="428" y2="112" stroke="#4a4a5a" stroke-width="1" opacity="0.45"/>
+    <!-- expert boxes -->
+    <rect x="432" y="14"  width="68" height="22" rx="3" fill="rgba(249,202,36,0.22)" stroke="#f9ca24" stroke-width="1.8"/>
+    <text x="466" y="29"  text-anchor="middle" fill="#f9ca24" font-size="10">Expert 1 ✓</text>
+    <rect x="432" y="43"  width="68" height="22" rx="3" fill="rgba(249,202,36,0.22)" stroke="#f9ca24" stroke-width="1.8"/>
+    <text x="466" y="58"  text-anchor="middle" fill="#f9ca24" font-size="10">Expert 2 ✓</text>
+    <rect x="432" y="75"  width="68" height="20" rx="3" fill="rgba(40,40,60,0.4)"   stroke="#3a3a4a" stroke-width="1"/>
+    <text x="466" y="89"  text-anchor="middle" fill="#5a5a6a" font-size="9">Expert 3</text>
+    <rect x="432" y="101" width="68" height="20" rx="3" fill="rgba(40,40,60,0.4)"   stroke="#3a3a4a" stroke-width="1"/>
+    <text x="466" y="115" text-anchor="middle" fill="#5a5a6a" font-size="9">Expert 4</text>
+    <!-- active experts → output -->
+    <line x1="500" y1="25"  x2="516" y2="58" stroke="#f9ca24" stroke-width="1.5"/>
+    <line x1="500" y1="54"  x2="516" y2="62" stroke="#f9ca24" stroke-width="1.5"/>
+    <polygon points="513,62 520,66 515,58" fill="#f9ca24"/>
+    <rect x="520" y="52" width="52" height="26" rx="4" fill="#1e3350" stroke="#7ee8fa" stroke-width="1.3"/>
+    <text x="546" y="69" text-anchor="middle" fill="#7ee8fa" font-size="10">output</text>
+    <text x="452" y="128" text-anchor="middle" fill="#8892a4" font-size="9" font-style="italic">only top-K experts fire — rest skip</text>
+  </svg>
+
+  <div class="box" style="font-size:0.78em; margin-top:0.25em;">
+    <strong>Example:</strong> DeepSeek-V4 Pro — 1.6T total params, only <strong style="color:var(--accent)">49B active per token</strong> (3%). Frontier capability at roughly the compute cost of a 49B dense model.
+  </div>
+  <aside class="notes">
+    The router is trained jointly with the network — it learns to specialise experts on different types of content
+    (syntax, factual recall, reasoning, etc.), though the specialisation is emergent, not explicit.
+    Two training challenges: (1) collapse — early training tends to route all tokens to one expert; fixed by
+    adding noise to router logits. (2) load imbalance — some experts become over-subscribed; fixed by capping
+    tokens per expert and routing overflow to the next-best alternative.
+    Why does total parameter count predict capability better than active count? Li (2026, arXiv:2604.24827)
+    shows R²=0.79 for total params vs 0.51 for active — factual knowledge is distributed across all experts,
+    not just the ones that fire per token.
+  </aside>
+</section>
+
+<!-- Slide 18 — MoE in the wild -->
+<section data-background-color="#0a1628">
+  <h2>MoE Models in the Wild</h2>
+  <div class="cols3" style="gap:0.8em; font-size:0.80em;">
+    <div class="lab-card">
+      <h4>DeepSeek-V4 Pro</h4>
+      <ul>
+        <li>DeepSeek, Apr 2026</li>
+        <li>1.6T total / 49B active (3%)</li>
+        <li>80.6% SWE-Bench; MIT licence</li>
+        <li>Frontier capability, open weights</li>
+      </ul>
+    </div>
+    <div class="lab-card">
+      <h4>GLM-5.1</h4>
+      <ul>
+        <li>Zhipu AI, Apr 2026</li>
+        <li>754B total / 40B active</li>
+        <li>SWE-Bench Pro 58.4%; MIT</li>
+        <li>Strong coding &amp; reasoning</li>
+      </ul>
+    </div>
+    <div class="lab-card">
+      <h4>Kimi K2.6</h4>
+      <ul>
+        <li>Moonshot AI, Apr 2026</li>
+        <li>~1T total / 32B active</li>
+        <li>HLE 54.0%; Modified MIT</li>
+        <li>Long-context &amp; agentic tasks</li>
+      </ul>
+    </div>
+  </div>
+  <div class="box" style="margin-top:0.6em; font-size:0.80em;">
+    MoE is now standard for frontier models. It decouples "knowledge capacity" from "inference
+    cost" — you get a huge model that runs nearly as fast as a small one.
+  </div>
+  <aside class="notes">
+    All three models were released in April 2026, all open-weights, all using MoE. The
+    simultaneous release of multiple strong open-weight MoE models from different labs
+    signals that MoE is now the default architecture for large-scale training.
+  </aside>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SECTION 5 — Training Methods
+     ═══════════════════════════════════════════ -->
+
+<!-- Slide 19 — Section divider -->
+<section data-background-color="#0f2318">
+  <span class="big-emoji">🔧</span>
+  <p class="section-label">Section 4</p>
+  <h2 class="divider-title">Training Methods</h2>
+  <p style="font-size:0.7em; color:var(--text-muted);">Tokens, reinforcement learning, and energy</p>
+</section>
+
+<!-- Slide 20 — Pre-training token counts -->
+<section data-background-color="#0f2318">
+  <h2>Pre-training from Scratch: Token Counts</h2>
+  <div class="cols" style="align-items:center; gap:1em;">
+    <ul style="font-size:0.82em;">
+      <li>One <strong style="color:var(--accent)">token</strong> ≈ ¾ of a word</li>
+      <li>Pre-training = feeding the model trillions of tokens, one next-token prediction at a time</li>
+      <li>Modern open models use 10–20× more tokens than early GPT models</li>
+      <li>More tokens → more knowledge, better reasoning — up to a point</li>
+    </ul>
+    <!-- Bar chart SVG -->
+    <svg viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg"
+         style="width:100%; display:block; font-family:Inter,sans-serif;">
+      <!-- axis -->
+      <line x1="95" y1="10" x2="95" y2="185" stroke="#8892a4" stroke-width="1"/>
+      <line x1="95" y1="185" x2="275" y2="185" stroke="#8892a4" stroke-width="1"/>
+      <!-- x-axis labels -->
+      <text x="95"  y="198" text-anchor="middle" fill="#8892a4" font-size="9">0</text>
+      <text x="185" y="198" text-anchor="middle" fill="#8892a4" font-size="9">9T</text>
+      <text x="275" y="198" text-anchor="middle" fill="#8892a4" font-size="9">18T</text>
+      <text x="185" y="212" text-anchor="middle" fill="#8892a4" font-size="9">tokens</text>
+
+      <!-- Bars (max 18T = 180px width) -->
+      <!-- LLaMA 2: 2T = 20px -->
+      <rect x="95" y="18"  height="22" width="20"  fill="#7ee8fa" opacity="0.7"/>
+      <text x="90" y="33"  text-anchor="end" fill="#e8eaf0" font-size="9">LLaMA 2</text>
+      <text x="118" y="33" fill="#7ee8fa" font-size="9">2T</text>
+
+      <!-- Mistral 7B: ~8T = 80px -->
+      <rect x="95" y="46"  height="22" width="80"  fill="#7ee8fa" opacity="0.7"/>
+      <text x="90" y="61"  text-anchor="end" fill="#e8eaf0" font-size="9">Mistral 7B</text>
+      <text x="178" y="61" fill="#7ee8fa" font-size="9">~8T</text>
+
+      <!-- Gemma 2: 13T = 130px -->
+      <rect x="95" y="74"  height="22" width="130" fill="#f9ca24" opacity="0.8"/>
+      <text x="90" y="89"  text-anchor="end" fill="#e8eaf0" font-size="9">Gemma 2</text>
+      <text x="228" y="89" fill="#f9ca24" font-size="9">13T</text>
+
+      <!-- LLaMA 3: 15T = 150px -->
+      <rect x="95" y="102" height="22" width="150" fill="#f9ca24" opacity="0.8"/>
+      <text x="90" y="117" text-anchor="end" fill="#e8eaf0" font-size="9">LLaMA 3</text>
+      <text x="248" y="117" fill="#f9ca24" font-size="9">15T</text>
+
+      <!-- DeepSeek V3: 14.8T = 148px -->
+      <rect x="95" y="130" height="22" width="148" fill="#ff6b6b" opacity="0.8"/>
+      <text x="90" y="145" text-anchor="end" fill="#e8eaf0" font-size="9">DeepSeek V3</text>
+      <text x="246" y="145" fill="#ff6b6b" font-size="9">14.8T</text>
+
+      <!-- Qwen 2.5: 18T = 180px -->
+      <rect x="95" y="158" height="22" width="180" fill="#ff6b6b" opacity="0.8"/>
+      <text x="90" y="173" text-anchor="end" fill="#e8eaf0" font-size="9">Qwen 2.5</text>
+      <text x="278" y="173" fill="#ff6b6b" font-size="9">18T</text>
+    </svg>
+  </div>
+  <aside class="notes">
+    For context: the entire English Wikipedia is about 4 billion tokens. LLaMA 3 trained on
+    the equivalent of ~3,750 Wikipedias. Qwen 2.5's 18 trillion tokens represent a significant
+    investment in data collection, cleaning, and deduplication — often more expensive than the
+    compute itself.
+  </aside>
+</section>
+
+<!-- Slide 21 — What's in training data -->
+<section data-background-color="#0f2318">
+  <h2>What's in the Training Data?</h2>
+  <ul style="font-size:1em; line-height:1.9;">
+    <li><strong style="color:var(--accent)">Web crawls</strong> (Common Crawl): biggest source — but noisy, needs heavy filtering</li>
+    <li><strong>Books</strong>: high-quality, long-form reasoning</li>
+    <li><strong>Code</strong>: GitHub repositories — dramatically improves structured reasoning</li>
+    <li><strong>Scientific papers</strong>: arXiv, PubMed</li>
+    <li><strong>Math</strong>: textbooks, competition problems, formal proofs</li>
+  </ul>
+  <aside class="notes">
+    The Phi series (Microsoft) showed that training on carefully curated "textbook quality" data
+    could produce surprisingly capable small models. Code training is particularly important —
+    it teaches models to think step-by-step, which transfers to non-code reasoning tasks.
+  </aside>
+</section>
+
+<!-- Slide 22 — RL for reasoning -->
+<section data-background-color="#0f2318">
+  <h2>🧠 Reinforcement Learning for Reasoning</h2>
+  <ul>
+    <li>Pre-training gives broad knowledge. RL teaches the model to <strong style="color:var(--accent)">think harder</strong></li>
+    <li>Key idea: reward the model when its <em>chain of thought</em> leads to a correct answer</li>
+    <li>The model learns to <strong>self-verify</strong>, backtrack, and try multiple approaches</li>
+    <li>No human labels needed for the reasoning steps — just a verifiable final answer</li>
+  </ul>
+  <div class="box_yellow" style="background:rgba(249,202,36,0.10); border-left:4px solid #f9ca24; border-radius:6px; padding:0.5em 0.9em; font-size:0.82em; margin:0.5em 0;">
+    DeepSeek-R1 (Jan 2025): trained purely with RL on math and coding problems. The model
+    spontaneously developed an <strong>"aha moment"</strong> — learning to pause, reflect, and
+    reconsider wrong answers mid-generation.
+  </div>
+  <ul>
+    <li>OpenAI o1/o3: similar approach — "thinking tokens" before answering</li>
+    <li>Trade-off: much slower and more expensive at inference time</li>
+  </ul>
+  <aside class="notes">
+    The "aha moment" in DeepSeek-R1 was genuinely surprising — it emerged from RL without being
+    explicitly programmed. The model learned phrases like "Wait, let me reconsider..." as a useful
+    strategy. This is an example of emergent behavior from training incentives alone.
+    OpenAI's o3 uses a similar approach and achieved unprecedented scores on ARC-AGI.
+  </aside>
+</section>
+
+<!-- Slide 23 — Chain of Thought -->
+<section data-background-color="#0f2318">
+  <h2>Chain of Thought: Reasoning Step-by-Step</h2>
+  <div class="cols" style="align-items:start;">
+    <div>
+      <p style="font-size:0.82em; color:var(--text-muted);">Without chain of thought:</p>
+      <div class="box-red" style="font-size:0.8em;">
+        Q: "If a train leaves at 9am at 60 km/h and another at 10am at 80 km/h, when do they meet?"<br><br>
+        A: "11:30am" &nbsp;❌
+      </div>
+    </div>
+    <div>
+      <p style="font-size:0.82em; color:var(--text-muted);">With chain of thought:</p>
+      <div class="box" style="font-size:0.8em;">
+        A: "Train 2 starts 1 hour later. In 1 hour, Train 1 covers 60 km. Train 2 closes the gap at
+        80−60=20 km/h. Time to close: 60/20 = 3 hours. Train 2 departs 10am + 3h = <strong style="color:var(--accent)">1pm ✓</strong>"
+      </div>
+    </div>
+  </div>
+  <ul style="font-size:0.85em; margin-top:0.5em;">
+    <li>Wei et al. (2022, Google): simply adding "Let's think step by step" dramatically improves accuracy</li>
+    <li>RL-trained reasoning models generate much longer, richer thought traces</li>
+    <li><strong style="color:var(--accent)">Test-time compute</strong>: spending more tokens thinking → better answers</li>
+  </ul>
+  <aside class="notes">
+    Chain of thought prompting was one of the most surprising findings in recent NLP: you don't
+    need to change the model at all — just asking it to think aloud massively improves performance
+    on multi-step reasoning tasks. RL-trained models internalize this and do it automatically.
+  </aside>
+</section>
+
+<!-- Slide 24 — Energy -->
+<section data-background-color="#0f2318">
+  <h2>⚡ Energy: The Cost of Intelligence</h2>
+  <div class="cols" style="align-items:start;">
+    <ul style="font-size:0.85em;">
+      <li>Training GPT-3: ~<strong style="color:var(--accent)">1,300 MWh</strong> — powering ~120 US homes for a year</li>
+      <li>Training a frontier model today: estimated <strong style="color:var(--accent)">50–100+ GWh</strong></li>
+      <li>Per-query energy (early estimate): ChatGPT ~10× a Google search — but <strong style="color:var(--accent2);">2025 figures suggest the gap has narrowed</strong> as models became more efficient</li>
+      <li>At ~1B+ daily queries, even small per-query costs add up to enormous totals</li>
+      <li>IEA projects AI could <strong style="color:var(--accent3)">double data-centre electricity use</strong> by 2026</li>
+    </ul>
+    <div>
+      <div class="box-yellow" style="font-size:0.82em;">
+        Microsoft, Google, and Amazon have all made major investments in nuclear energy (SMRs)
+        specifically to power AI data centres.
+      </div>
+      <div class="box" style="font-size:0.82em; margin-top:0.5em;">
+        <strong>The efficiency race:</strong> DeepSeek V3 achieved frontier performance at a fraction
+        of the energy cost — proving that clever algorithms can reduce the footprint significantly.
+      </div>
+    </div>
+  </div>
+  <aside class="notes">
+    The energy estimates for frontier training are rough — labs don't publicly disclose. The
+    1,287 MWh for GPT-3 is from Patterson et al. (2021) at Google. The 50–100+ GWh for GPT-4
+    is speculative extrapolation. The "10× more than Google search" figure (de Vries 2023)
+    is now contested: more recent 2025 analyses (Epoch AI, Hannah Ritchie) put a GPT-4o
+    query at ~0.3 Wh, roughly on par with a modern Google search — efficiency gains have
+    been substantial. Microsoft signed a deal to restart Three Mile Island nuclear plant
+    for AI power.
+  </aside>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SECTION 6 — The Frontier Race
+     ═══════════════════════════════════════════ -->
+
+<!-- Slide 25 — Section divider -->
+<section data-background-color="#1a0006">
+  <span class="big-emoji">🏁</span>
+  <p class="section-label">Section 5</p>
+  <h2 class="divider-title">The Frontier Race</h2>
+  <p style="font-size:0.7em; color:var(--text-muted);">US labs, China labs, and a very fast clock</p>
+</section>
+
+<!-- Slide 26 — US frontier labs -->
+<section data-background-color="#1a0006">
+  <h2>🇺🇸 US Frontier Labs</h2>
+  <div class="cols" style="gap:0.8em; align-items:start; font-size:0.78em;">
+    <div class="lab-card">
+      <h4>OpenAI</h4>
+      <ul>
+        <li>GPT-4o — multimodal (May 2024)</li>
+        <li>o1/o3 — reasoning (Sep–Dec 2024)</li>
+        <li>GPT-5 / GPT-5.5 — closed API (2025)</li>
+        <li>GPT-OSS 120B — open weights (Aug 2025)</li>
+      </ul>
+    </div>
+    <div class="lab-card">
+      <h4>Anthropic</h4>
+      <ul>
+        <li>Claude 3.5 Sonnet — SOTA (Jun 2024)</li>
+        <li>Claude 3.7 Sonnet — reasoning (Feb 2025)</li>
+        <li>Claude Sonnet 4.6 / Opus 4.7 (2025–26)</li>
+        <li>Safety-focused; closed API</li>
+      </ul>
+    </div>
+    <div class="lab-card">
+      <h4>Google DeepMind</h4>
+      <ul>
+        <li>Gemini 1.5 — 1M context (Feb 2024)</li>
+        <li>Gemini 2.5 Pro — IMO gold (Mar 2025)</li>
+        <li>Gemma 4 31B — open weights (Apr 2026)</li>
+        <li>Gemini API closed; Gemma open</li>
+      </ul>
+    </div>
+    <div class="lab-card">
+      <h4>Meta AI</h4>
+      <ul>
+        <li>LLaMA 3.1 405B (Jul 2024)</li>
+        <li>LLaMA 4 Scout / Maverick (Apr 2025)</li>
+        <li>400B MoE; 10M context; multimodal</li>
+        <li>Open weights (Apache 2.0 / custom)</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">
+    The US lab ecosystem has a clear split: OpenAI and Anthropic are closed API; Meta is fully
+    open weights; Google does both. The competitive dynamic is intense — a major model release
+    roughly every 2–3 months across the ecosystem in 2024–25.
+  </aside>
+</section>
+
+<!-- Slide 27 — China frontier labs -->
+<section data-background-color="#1a0006">
+  <h2>🇨🇳 China's Frontier Labs</h2>
+  <div class="cols" style="gap:0.8em; align-items:start; font-size:0.78em;">
+    <div class="lab-card">
+      <h4>DeepSeek</h4>
+      <ul>
+        <li>V3 — matches GPT-4 (Dec 2024)</li>
+        <li>R1 — open reasoning model (Jan 2025)</li>
+        <li>V4 Pro: 1.6T / 49B active (Apr 2026)</li>
+        <li>80.6% SWE-Bench; MIT licence</li>
+      </ul>
+    </div>
+    <div class="lab-card">
+      <h4>Alibaba (Qwen)</h4>
+      <ul>
+        <li>Qwen 2.5 — 18T tokens (Sep 2024)</li>
+        <li>Qwen3 series — 0.6B → Max (Apr 2026)</li>
+        <li>Qwen3-Max ~685B; 1M context</li>
+        <li>Open weights; strong coding &amp; math</li>
+      </ul>
+    </div>
+    <div class="lab-card">
+      <h4>Zhipu AI (GLM)</h4>
+      <ul>
+        <li>GLM-4 (Jan 2024)</li>
+        <li>GLM-Z1 / GLM-5.1: 754B / 40B active</li>
+        <li>#1 SWE-Bench Pro 58.4% (Apr 2026)</li>
+        <li>MIT licence; Tsinghua spin-out</li>
+      </ul>
+    </div>
+    <div class="lab-card">
+      <h4>Moonshot AI (Kimi)</h4>
+      <ul>
+        <li>Kimi k1.5 — reasoning (Jan 2025)</li>
+        <li>Kimi K2.6: ~1T / 32B active (Apr 2026)</li>
+        <li>HLE 54.0% — leads all models</li>
+        <li>Modified MIT; 256K context</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">
+    China's AI ecosystem is large and fast-moving. Beyond these four, ByteDance (Doubao/Seed),
+    Baidu (ERNIE), Huawei, and state-backed institutes are all active. The DeepSeek story is
+    especially notable because it came from a quantitative trading firm (High-Flyer Capital), not
+    a big tech company.
+  </aside>
+</section>
+
+<!-- Slide 28 — The DeepSeek moment -->
+<section data-background-color="#1a0006">
+  <h2>The DeepSeek Moment: January 2025</h2>
+  <ul>
+    <li>DeepSeek releases <strong style="color:var(--accent)">R1</strong> — an open-weights reasoning model matching o1 on most benchmarks</li>
+    <li>Training cost for V3 (the base): reported at <strong style="color:var(--accent)">~$5.6 million</strong></li>
+    <li>US frontier models estimated to cost <strong style="color:var(--accent3)">$100M–$1B+</strong> to train</li>
+    <li>Stock markets reacted: Nvidia dropped ~17% in one day — $600B market cap wiped</li>
+  </ul>
+  <div class="box-yellow">
+    Key insight: DeepSeek used algorithmic innovations (efficient MoE, FP8 training, novel
+    attention) to dramatically reduce compute needs — even on restricted H800 chips.
+  </div>
+  <div class="box" style="margin-top:0.4em; font-size:0.82em;">
+    The efficiency continued: V4 Pro (Apr 2026) reached <strong>80.6% SWE-Bench</strong> with only 49B active params
+    — proving that <strong>clever engineering can compress the gap</strong> repeatedly.
+  </div>
+  <aside class="notes">
+    The $5.6M figure is for the final training run only — it doesn't include failed experiments,
+    hardware purchase costs, or data preparation. Nonetheless, the efficiency gap with US labs
+    was genuinely shocking. US export controls on high-end chips were meant to slow China's AI
+    progress — DeepSeek showed they hadn't worked as intended.
+  </aside>
+</section>
+
+<!-- Slide 29 — Timeline of releases -->
+<section data-background-color="#1a0006">
+  <h2>A Relentless Release Cadence</h2>
+  <ul style="font-size:0.75em; line-height:1.7;">
+    <li><span class="pill">Mar 2023</span> GPT-4 (OpenAI) — new capability ceiling</li>
+    <li><span class="pill">Dec 2023</span> Gemini Ultra (Google) &nbsp;·&nbsp; Mixtral 8×7B (Mistral)</li>
+    <li><span class="pill">Apr 2024</span> LLaMA 3 (Meta) &nbsp;·&nbsp; Claude 3 Opus (Anthropic)</li>
+    <li><span class="pill">May 2024</span> GPT-4o &nbsp;·&nbsp; DeepSeek V2</li>
+    <li><span class="pill">Sep 2024</span> o1 (OpenAI) &nbsp;·&nbsp; Qwen 2.5</li>
+    <li><span class="pill">Dec 2024</span> DeepSeek V3 &nbsp;·&nbsp; Gemini 2.0 &nbsp;·&nbsp; o3 (OpenAI)</li>
+    <li><span class="pill">Jan 2025</span> DeepSeek-R1 — open reasoning shocks the market</li>
+    <li><span class="pill">Mar 2025</span> Gemini 2.5 Pro (Google) — IMO gold medal</li>
+    <li><span class="pill">Apr 2025</span> LLaMA 4 Scout/Maverick (Meta) &nbsp;·&nbsp; Claude 3.7 Sonnet</li>
+    <li><span class="pill">Aug 2025</span> GPT-OSS 120B (OpenAI) — first open weights since GPT-2</li>
+    <li><span class="pill">Apr 2026</span> DeepSeek-V4 Pro &nbsp;·&nbsp; Kimi K2.6 &nbsp;·&nbsp; GLM-5.1 &nbsp;·&nbsp; Qwen3-Max</li>
+  </ul>
+  <p class="caption">Major releases every 4–8 weeks. The pace shows no sign of slowing.</p>
+  <aside class="notes">
+    This list is not exhaustive — there are dozens of smaller releases between these milestones.
+    The pace of meaningful capability improvement is unlike anything seen before in software.
+    Each new model makes the previous frontier seem modest within months.
+  </aside>
+</section>
+
+<!-- Slide 30 — Chip restrictions -->
+<section data-background-color="#1a0006">
+  <h2>Chip Restrictions &amp; the Efficiency Race</h2>
+  <div class="two-side">
+    <div class="side-left">
+      <h4>US Export Controls</h4>
+      <ul>
+        <li>US restricts export of H100 GPUs to China since Oct 2022</li>
+        <li>H800 (downgraded H100) was created for China — then also restricted in Oct 2023</li>
+        <li>Goal: slow China's frontier AI development</li>
+        <li>China turns to Huawei Ascend chips as alternative</li>
+      </ul>
+    </div>
+    <div class="side-right">
+      <h4>The Response</h4>
+      <ul>
+        <li>DeepSeek trained V3 on H800s — matched H100-trained models</li>
+        <li>Algorithm efficiency compensated for hardware constraints</li>
+        <li>Some argue restrictions accelerated Chinese innovation in efficiency</li>
+        <li>Huawei's Ascend 910C gaining ground in 2025</li>
+      </ul>
+    </div>
+  </div>
+  <div class="box-red" style="margin-top:0.8em; font-size:0.82em;">
+    The "compute gap" strategy assumed hardware was the binding constraint. DeepSeek showed
+    algorithms can substitute — a lesson that has reshuffled the geopolitical calculus.
+  </div>
+  <aside class="notes">
+    This is a live geopolitical debate. Some US policymakers argue tighter restrictions are
+    needed; others argue they are counterproductive and merely slow US customers without stopping
+    Chinese progress. The Commerce Department continues to update the entity list and export
+    control rules.
+  </aside>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SECTION 7 — Future of LLMs
+     ═══════════════════════════════════════════ -->
+
+<!-- Slide 31 — Section divider -->
+<section data-background-gradient="linear-gradient(135deg, #0d1117 0%, #0a1628 100%)">
+  <span class="big-emoji">🔭</span>
+  <p class="section-label">Section 6</p>
+  <h2 class="divider-title">The Future of LLMs</h2>
+  <p style="font-size:0.7em; color:var(--text-muted);">What comes next — and what remains unknown</p>
+</section>
+
+<!-- Slide 32 — Scaling wall? -->
+<section data-background-gradient="linear-gradient(135deg, #0d1117 0%, #0a1628 100%)">
+  <h2>Are Scaling Laws Hitting a Wall?</h2>
+  <ul>
+    <li>Pre-training data is <strong style="color:var(--accent3)">running out</strong> — the public internet has been largely consumed</li>
+    <li>Post-2024: diminishing returns reported for naive pre-training scale</li>
+    <li>Responses from the field:</li>
+  </ul>
+  <ul style="font-size:0.88em; margin-left:1em;">
+    <li>→ <strong style="color:var(--accent)">Synthetic data</strong>: generate training data with existing models</li>
+    <li>→ <strong style="color:var(--accent)">Test-time compute</strong>: spend more tokens "thinking" per query (o1/o3/R1)</li>
+    <li>→ <strong style="color:var(--accent)">Better architectures</strong>: MoE, attention variants, state-space models</li>
+    <li>→ <strong style="color:var(--accent)">Better data curation</strong>: quality over quantity</li>
+  </ul>
+  <div class="box-yellow" style="margin-top:0.5em; font-size:0.82em;">
+    The next scaling era may be in <strong>inference compute</strong> rather than training compute —
+    models that "think longer" on hard problems.
+  </div>
+  <aside class="notes">
+    Some researchers (e.g. Ilya Sutskever) believe we've exhausted the "low-hanging fruit" of
+    internet pre-training. The shift to synthetic data and test-time scaling is a meaningful
+    change in direction. Mamba and other state-space models are challengers to the transformer
+    architecture, though they haven't yet matched it at scale.
+  </aside>
+</section>
+
+<!-- Slide 33 — Reasoning and planning -->
+<section data-background-gradient="linear-gradient(135deg, #0d1117 0%, #0a1628 100%)">
+  <h2>Reasoning &amp; Planning</h2>
+  <ul>
+    <li>Current LLMs are good at <em>pattern recognition</em> — less good at <strong style="color:var(--accent)">multi-step planning</strong></li>
+    <li>RL-trained reasoning models (o3, R1) are a major step forward — but still brittle</li>
+    <li>Open problems:</li>
+  </ul>
+  <ul style="font-size:0.88em; margin-left:1em;">
+    <li>→ <strong>Reliable multi-step tool use</strong>: search, code execution, API calls</li>
+    <li>→ <strong>Long-horizon planning</strong>: decompose complex goals over many steps</li>
+    <li>→ <strong>Self-correction</strong>: detect and fix errors during generation</li>
+    <li>→ <strong>World models</strong>: understanding causality and physical dynamics</li>
+  </ul>
+  <div class="box" style="font-size:0.82em; margin-top:0.5em;">
+    The gap between "very good at language tasks" and "can reliably solve novel real-world
+    problems" is large — and closing faster than most expected.
+  </div>
+  <aside class="notes">
+    ARC-AGI is a benchmark designed specifically to test novel reasoning that can't be solved by
+    pattern matching. o3 scored 87.5% in high-compute mode — up from ~5% for GPT-4. But it used
+    enormous compute per problem. The challenge is making this efficient and reliable.
+  </aside>
+</section>
+
+<!-- Slide 34 — Agents -->
+<section data-background-gradient="linear-gradient(135deg, #0d1117 0%, #0a1628 100%)">
+  <h2>🤖 Agents: LLMs That Act</h2>
+  <ul>
+    <li>An <strong style="color:var(--accent)">agent</strong> is an LLM connected to tools: web search, code execution, file systems, APIs</li>
+    <li>The model decides which tool to call, interprets the result, and plans the next step</li>
+    <li>Applications: software engineering (Devin, Claude Code), research, data analysis</li>
+    <li>Multi-agent systems: multiple models collaborating, checking each other's work</li>
+  </ul>
+  <div class="box-yellow" style="font-size:0.82em;">
+    SWE-Bench: real GitHub software bugs. GPT-4 (2023): ~2% solved.
+    Claude 3.5 Sonnet (2024): ~49%. DeepSeek-V4 Pro (2026): <strong>80.6%</strong> — a 40× improvement in 3 years.
+  </div>
+  <div class="box-red" style="font-size:0.82em; margin-top:0.4em;">
+    Risk: agents that take real-world actions can cause real-world harm. Reliability,
+    oversight, and permission systems are active research areas.
+  </div>
+  <aside class="notes">
+    Claude Code (what is being used to help me prepare these slides!) is an example of an AI
+    coding agent. SWE-bench measures the ability to fix real GitHub issues in popular open-source
+    repositories — far harder than toy coding problems. The jump from 2% to 50%+ in 18 months
+    is remarkable.
+  </aside>
+</section>
+
+<!-- Slide 35 — Open challenges -->
+<section data-background-gradient="linear-gradient(135deg, #0d1117 0%, #0a1628 100%)">
+  <h2>Open Challenges</h2>
+  <div class="cols" style="align-items:start; font-size:0.85em;">
+    <ul>
+      <li><strong style="color:var(--accent3)">Hallucination</strong> — models confidently state false information</li>
+      <li><strong style="color:var(--accent3)">Reasoning reliability</strong> — small prompt changes cause large performance swings</li>
+      <li><strong style="color:var(--accent3)">Context limits</strong> — even 1M-token windows struggle with very long documents</li>
+      <li><strong style="color:var(--accent3)">Evaluation</strong> — benchmarks saturate; measuring real-world capability is hard</li>
+    </ul>
+    <ul>
+      <li><strong style="color:var(--accent)">Interpretability</strong> — we don't understand <em>how</em> models reach conclusions</li>
+      <li><strong style="color:var(--accent)">Alignment</strong> — reliably making models do what we want</li>
+      <li><strong style="color:var(--accent)">Compute efficiency</strong> — sustainable energy use at scale</li>
+      <li><strong style="color:var(--accent)">Data scarcity</strong> — what to train on next</li>
+    </ul>
+  </div>
+  <div class="box" style="margin-top:0.8em; font-size:0.82em;">
+    Every one of these is an active research area with PhD-level careers attached. The field
+    is not "solved" — it has never been more open.
+  </div>
+  <aside class="notes">
+    Interpretability (mechanistic interpretability) is a field trying to reverse-engineer what
+    computations are happening inside neural networks. Anthropic, DeepMind, and academic labs
+    have made progress — identifying "features" and "circuits" — but we're still far from a
+    full mechanistic account.
+  </aside>
+</section>
+
+<!-- Slide 36 — Closing -->
+<section data-background-gradient="linear-gradient(135deg, #0d1117 0%, #1a0f2e 100%)">
+  <span class="big-emoji">🤔</span>
+  <ul style="font-size:0.88em;">
+    <li>NLP went from hand-written grammar rules to self-taught trillion-parameter models in 70 years</li>
+    <li>The last 5 years moved faster than the previous 65</li>
+    <li>The technology is powerful, economically significant, and not well understood — even by its creators</li>
+  </ul>
+  <div class="box-yellow" style="margin-top:0.8em; text-align:center; font-size:0.88em;">
+    "The models are getting better faster than our ability to evaluate them,<br>
+    understand them, or govern them."
+  </div>
+  <h3 style="margin-top:0.8em;">Questions?</h3>
+  <aside class="notes">
+    End on genuine intellectual humility. The field is moving so fast that even leading
+    researchers are surprised by what emerges. Encourage students to stay curious, read primary
+    sources (papers on arXiv are free), and consider that the most important contributions to
+    this field are yet to be made.
+  </aside>
+</section>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/notes/notes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/highlight/highlight.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/zoom/zoom.js"></script>
+
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    controls: true,
+    progress: true,
+    center: true,
+    transition: 'slide',
+    transitionSpeed: 'fast',
+    backgroundTransition: 'fade',
+    plugins: [ RevealNotes, RevealHighlight, RevealZoom ]
+  });
+</script>
+</body>
+</html>
