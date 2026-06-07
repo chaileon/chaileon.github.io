@@ -100,7 +100,7 @@ ATTITUDE_SCORES = {
 
 # ── Ollama API ────────────────────────────────────────────────────────────────
 
-def ollama_chat(messages, system="", temperature=0.7):
+def ollama_chat(messages, system="", temperature=0.0):
     """Call Ollama /api/chat and return the assistant's text reply."""
     all_messages = []
     if system:
@@ -163,7 +163,7 @@ def attitude_score(attitude):
 def get_initial_attitude(topic, persuadee_sys):
     """Ask the persuadee for its attitude before any debate turns."""
     messages = [{"role": "user", "content": _ATTITUDE_Q.format(pos=topic["pos"])}]
-    raw = ollama_chat(messages, system=persuadee_sys, temperature=0)
+    raw = ollama_chat(messages, system=persuadee_sys)
     att = parse_attitude(raw)
     return att, attitude_score(att)
 
