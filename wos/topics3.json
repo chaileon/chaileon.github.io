@@ -1,0 +1,52 @@
+[
+  {
+    "topic": "Spoilers",
+    "pos": "Knowing major plot spoilers in advance does not reduce, and can even increase, enjoyment of a film or novel.",
+    "neg": "Spoilers ruin a story by removing suspense, so they should always be avoided."
+  },
+  {
+    "topic": "Tipping",
+    "pos": "Restaurants should abolish tipping and pay staff a higher fixed wage built into menu prices.",
+    "neg": "Tipping should stay because it rewards good service and lets diners reward staff directly."
+  },
+  {
+    "topic": "Standing Desks",
+    "pos": "Standing desks offer no meaningful health benefit over sitting and are not worth their cost.",
+    "neg": "Standing desks are clearly healthier than sitting all day and are a worthwhile investment."
+  },
+  {
+    "topic": "Primary Homework",
+    "pos": "Primary schools should assign no homework, as it offers little academic benefit at that age.",
+    "neg": "Homework in primary school builds discipline and reinforces learning, so it should continue."
+  },
+  {
+    "topic": "Daylight Saving",
+    "pos": "Daylight saving time should be abolished and clocks kept constant all year.",
+    "neg": "Daylight saving time is worth keeping for the extra evening daylight it gives us."
+  },
+  {
+    "topic": "Bottled Water",
+    "pos": "Where tap water is safe, bottled water offers no health advantage and is a waste of money.",
+    "neg": "Bottled water is cleaner and safer than tap water, so paying for it is justified."
+  },
+  {
+    "topic": "Open-Plan Offices",
+    "pos": "Open-plan offices reduce focus and productivity and should be replaced with quieter layouts.",
+    "neg": "Open-plan offices boost collaboration and communication, so they are the better design."
+  },
+  {
+    "topic": "Plastic Recycling",
+    "pos": "Most household plastic recycling is ineffective, and effort is better spent reducing consumption.",
+    "neg": "Recycling household plastic is clearly worthwhile and everyone should keep doing it."
+  },
+  {
+    "topic": "E-readers vs Paper",
+    "pos": "E-readers are as good as or better than paper books for reading comfort and retention.",
+    "neg": "Paper books lead to better focus and comprehension than screens, so they remain superior."
+  },
+  {
+    "topic": "Self-Checkout",
+    "pos": "Supermarket self-checkout machines worsen the shopping experience, and stores should bring back staffed lanes.",
+    "neg": "Self-checkout machines are faster and more convenient, so stores should expand them."
+  }
+]
