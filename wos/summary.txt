@@ -1,0 +1,50 @@
+==> output1/topics2/persuader_config_tom.json <==
+{
+  "summary": {
+    "model": "qwen2.5:1.5b",
+    "turns_per_debate": 3,
+    "temperature": 0.7,
+    "repeats_per_topic": 3,
+    "n_topics": 6,
+    "n_completed": 6,
+    "avg_persuasion_score": 0.75,
+    "std_across_topics": 0.2041,
+    "sem_across_topics": 0.0833,
+    "n_debates_total": 18,
+    "avg_attitude_delta": 2
+  },
+  "results": [
+
+==> output1/topics2/persuader_config_v2.json <==
+{
+  "summary": {
+    "model": "qwen2.5:1.5b",
+    "turns_per_debate": 3,
+    "temperature": 0.7,
+    "repeats_per_topic": 3,
+    "n_topics": 6,
+    "n_completed": 6,
+    "avg_persuasion_score": 0.6389,
+    "std_across_topics": 0.2453,
+    "sem_across_topics": 0.1002,
+    "n_debates_total": 17,
+    "avg_attitude_delta": 1.176
+  },
+  "results": [
+
+==> output1/topics2/persuader_config.json <==
+{
+  "summary": {
+    "model": "qwen2.5:1.5b",
+    "turns_per_debate": 3,
+    "temperature": 0.7,
+    "repeats_per_topic": 3,
+    "n_topics": 6,
+    "n_completed": 6,
+    "avg_persuasion_score": 0.6389,
+    "std_across_topics": 0.1948,
+    "sem_across_topics": 0.0795,
+    "n_debates_total": 18,
+    "avg_attitude_delta": 1.111
+  },
+  "results": [
