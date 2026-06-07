@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-debate_ollama.py — Debate simulator using Ollama (gemma4:latest).
+debate_ollama.py — Debate simulator using Ollama (qwen2.5:1.5b).
 
-Two gemma4 instances debate topics loaded from a JSON file:
+Two model instances debate topics loaded from a JSON file:
   • Persuader — configurable system prompt (edit PERSUADER_SYS_PROMPT below,
                 or pass --persuader-prompt <file> to load from a text file)
   • Persuadee — neutral, open-minded system prompt
@@ -35,7 +35,7 @@ from pathlib import Path
 import requests
 
 OLLAMA_URL = "http://localhost:11434"
-MODEL = "qwen3:4b"
+MODEL = "qwen2.5:1.5b"
 
 # ════════════════════════════════════════════════════════════════════════════
 #  PERSUADER SYSTEM PROMPT — edit this to change the persuader's strategy.
@@ -103,13 +103,8 @@ ATTITUDE_SCORES = {
 
 # ── Ollama API ────────────────────────────────────────────────────────────────
 
-def ollama_chat(messages, system="", temperature=0.0, think=False):
-    """Call Ollama /api/chat and return the assistant's text reply.
-
-    When think=True (Qwen3 / QwQ / deepseek-r1 etc.), Ollama routes the
-    reasoning trace into a separate message["thinking"] field, so the
-    returned content stays clean. Models without thinking support ignore it.
-    """
+def ollama_chat(messages, system="", temperature=0.0):
+    """Call Ollama /api/chat and return the assistant's text reply."""
     all_messages = []
     if system:
         all_messages.append({"role": "system", "content": system})
@@ -119,7 +114,6 @@ def ollama_chat(messages, system="", temperature=0.0, think=False):
         "model": MODEL,
         "messages": all_messages,
         "stream": False,
-        "think": think,
         "options": {"temperature": temperature},
         "top-p": 1,
     }
@@ -179,7 +173,7 @@ def get_initial_attitude(topic, persuadee_sys):
     return att, attitude_score(att)
 
 
-def run_debate(topic, n_turns, persuader_sys_template, temperature=0.7, think=False):
+def run_debate(topic, n_turns, persuader_sys_template, temperature=0.7):
     pos = topic["pos"]
     neg = topic["neg"]
 
@@ -201,7 +195,7 @@ def run_debate(topic, n_turns, persuader_sys_template, temperature=0.7, think=Fa
             p_prompt = _PERSUADER_NEXT.format(response=last_persuadee_resp)
 
         persuader_history.append({"role": "user", "content": p_prompt})
-        persuader_raw = ollama_chat(persuader_history, system=persuader_sys, temperature=temperature, think=think)
+        persuader_raw = ollama_chat(persuader_history, system=persuader_sys, temperature=temperature)
         persuader_history.append({"role": "assistant", "content": persuader_raw})
 
         # Extract only the <argument> block so persuadee never sees <thought>
@@ -215,7 +209,7 @@ def run_debate(topic, n_turns, persuader_sys_template, temperature=0.7, think=Fa
             d_prompt = _PERSUADEE_NEXT.format(argument=persuader_arg)
 
         persuadee_history.append({"role": "user", "content": d_prompt})
-        last_persuadee_resp = ollama_chat(persuadee_history, system=persuadee_sys, temperature=temperature, think=think)
+        last_persuadee_resp = ollama_chat(persuadee_history, system=persuadee_sys, temperature=temperature)
         persuadee_history.append({"role": "assistant", "content": last_persuadee_resp})
 
         turns_log.append({
@@ -255,7 +249,7 @@ def run_debate(topic, n_turns, persuader_sys_template, temperature=0.7, think=Fa
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Ollama debate simulator (gemma4:latest)",
+        description="Ollama debate simulator (qwen2.5:1.5b)",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("--topics", required=True,
@@ -273,9 +267,6 @@ def main():
                              "Attitude scoring always uses temperature 0.")
     parser.add_argument("--repeats", type=int, default=3,
                         help="Independent debates per topic, for error bars (default: 3)")
-    parser.add_argument("--think", action="store_true",
-                        help="Enable native thinking mode on debate turns "
-                             "(Qwen3 / QwQ / deepseek-r1). Attitude scoring never thinks.")
     args = parser.parse_args()
 
     # Load persuader prompt
@@ -295,7 +286,6 @@ def main():
     print(f"Turns       : {args.turns}")
     print(f"Temperature : {args.temperature}")
     print(f"Repeats     : {args.repeats}")
-    print(f"Thinking    : {args.think}")
     print(f"Output      : {args.output}\n")
 
     results = []
@@ -308,8 +298,7 @@ def main():
             try:
                 r = run_debate(topic, n_turns=args.turns,
                                persuader_sys_template=persuader_sys,
-                               temperature=args.temperature,
-                               think=args.think)
+                               temperature=args.temperature)
                 runs.append(r)
                 scores.append(r["persuasion_score"])
                 sign = "+" if r["delta"] >= 0 else ""

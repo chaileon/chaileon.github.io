@@ -426,13 +426,13 @@
           <strong>Run Cells 1–2 to set-up Ollama</strong>
           <p>
             Cell 1 installs <strong>Ollama</strong> and starts the server.
-            Cell 2 loads the <code>gemma4:e4b</code> model (~5 GB). This
-            may take 3–5 minutes — a lot of output is normal. No runtime
+            Cell 2 loads the <code>qwen2.5:1.5b</code> model (~1 GB). This
+            may take 1–2 minutes — a lot of output is normal. No runtime
             restart is needed after this step.
           </p>
           <pre><code>!apt-get install -y zstd
 !curl -fsSL https://ollama.com/install.sh | sh
-# starts server + pulls gemma4:e4b automatically</code></pre>
+# starts server + pulls qwen2.5:1.5b automatically</code></pre>
         </div>
       </li>
 
@@ -441,7 +441,7 @@
           <strong>Confirm the model is ready</strong>
           <p>
             Once the cell finishes you should see Ollama confirm that
-            <code>gemma4:e4b</code> has been pulled successfully. No
+            <code>qwen2.5:1.5b</code> has been pulled successfully. No
             separate "load model" step is required.
           </p>
         </div>
@@ -473,6 +473,28 @@
       </li>
 
     </ol>
+
+    <div class="callout callout-blue">
+      <p class="callout-title">Tuning the run (command-line options)</p>
+      <p>
+        The run cell calls <code>debate_ollama.py</code>. You can change how it
+        runs by editing the flags in that cell:
+      </p>
+      <ul style="margin-bottom:0">
+        <li><code>--persuader-prompt &lt;file&gt;</code> — load your strategy from a
+            config file (e.g. <code>persuader_config.json</code>).</li>
+        <li><code>--topics &lt;file&gt;</code> — which topic set to debate
+            (<code>topics.json</code>, <code>topics2.json</code>, or
+            <code>topics3.json</code>).</li>
+        <li><code>--turns N</code> — number of debate turns per topic (default 3).</li>
+        <li><code>--temperature T</code> — randomness of the debate turns
+            (default 0.7). Higher means more varied arguments; the attitude
+            scoring is always deterministic regardless of this setting.</li>
+        <li><code>--repeats N</code> — run each topic <em>N</em> times and report
+            the average persuasion score with an error bar (default 3). A single
+            debate is noisy, so this is essential for fair comparison.</li>
+      </ul>
+    </div>
 
     <div class="callout callout-red">
       <p class="callout-title">Common issues</p>
@@ -717,8 +739,11 @@ Rules:
       <p class="callout-title">Comparing prompts fairly</p>
       <p>
         Always test both versions on the <em>same set of topics</em>. Because
-        the model samples randomly, a single run can be noisy — if you have
-        time, run each configuration twice and average the scores.
+        the model samples randomly at <code>--temperature 0.7</code>, a single
+        debate is noisy — so use <code>--repeats N</code> to run each topic
+        several times. The script then reports the mean persuasion score with an
+        error bar (the standard error). Treat two prompts as genuinely different
+        only when their error bars do <em>not</em> overlap.
       </p>
     </div>
   </div>
@@ -773,7 +798,7 @@ Rules:
 
   <div class="card">
     <p>
-      The model powering this project — <code>gemma4:e4b</code> — is a
+      The model powering this project — <code>qwen2.5:1.5b</code> — is a
       compact open-weight model. For context, the table below shows estimated
       parameter counts for recent frontier models, as inferred by the
       <em>Incompressible Knowledge Probes</em> method
