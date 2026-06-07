@@ -371,7 +371,7 @@
         <li><a href="https://chaileon.github.io/wos/debate_ollama_colab.ipynb" target="_blank"><code>debate_ollama_colab.ipynb</code></a> — the notebook</li>
         <li><a href="https://chaileon.github.io/wos/debate_ollama.py" target="_blank"><code>debate_ollama.py</code></a> — the debate simulator</li>
         <li><a href="https://chaileon.github.io/wos/topics.json" target="_blank"><code>topics.json</code></a> — debate topics</li>
-        <li><a href="https://chaileon.github.io/wos/persuader_config.json" target="_blank"><code>persuader_config.json</code></a> — default persuader config</li>
+        <li><a href="https://chaileon.github.io/wos/persuader_config_v1.json" target="_blank"><code>persuader_config_v1.json</code></a> — default persuader config</li>
       </ul>
     </div>
 
@@ -403,7 +403,7 @@
           <p>
             In the left sidebar click the <strong>Files</strong> icon, then
             the upload button, and upload <code>debate_ollama.py</code>,
-            <code>topics.json</code>, and <code>persuader_config.json</code>.
+            <code>topics.json</code>, and <code>persuader_config_v1.json</code>.
             These must be in the same directory as the notebook for it to run.
           </p>
         </div>
@@ -451,7 +451,7 @@
         <div class="step-body">
           <strong>Edit your persuader system prompt</strong>
           <p>
-            Open <code>persuader_config.json</code> and edit the
+            Open <code>persuader_config_v1.json</code> and edit the
             <code>"system_prompt"</code> field. This is where you write your
             strategy — no changes to the Python script are needed. See
             <a href="#sec-task">Section 5</a> for guidance.
@@ -482,7 +482,7 @@
       </p>
       <ul style="margin-bottom:0">
         <li><code>--persuader-prompt &lt;file&gt;</code> — load your strategy from a
-            config file (e.g. <code>persuader_config.json</code>).</li>
+            config file (e.g. <code>persuader_config_v1.json</code>).</li>
         <li><code>--topics &lt;file&gt;</code> — the topic set to debate
             (<code>topics.json</code>).</li>
         <li><code>--turns N</code> — number of debate turns per topic (default 3).</li>
