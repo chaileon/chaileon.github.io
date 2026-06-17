@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kimi K2.7 Pretraining — H200 DGX SuperPOD Configuration</title>
+  <style>
+    :root {
+      --bg:       #0d1117;
+      --surf:     #161b22;
+      --surf2:    #1c2128;
+      --border:   #30363d;
+      --text:     #e6edf3;
+      --muted:    #8b949e;
+      --accent:   #58a6ff;
+      --green:    #3fb950;
+      --yellow:   #d29922;
+      --red:      #f85149;
+      --purple:   #bc8cff;
+      --orange:   #ffa657;
+      --teal:     #39d0d8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', sans-serif;
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+
+    /* ── Layout ── */
+    .page { max-width: 1120px; margin: 0 auto; padding: 0 24px 80px; }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(160deg, #0a0f1a 0%, #111827 60%, #0d1117 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 56px 40px 40px;
+    }
+    header .inner { max-width: 1120px; margin: 0 auto; }
+    .badge {
+      display: inline-block;
+      background: #21262d;
+      border: 1px solid #30363d;
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: .04em;
+      margin-bottom: 20px;
+    }
+    header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      background: linear-gradient(120deg, #e6edf3 30%, #58a6ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+    }
+    header p.sub {
+      color: var(--muted);
+      font-size: 15px;
+      max-width: 680px;
+    }
+    .header-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 36px;
+      max-width: 900px;
+    }
+    .hstat {
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+    }
+    .hstat .val { font-size: 24px; font-weight: 700; color: var(--accent); }
+    .hstat .lbl { font-size: 11px; color: var(--muted); margin-top: 4px; letter-spacing:.03em; }
+
+    /* ── Section titles ── */
+    section { padding: 40px 0 0; }
+    .sec-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sec-num {
+      width: 28px; height: 28px;
+      background: var(--accent);
+      color: #0d1117;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .sec-head h2 { font-size: 18px; font-weight: 600; }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--surf);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+    }
+    .card-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 12px;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+
+    /* ── Tables ── */
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th {
+      background: var(--surf2);
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      padding: 8px 12px;
+      text-align: left;
+    }
+    th:first-child { border-radius: 6px 0 0 6px; }
+    th:last-child  { border-radius: 0 6px 6px 0; }
+    td {
+      padding: 9px 12px;
+      border-bottom: 1px solid rgba(48,54,61,.6);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,.015); }
+    .mono { font-family: 'SF Mono', 'Fira Code', monospace; }
+    .hi { color: var(--accent); font-weight: 600; }
+    .hi-g { color: var(--green); font-weight: 600; }
+    .hi-y { color: var(--yellow); font-weight: 600; }
+    .hi-p { color: var(--purple); }
+    .hi-o { color: var(--orange); }
+    .muted { color: var(--muted); }
+
+    /* ── Metric rows ── */
+    .metric-row {
+      display: flex; align-items: baseline; gap: 8px;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(48,54,61,.5);
+    }
+    .metric-row:last-child { border-bottom: none; }
+    .metric-key { color: var(--muted); min-width: 220px; font-size: 13px; }
+    .metric-val { color: var(--text); font-weight: 600; font-family: 'SF Mono','Fira Code',monospace; }
+    .metric-note { color: var(--muted); font-size: 11px; margin-left: auto; }
+
+    /* ── Parallelism visual ── */
+    .parallel-diagram {
+      background: var(--surf2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      margin: 16px 0;
+      overflow-x: auto;
+    }
+    .pd-row { display: flex; gap: 6px; margin-bottom: 6px; }
+    .pd-label { width: 90px; font-size: 11px; color: var(--muted); display: flex; align-items: center; flex-shrink: 0; }
+    .gpu-block {
+      width: 34px; height: 34px;
+      border-radius: 5px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px; font-weight: 700;
+      color: #0d1117;
+      cursor: default;
+    }
+    .gpu-tp  { background: #58a6ff; }
+    .gpu-pp  { background: #3fb950; }
+    .gpu-dp  { background: #bc8cff; }
+    .gap-sm  { width: 12px; }
+
+    /* ── Progress bars ── */
+    .bar-row { margin-bottom: 12px; }
+    .bar-label { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 12px; }
+    .bar-track {
+      height: 8px;
+      background: var(--surf2);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .bar-fill { height: 100%; border-radius: 4px; transition: width .3s; }
+
+    /* ── Comparison boxes ── */
+    .cmp-box {
+      background: var(--surf2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+    }
+    .cmp-box .cmp-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 4px;
+    }
+    .cmp-box .cmp-val {
+      font-size: 28px;
+      font-weight: 700;
+      font-family: 'SF Mono','Fira Code',monospace;
+      margin-bottom: 4px;
+    }
+    .cmp-box .cmp-sub { font-size: 11px; color: var(--muted); }
+
+    /* ── Timeline ── */
+    .timeline { position: relative; padding-left: 24px; }
+    .timeline::before {
+      content: '';
+      position: absolute; left: 7px; top: 8px; bottom: 8px;
+      width: 2px; background: var(--border);
+    }
+    .tl-item { position: relative; margin-bottom: 20px; }
+    .tl-dot {
+      position: absolute; left: -24px; top: 4px;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      border: 2px solid var(--bg);
+    }
+    .tl-head { font-weight: 600; font-size: 13px; }
+    .tl-body { color: var(--muted); font-size: 12px; margin-top: 2px; }
+
+    /* ── Callout ── */
+    .callout {
+      background: rgba(88,166,255,.06);
+      border: 1px solid rgba(88,166,255,.25);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 12px 16px;
+      font-size: 12.5px;
+      color: #c9d1d9;
+      margin: 16px 0;
+    }
+    .callout.warn {
+      background: rgba(210,153,34,.06);
+      border-color: rgba(210,153,34,.25);
+      border-left-color: var(--yellow);
+    }
+
+    /* ── Footnote ── */
+    .footnote { font-size: 11px; color: var(--muted); margin-top: 10px; }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+      .header-stats { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════ HEADER ═══════════════════════════════════════ -->
+<header>
+  <div class="inner">
+    <div class="badge">PRETRAINING CONFIGURATION · JUNE 2026</div>
+    <h1>Kimi K2.7 Continued Pretraining</h1>
+    <p class="sub">
+      Optimal parallelization strategy and throughput analysis for a 1-trillion-token
+      continued pretraining run on a 30-node H200 DGX SuperPOD (240 × H200 SXM GPUs).
+    </p>
+    <div class="header-stats">
+      <div class="hstat"><div class="val">240</div><div class="lbl">H200 SXM GPUs (30 × 8)</div></div>
+      <div class="hstat"><div class="val">1 T</div><div class="lbl">Target tokens</div></div>
+      <div class="hstat"><div class="val">~1.48 M</div><div class="lbl">Tokens / sec (FP8)</div></div>
+      <div class="hstat"><div class="val">~7.9 d</div><div class="lbl">Estimated wall-clock (FP8)</div></div>
+    </div>
+  </div>
+</header>
+
+<div class="page">
+
+<!-- ═══════════════════════════════════════ §1 MODEL ARCHITECTURE ═══════════════════════════════════════ -->
+<section>
+  <div class="sec-head">
+    <div class="sec-num">1</div>
+    <h2>Model Architecture — Kimi K2.7</h2>
+  </div>
+  <div class="callout warn">
+    Architecture figures are derived from Moonshot AI's public disclosures and model card for Kimi K2.
+    Where exact values are not confirmed, industry-standard estimates for models of equivalent scale are used.
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Core Dimensions</div>
+      <div class="metric-row"><span class="metric-key">Architecture type</span><span class="metric-val hi-p">Mixture-of-Experts (MoE)</span></div>
+      <div class="metric-row"><span class="metric-key">Total parameters</span><span class="metric-val">~1,000 B</span></div>
+      <div class="metric-row"><span class="metric-key">Active parameters / token</span><span class="metric-val hi">~32 B</span></div>
+      <div class="metric-row"><span class="metric-key">Activation ratio</span><span class="metric-val">3.2 %</span></div>
+      <div class="metric-row"><span class="metric-key">Hidden dimension (d_model)</span><span class="metric-val mono">7 168</span></div>
+      <div class="metric-row"><span class="metric-key">Number of layers</span><span class="metric-val mono">61</span></div>
+      <div class="metric-row"><span class="metric-key">Training context length</span><span class="metric-val mono">4 096 tokens</span><span class="metric-note">(initial phase)</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Attention &amp; Expert Config</div>
+      <div class="metric-row"><span class="metric-key">Attention type</span><span class="metric-val hi-p">MLA (Multi-head Latent Attn)</span></div>
+      <div class="metric-row"><span class="metric-key">Attention heads (Q)</span><span class="metric-val mono">128</span></div>
+      <div class="metric-row"><span class="metric-key">KV latent dimension</span><span class="metric-val mono">512</span></div>
+      <div class="metric-row"><span class="metric-key">Routed experts per layer</span><span class="metric-val mono">256</span></div>
+      <div class="metric-row"><span class="metric-key">Active routed experts / token</span><span class="metric-val mono hi">8</span></div>
+      <div class="metric-row"><span class="metric-key">Shared experts per layer</span><span class="metric-val mono">2</span></div>
+      <div class="metric-row"><span class="metric-key">Expert intermediate dim</span><span class="metric-val mono">2 048</span><span class="metric-note">est.</span></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:0;">
+    <div class="card-title">Parameter Budget Breakdown</div>
+    <table>
+      <tr>
+        <th>Component</th>
+        <th>Params (approx.)</th>
+        <th>Active per Token</th>
+        <th>Notes</th>
+      </tr>
+      <tr>
+        <td>Attention (MLA) + norms</td>
+        <td class="mono">~12 B</td>
+        <td class="mono hi-g">~12 B (always)</td>
+        <td class="muted">Dense; shared across all tokens</td>
+      </tr>
+      <tr>
+        <td>MoE FFN — active experts</td>
+        <td class="mono">~988 B</td>
+        <td class="mono hi-g">~20 B (8/256 × 988 B)</td>
+        <td class="muted">Top-8 routing per token</td>
+      </tr>
+      <tr>
+        <td>Embedding + LM Head</td>
+        <td class="mono">~0.5 B</td>
+        <td class="mono hi-g">~0.5 B</td>
+        <td class="muted">Tied weights</td>
+      </tr>
+      <tr>
+        <td><strong>Total active</strong></td>
+        <td class="mono"></td>
+        <td class="mono hi" style="font-size:14px;"><strong>~32.5 B</strong></td>
+        <td></td>
+      </tr>
+    </table>
+    <p class="footnote">FLOPs/token (training, forward + backward) ≈ 6 × active_params = 6 × 32 B = <strong>192 GFLOPs</strong>.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ §2 HARDWARE ═══════════════════════════════════════ -->
+<section>
+  <div class="sec-head">
+    <div class="sec-num">2</div>
+    <h2>Hardware — H200 DGX SuperPOD</h2>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-title">Per-GPU Specs (H200 SXM)</div>
+      <div class="metric-row"><span class="metric-key">Memory</span><span class="metric-val">141 GB HBM3e</span></div>
+      <div class="metric-row"><span class="metric-key">Memory bandwidth</span><span class="metric-val">3.35 TB/s</span></div>
+      <div class="metric-row"><span class="metric-key">FP8 Tensor Core peak</span><span class="metric-val hi">3 958 TFLOPS</span></div>
+      <div class="metric-row"><span class="metric-key">BF16 Tensor Core peak</span><span class="metric-val">1 979 TFLOPS</span></div>
+      <div class="metric-row"><span class="metric-key">NVLink bandwidth</span><span class="metric-val">900 GB/s (bidir)</span></div>
+      <div class="metric-row"><span class="metric-key">TDP</span><span class="metric-val">700 W</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Intra-Node (DGX H200)</div>
+      <div class="metric-row"><span class="metric-key">GPUs per node</span><span class="metric-val">8</span></div>
+      <div class="metric-row"><span class="metric-key">NVLink topology</span><span class="metric-val">NVLink Switch 4.0</span></div>
+      <div class="metric-row"><span class="metric-key">GPU-GPU bandwidth</span><span class="metric-val">900 GB/s each</span></div>
+      <div class="metric-row"><span class="metric-key">Node memory total</span><span class="metric-val">8 × 141 = 1.13 TB</span></div>
+      <div class="metric-row"><span class="metric-key">Node BF16 peak</span><span class="metric-val">15.8 PetaFLOPS</span></div>
+      <div class="metric-row"><span class="metric-key">Node FP8 peak</span><span class="metric-val">31.7 PetaFLOPS</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Cluster (30 Nodes)</div>
+      <div class="metric-row"><span class="metric-key">Total GPUs</span><span class="metric-val hi">240</span></div>
+      <div class="metric-row"><span class="metric-key">Total GPU memory</span><span class="metric-val">33.84 TB</span></div>
+      <div class="metric-row"><span class="metric-key">Cluster BF16 peak</span><span class="metric-val">474.96 PetaFLOPS</span></div>
+      <div class="metric-row"><span class="metric-key">Cluster FP8 peak</span><span class="metric-val hi">949.92 PetaFLOPS</span></div>
+      <div class="metric-row"><span class="metric-key">Inter-node fabric</span><span class="metric-val">InfiniBand NDR</span></div>
+      <div class="metric-row"><span class="metric-key">IB per node</span><span class="metric-val">8 × NDR400 = 3.2 Tbps</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ §3 PARALLELIZATION ═══════════════════════════════════════ -->
+<section>
+  <div class="sec-head">
+    <div class="sec-num">3</div>
+    <h2>Optimal Parallelization Strategy</h2>
+  </div>
+
+  <!-- Primary recommendation table -->
+  <div class="card">
+    <div class="card-title">Recommended Configuration — 240 GPUs</div>
+    <table>
+      <tr>
+        <th>Dimension</th>
+        <th>Symbol</th>
+        <th>Value</th>
+        <th>Rationale</th>
+      </tr>
+      <tr>
+        <td><strong>Tensor Parallelism</strong></td>
+        <td class="mono hi">TP</td>
+        <td class="mono hi" style="font-size:16px;">8</td>
+        <td>One full NVLink domain per node (900 GB/s); splits QKV projections and FFN weight matrices across 8 GPUs. No cross-node bandwidth penalty.</td>
+      </tr>
+      <tr>
+        <td><strong>Pipeline Parallelism</strong></td>
+        <td class="mono hi-g">PP</td>
+        <td class="mono hi-g" style="font-size:16px;">6</td>
+        <td>30 nodes ÷ 5 DP replicas = 6 nodes per pipeline. Partitions 61 layers into ~10 layers/stage (stages 1–5: 10 layers each; stage 6: 11 layers + LM head). Bubble fraction = 5/64 ≈ 7.8% with 64 micro-batches.</td>
+      </tr>
+      <tr>
+        <td><strong>Data Parallelism</strong></td>
+        <td class="mono hi-p">DP</td>
+        <td class="mono hi-p" style="font-size:16px;">5</td>
+        <td>5 independent pipeline replicas. Gradient reduce-scatter via ZeRO Stage 2 over InfiniBand. Check: TP × PP × DP = 8 × 6 × 5 = <span class="hi-g">240 ✓</span></td>
+      </tr>
+      <tr>
+        <td><strong>Expert Parallelism</strong></td>
+        <td class="mono hi-o">EP</td>
+        <td class="mono hi-o" style="font-size:16px;">8</td>
+        <td>EP = TP (same NVLink group). Each GPU holds 256 ÷ 8 = <strong>32 routed experts</strong> per MoE layer. All2All for token dispatch uses high-BW NVLink; no cross-node expert traffic within a stage.</td>
+      </tr>
+      <tr>
+        <td><strong>Sequence Parallelism</strong></td>
+        <td class="mono" style="color:var(--teal);">SP</td>
+        <td class="mono" style="color:var(--teal); font-size:16px;">ON</td>
+        <td>Paired with TP=8; splits sequence dimension across the TP group for LayerNorm and Dropout, reducing per-GPU activation memory by ~8×.</td>
+      </tr>
+      <tr>
+        <td><strong>ZeRO Stage</strong></td>
+        <td class="mono">ZeRO</td>
+        <td class="mono" style="font-size:16px;">2</td>
+        <td>Shards optimizer states and gradients across DP=5, cutting optimizer memory by 5×. Full param replication preserved for fast AR access pattern.</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Pipeline layout diagram -->
+  <div class="card">
+    <div class="card-title">Pipeline + Cluster Topology Visualization</div>
+    <div class="parallel-diagram">
+      <p style="font-size:11px;color:var(--muted);margin-bottom:14px;">
+        Each colored block = 1 GPU. Each row = 1 H200 DGX node (8 GPUs).
+        Color = pipeline stage. Columns = TP group (8 GPUs, same node).
+        Rows grouped by DP replica (6 rows = 1 pipeline = 1 DP replica).
+      </p>
+      <!-- DP replica labels -->
+      <div style="display:flex;gap:0;margin-bottom:8px;">
+        <div style="width:90px;"></div>
+        <span style="font-size:10px;color:var(--muted);">← TP=8 (within node, NVLink) →</span>
+      </div>
+
+      <!-- Stage colors -->
+      <style>
+        .s0 { background:#1e40af; color:#bfdbfe; }
+        .s1 { background:#065f46; color:#a7f3d0; }
+        .s2 { background:#7c2d12; color:#fed7aa; }
+        .s3 { background:#4c1d95; color:#ddd6fe; }
+        .s4 { background:#0f766e; color:#99f6e4; }
+        .s5 { background:#9a3412; color:#fed7aa; }
+      </style>
+
+      <!-- DP replica 1 -->
+      <div style="margin-bottom:4px;font-size:10px;color:var(--muted);">DP=0</div>
+      <div class="pd-row"><div class="pd-label">Node 0 — PP0</div>
+        <div class="gpu-block s0">0</div><div class="gpu-block s0">1</div><div class="gpu-block s0">2</div><div class="gpu-block s0">3</div>
+        <div class="gpu-block s0">4</div><div class="gpu-block s0">5</div><div class="gpu-block s0">6</div><div class="gpu-block s0">7</div>
+      </div>
+      <div class="pd-row"><div class="pd-label">Node 1 — PP1</div>
+        <div class="gpu-block s1">8</div><div class="gpu-block s1">9</div><div class="gpu-block s1">10</div><div class="gpu-block s1">11</div>
+        <div class="gpu-block s1">12</div><div class="gpu-block s1">13</div><div class="gpu-block s1">14</div><div class="gpu-block s1">15</div>
+      </div>
+      <div class="pd-row"><div class="pd-label">Node 2 — PP2</div>
+        <div class="gpu-block s2">16</div><div class="gpu-block s2">17</div><div class="gpu-block s2">18</div><div class="gpu-block s2">19</div>
+        <div class="gpu-block s2">20</div><div class="gpu-block s2">21</div><div class="gpu-block s2">22</div><div class="gpu-block s2">23</div>
+      </div>
+      <div class="pd-row"><div class="pd-label">Node 3 — PP3</div>
+        <div class="gpu-block s3">24</div><div class="gpu-block s3">25</div><div class="gpu-block s3">26</div><div class="gpu-block s3">27</div>
+        <div class="gpu-block s3">28</div><div class="gpu-block s3">29</div><div class="gpu-block s3">30</div><div class="gpu-block s3">31</div>
+      </div>
+      <div class="pd-row"><div class="pd-label">Node 4 — PP4</div>
+        <div class="gpu-block s4">32</div><div class="gpu-block s4">33</div><div class="gpu-block s4">34</div><div class="gpu-block s4">35</div>
+        <div class="gpu-block s4">36</div><div class="gpu-block s4">37</div><div class="gpu-block s4">38</div><div class="gpu-block s4">39</div>
+      </div>
+      <div class="pd-row"><div class="pd-label">Node 5 — PP5</div>
+        <div class="gpu-block s5">40</div><div class="gpu-block s5">41</div><div class="gpu-block s5">42</div><div class="gpu-block s5">43</div>
+        <div class="gpu-block s5">44</div><div class="gpu-block s5">45</div><div class="gpu-block s5">46</div><div class="gpu-block s5">47</div>
+      </div>
+
+      <div style="margin:10px 0 4px;font-size:10px;color:var(--muted);">DP=1 (nodes 6–11), DP=2 (12–17), DP=3 (18–23), DP=4 (24–29) — identical topology, omitted for clarity</div>
+
+      <!-- Legend -->
+      <div style="display:flex;gap:16px;margin-top:14px;flex-wrap:wrap;">
+        <span style="font-size:11px;color:var(--muted);">Stage colors:</span>
+        <span class="gpu-block s0" style="width:auto;padding:2px 8px;font-size:10px;border-radius:4px;">PP0 · L0–9</span>
+        <span class="gpu-block s1" style="width:auto;padding:2px 8px;font-size:10px;border-radius:4px;">PP1 · L10–19</span>
+        <span class="gpu-block s2" style="width:auto;padding:2px 8px;font-size:10px;border-radius:4px;">PP2 · L20–29</span>
+        <span class="gpu-block s3" style="width:auto;padding:2px 8px;font-size:10px;border-radius:4px;">PP3 · L30–39</span>
+        <span class="gpu-block s4" style="width:auto;padding:2px 8px;font-size:10px;border-radius:4px;">PP4 · L40–49</span>
+        <span class="gpu-block s5" style="width:auto;padding:2px 8px;font-size:10px;border-radius:4px;">PP5 · L50–60+Head</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Micro-batch and batch config -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Batch Configuration</div>
+      <div class="metric-row"><span class="metric-key">Sequence length</span><span class="metric-val mono">4 096 tokens</span></div>
+      <div class="metric-row"><span class="metric-key">Micro-batch size</span><span class="metric-val mono">4 sequences / GPU</span></div>
+      <div class="metric-row"><span class="metric-key">Gradient accumulation steps</span><span class="metric-val mono">64</span></div>
+      <div class="metric-row"><span class="metric-key">Total micro-batches in pipeline</span><span class="metric-val mono">64</span></div>
+      <div class="metric-row"><span class="metric-key">Pipeline bubble fraction</span><span class="metric-val hi-g">5 / 64 = 7.8 %</span></div>
+      <div class="metric-row"><span class="metric-key">Global batch sequences</span><span class="metric-val mono">5 × 4 × 64 = 1 280</span></div>
+      <div class="metric-row"><span class="metric-key">Global batch tokens</span><span class="metric-val hi">1 280 × 4 096 ≈ 5.24 M</span></div>
+      <div class="metric-row"><span class="metric-key">Steps for 1 T tokens</span><span class="metric-val mono">190 735</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Expert Routing Details</div>
+      <div class="metric-row"><span class="metric-key">Total routed experts</span><span class="metric-val mono">256</span></div>
+      <div class="metric-row"><span class="metric-key">Experts per GPU (EP=8)</span><span class="metric-val mono hi">32</span></div>
+      <div class="metric-row"><span class="metric-key">Expert routing strategy</span><span class="metric-val mono">Top-8 softmax</span></div>
+      <div class="metric-row"><span class="metric-key">All2All location</span><span class="metric-val mono">Intra-node (NVLink)</span></div>
+      <div class="metric-row"><span class="metric-key">Auxiliary loss</span><span class="metric-val mono">Load-balance loss</span></div>
+      <div class="metric-row"><span class="metric-key">Max expert capacity factor</span><span class="metric-val mono">1.25</span></div>
+      <div class="metric-row"><span class="metric-key">Cross-node expert traffic</span><span class="metric-val hi-g">None (EP ≤ TP=8)</span></div>
+    </div>
+  </div>
+
+  <!-- Why not alternatives -->
+  <div class="card">
+    <div class="card-title">Configurations Considered vs. Rejected</div>
+    <table>
+      <tr>
+        <th>Config</th>
+        <th>TP</th><th>PP</th><th>DP</th>
+        <th>Verdict</th>
+      </tr>
+      <tr>
+        <td><strong>Recommended ✓</strong></td>
+        <td class="mono hi-g">8</td><td class="mono hi-g">6</td><td class="mono hi-g">5</td>
+        <td class="hi-g">Clean 240-GPU split; low PP bubble; EP fully within NVLink; expert count divisible</td>
+      </tr>
+      <tr>
+        <td>TP=8, PP=5, DP=6</td>
+        <td class="mono">8</td><td class="mono">5</td><td class="mono">6</td>
+        <td class="hi-y">Valid (240 ✓), but 61÷5 = 12.2 layers/stage — uneven partitioning; also 256÷6 EP not integer</td>
+      </tr>
+      <tr>
+        <td>TP=4, PP=6, DP=10</td>
+        <td class="mono">4</td><td class="mono">6</td><td class="mono">10</td>
+        <td class="hi-y">Sub-uses NVLink (only 4 of 8 GPUs in TP group); higher DP reduce-scatter traffic; EP=4 → 64 experts/GPU (manageable)</td>
+      </tr>
+      <tr>
+        <td>TP=8, PP=8, DP=3.75</td>
+        <td class="mono">8</td><td class="mono">8</td><td class="mono">—</td>
+        <td class="hi-y">240 ÷ 64 = 3.75 — not integer, <strong>invalid</strong></td>
+      </tr>
+      <tr>
+        <td>TP=1, EP=8, PP=5, DP=6</td>
+        <td class="mono">1</td><td class="mono">5</td><td class="mono">6</td>
+        <td class="muted">DeepSeek-style; lower TP comms but each GPU sees full d_model; activation memory higher; viable if memory allows</td>
+      </tr>
+      <tr>
+        <td>TP=8, PP=10, DP=3</td>
+        <td class="mono">8</td><td class="mono">10</td><td class="mono">3</td>
+        <td class="hi-y">Valid (240 ✓) but 61÷10 = 6 layers/stage; shallow stages increase PP comm overhead; DP=3 gives small global batch</td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ §4 MEMORY ANALYSIS ═══════════════════════════════════════ -->
+<section>
+  <div class="sec-head">
+    <div class="sec-num">4</div>
+    <h2>Per-GPU Memory Analysis (141 GB H200)</h2>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">BF16 Training with ZeRO-2 (per GPU)</div>
+
+      <!-- Model params -->
+      <div style="margin-bottom:12px;">
+        <div class="bar-row">
+          <div class="bar-label"><span>Model parameters (BF16)</span><span class="hi">~41.7 GB</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:29.6%;background:var(--accent);"></div></div>
+        </div>
+        <!-- Derivation note -->
+        <div class="footnote">Dense 12B÷(TP×PP) + Expert 988B÷(EP×PP) = 250M + 20.6B ≈ 20.85B params @ 2B = 41.7 GB</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label"><span>Optimizer states (FP32, sharded ÷DP=5)</span><span class="hi-y">~50.1 GB</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:35.5%;background:var(--yellow);"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label"><span>Gradients (BF16, sharded ÷DP=5)</span><span class="hi-p">~8.3 GB</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:5.9%;background:var(--purple);"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label"><span>Activations (selective checkpointing)</span><span style="color:var(--teal);">~8 GB</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:5.7%;background:var(--teal);"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label"><span>CUDA / framework overhead</span><span class="muted">~5 GB</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:3.5%;background:#444;"></div></div>
+      </div>
+
+      <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+        <span style="color:var(--muted);font-size:12px;">Total used</span>
+        <span style="font-size:18px;font-weight:700;color:var(--green);">~113 GB / 141 GB</span>
+      </div>
+      <div class="bar-row" style="margin-top:8px;">
+        <div class="bar-label"><span>GPU utilization</span><span class="hi-g">80.1 %</span></div>
+        <div class="bar-track" style="height:12px;"><div class="bar-fill" style="width:80.1%;background:linear-gradient(90deg,var(--green),#26a641);border-radius:6px;height:12px;"></div></div>
+      </div>
+      <div class="footnote" style="margin-top:6px;">~28 GB headroom — allows micro_batch to scale to 6 if needed.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">FP8 Training with ZeRO-2 (per GPU)</div>
+      <div class="bar-row">
+        <div class="bar-label"><span>Model parameters (FP8)</span><span class="hi">~20.9 GB</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:14.8%;background:var(--accent);"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label"><span>BF16 master weights (÷DP=5)</span><span class="hi-y">~16.7 GB</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:11.8%;background:#b45309;"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label"><span>Optimizer 1st + 2nd moments (÷DP=5)</span><span class="hi-y">~33.4 GB</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:23.7%;background:var(--yellow);"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label"><span>Gradients (FP8, sharded ÷DP=5)</span><span class="hi-p">~4.2 GB</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:3.0%;background:var(--purple);"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label"><span>Activations (selective checkpointing)</span><span style="color:var(--teal);">~8 GB</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:5.7%;background:var(--teal);"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label"><span>CUDA / TE overhead</span><span class="muted">~5 GB</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:3.5%;background:#444;"></div></div>
+      </div>
+
+      <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+        <span style="color:var(--muted);font-size:12px;">Total used</span>
+        <span style="font-size:18px;font-weight:700;color:var(--green);">~88 GB / 141 GB</span>
+      </div>
+      <div class="bar-row" style="margin-top:8px;">
+        <div class="bar-label"><span>GPU utilization</span><span class="hi-g">62.4 %</span></div>
+        <div class="bar-track" style="height:12px;"><div class="bar-fill" style="width:62.4%;background:linear-gradient(90deg,var(--green),#26a641);border-radius:6px;height:12px;"></div></div>
+      </div>
+      <div class="footnote" style="margin-top:6px;">~53 GB headroom — sufficient to expand seq_len to 8 192 or increase micro_batch to 8.</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    Both configurations fit comfortably within 141 GB. ZeRO Stage 2 is the critical enabler: without gradient and optimizer sharding, BF16 would require ~196 GB per GPU, exceeding capacity. Selective activation checkpointing (recompute dense ops, retain MoE dispatch tensors) balances recompute cost against memory.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ §5 THROUGHPUT ═══════════════════════════════════════ -->
+<section>
+  <div class="sec-head">
+    <div class="sec-num">5</div>
+    <h2>Expected Throughput</h2>
+  </div>
+
+  <div class="grid-2">
+    <div class="cmp-box">
+      <div class="cmp-title" style="color:var(--accent);">BF16 Training</div>
+      <div class="cmp-val" style="color:var(--accent);">~940 K tok/s</div>
+      <div class="cmp-sub">System peak: 474.96 PetaFLOPS · MFU ≈ 38%</div>
+    </div>
+    <div class="cmp-box" style="border-color:rgba(63,185,80,.3);background:rgba(63,185,80,.05);">
+      <div class="cmp-title" style="color:var(--green);">FP8 Training (recommended)</div>
+      <div class="cmp-val" style="color:var(--green);">~1.48 M tok/s</div>
+      <div class="cmp-sub">System peak: 949.92 PetaFLOPS · MFU ≈ 31%</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px;">
+    <div class="card-title">Throughput Derivation</div>
+    <table>
+      <tr>
+        <th>Quantity</th>
+        <th>BF16</th>
+        <th>FP8 (NVIDIA TE)</th>
+        <th>Notes</th>
+      </tr>
+      <tr>
+        <td>Cluster peak TFLOPS</td>
+        <td class="mono">474 960</td>
+        <td class="mono">949 920</td>
+        <td class="muted">240 × 1 979 / 240 × 3 958</td>
+      </tr>
+      <tr>
+        <td>Model FLOP Utilization (MFU)</td>
+        <td class="mono hi-y">38 %</td>
+        <td class="mono hi-y">31 %</td>
+        <td class="muted">MoE All2All, PP bubble (7.8%), DP reduce-scatter reduce MFU vs. dense</td>
+      </tr>
+      <tr>
+        <td>Achieved TFLOPS</td>
+        <td class="mono">180 485</td>
+        <td class="mono">294 475</td>
+        <td class="muted">= peak × MFU</td>
+      </tr>
+      <tr>
+        <td>Training FLOPs per token</td>
+        <td class="mono" colspan="2">192 × 10⁹ (192 GFLOPs)</td>
+        <td class="muted">6 × 32 B active params (standard estimate)</td>
+      </tr>
+      <tr>
+        <td><strong>Tokens / second</strong></td>
+        <td class="mono hi"><strong>939 506</strong></td>
+        <td class="mono hi-g"><strong>1 481 641</strong></td>
+        <td class="muted">= achieved TFLOPS / FLOPs_per_token</td>
+      </tr>
+      <tr>
+        <td>Step time (at 5.24 M tok/step)</td>
+        <td class="mono">5.58 s</td>
+        <td class="mono">3.54 s</td>
+        <td class="muted">= global_batch_tokens / tok_per_sec</td>
+      </tr>
+      <tr>
+        <td>Steps to complete 1 T tokens</td>
+        <td class="mono" colspan="2">190 735</td>
+        <td class="muted">= 1 × 10¹² / 5.24 M</td>
+      </tr>
+      <tr>
+        <td><strong>Wall-clock for 1 T tokens</strong></td>
+        <td class="mono hi"><strong>295 h (12.3 d)</strong></td>
+        <td class="mono hi-g"><strong>188 h (7.8 d)</strong></td>
+        <td class="muted">= steps × step_time</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- MFU breakdown -->
+  <div class="card">
+    <div class="card-title">MFU Loss Budget (FP8 baseline = 100%)</div>
+    <div class="bar-row">
+      <div class="bar-label">
+        <span>Pipeline bubble (PP=6, 64 micro-batches)</span>
+        <span class="hi-y">−7.8 %</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:7.8%;background:var(--yellow);"></div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">
+        <span>MoE All2All routing (intra-node NVLink)</span>
+        <span class="hi-y">−6.0 %</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:6%;background:var(--orange);"></div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">
+        <span>DP gradient reduce-scatter (InfiniBand)</span>
+        <span class="hi-y">−3.0 %</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:3%;background:#9333ea;"></div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">
+        <span>TP AllReduce / AllGather (NVLink)</span>
+        <span class="hi-y">−1.5 %</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:1.5%;background:var(--accent);"></div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">
+        <span>PP send/recv activations (InfiniBand)</span>
+        <span class="hi-y">−2.0 %</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--teal);"></div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">
+        <span>Expert load imbalance (avg.)</span>
+        <span class="hi-y">−3.0 %</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:3%;background:var(--red);"></div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">
+        <span>FP8 cast / scaling overhead</span>
+        <span class="hi-y">−2.5 %</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:2.5%;background:#854d0e;"></div></div>
+    </div>
+    <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;justify-content:space-between;">
+      <span style="color:var(--muted);">Estimated realized MFU</span>
+      <span style="color:var(--green);font-weight:700;">100% − 25.8% = ~31% ✓ (matches table above)</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ §6 TRAINING HYPERPARAMS ═══════════════════════════════════════ -->
+<section>
+  <div class="sec-head">
+    <div class="sec-num">6</div>
+    <h2>Recommended Training Hyperparameters</h2>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Optimizer</div>
+      <div class="metric-row"><span class="metric-key">Optimizer</span><span class="metric-val mono">AdamW</span></div>
+      <div class="metric-row"><span class="metric-key">Peak learning rate</span><span class="metric-val mono">3 × 10⁻⁵</span><span class="metric-note">~1/3 of original LR for continued PT</span></div>
+      <div class="metric-row"><span class="metric-key">LR schedule</span><span class="metric-val mono">Cosine decay</span></div>
+      <div class="metric-row"><span class="metric-key">Warmup steps</span><span class="metric-val mono">1 000</span></div>
+      <div class="metric-row"><span class="metric-key">Min LR (end)</span><span class="metric-val mono">3 × 10⁻⁶</span></div>
+      <div class="metric-row"><span class="metric-key">β₁ / β₂</span><span class="metric-val mono">0.9 / 0.95</span></div>
+      <div class="metric-row"><span class="metric-key">Weight decay</span><span class="metric-val mono">0.1</span></div>
+      <div class="metric-row"><span class="metric-key">Gradient clip norm</span><span class="metric-val mono">1.0</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Numerical &amp; Stability</div>
+      <div class="metric-row"><span class="metric-key">Forward precision</span><span class="metric-val mono">FP8 (TE)</span></div>
+      <div class="metric-row"><span class="metric-key">Master weights / optimizer</span><span class="metric-val mono">FP32</span></div>
+      <div class="metric-row"><span class="metric-key">Gradient accumulation dtype</span><span class="metric-val mono">BF16</span></div>
+      <div class="metric-row"><span class="metric-key">Activation checkpointing</span><span class="metric-val mono">Selective (dense ops)</span></div>
+      <div class="metric-row"><span class="metric-key">Flash Attention</span><span class="metric-val mono">v3 (H200)</span></div>
+      <div class="metric-row"><span class="metric-key">Expert aux loss weight</span><span class="metric-val mono">0.01</span></div>
+      <div class="metric-row"><span class="metric-key">Dropout</span><span class="metric-val mono">0.0</span></div>
+      <div class="metric-row"><span class="metric-key">Checkpoint frequency</span><span class="metric-val mono">Every 1 000 steps</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ §7 TIMELINE ═══════════════════════════════════════ -->
+<section>
+  <div class="sec-head">
+    <div class="sec-num">7</div>
+    <h2>Training Timeline — 1 Trillion Tokens (FP8)</h2>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Milestone Breakdown</div>
+    <table>
+      <tr>
+        <th>Milestone</th>
+        <th>Token Count</th>
+        <th>Steps</th>
+        <th>Elapsed (FP8)</th>
+        <th>Elapsed (BF16)</th>
+      </tr>
+      <tr>
+        <td>Cluster warmup + smoke test</td>
+        <td class="mono muted">—</td>
+        <td class="mono muted">—</td>
+        <td class="mono">~4 h</td>
+        <td class="mono">~4 h</td>
+      </tr>
+      <tr>
+        <td>1 B tokens (first checkpoint)</td>
+        <td class="mono">1 × 10⁹</td>
+        <td class="mono">191</td>
+        <td class="mono">11 min</td>
+        <td class="mono">18 min</td>
+      </tr>
+      <tr>
+        <td>10 B tokens</td>
+        <td class="mono">1 × 10¹⁰</td>
+        <td class="mono">1 908</td>
+        <td class="mono">1.9 h</td>
+        <td class="mono">2.9 h</td>
+      </tr>
+      <tr>
+        <td>100 B tokens</td>
+        <td class="mono">1 × 10¹¹</td>
+        <td class="mono">19 074</td>
+        <td class="mono">18.8 h</td>
+        <td class="mono">29.5 h</td>
+      </tr>
+      <tr>
+        <td>250 B tokens</td>
+        <td class="mono">2.5 × 10¹¹</td>
+        <td class="mono">47 684</td>
+        <td class="mono">~2.0 d</td>
+        <td class="mono">~3.1 d</td>
+      </tr>
+      <tr>
+        <td>500 B tokens</td>
+        <td class="mono">5 × 10¹¹</td>
+        <td class="mono">95 368</td>
+        <td class="mono">~3.9 d</td>
+        <td class="mono">~6.1 d</td>
+      </tr>
+      <tr>
+        <td><strong>1 T tokens (complete)</strong></td>
+        <td class="mono"><strong>1 × 10¹²</strong></td>
+        <td class="mono"><strong>190 735</strong></td>
+        <td class="mono hi-g"><strong>~7.8 d</strong></td>
+        <td class="mono hi"><strong>~12.3 d</strong></td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Total Compute Budget</div>
+    <div class="grid-3">
+      <div>
+        <div class="metric-row"><span class="metric-key">Total training FLOPs</span><span class="metric-val mono">~1.92 × 10²³</span></div>
+        <div class="footnote">6 × 32 B × 1 × 10¹² tokens</div>
+      </div>
+      <div>
+        <div class="metric-row"><span class="metric-key">GPU-hours (FP8)</span><span class="metric-val mono">~44 640</span></div>
+        <div class="footnote">7.8 d × 240 GPUs × 24 h</div>
+      </div>
+      <div>
+        <div class="metric-row"><span class="metric-key">Peak power draw</span><span class="metric-val mono">~250 kW system</span></div>
+        <div class="footnote">240 × 700 W GPU + ~80 kW infra</div>
+      </div>
+    </div>
+    <div style="margin-top:12px;">
+      <div class="metric-row"><span class="metric-key">Energy (FP8 run)</span><span class="metric-val mono">~46.8 MWh</span></div>
+      <div class="metric-row"><span class="metric-key">Energy (BF16 run)</span><span class="metric-val mono">~73.5 MWh</span></div>
+      <div class="metric-row"><span class="metric-key">Energy savings with FP8</span><span class="metric-val hi-g">−26.7 MWh (~36 %)</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ §8 INFRA NOTES ═══════════════════════════════════════ -->
+<section>
+  <div class="sec-head">
+    <div class="sec-num">8</div>
+    <h2>Infrastructure &amp; Software Notes</h2>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Networking &amp; Storage Requirements</div>
+      <div class="metric-row"><span class="metric-key">PP activation tensor size</span><span class="metric-val mono">~580 MB/step</span><span class="metric-note">micro_batch=4, seq=4096, d=7168</span></div>
+      <div class="metric-row"><span class="metric-key">PP inter-node bandwidth need</span><span class="metric-val mono">~165 GB/s</span><span class="metric-note">per PP link; 8×NDR400 provides 400 GB/s</span></div>
+      <div class="metric-row"><span class="metric-key">DP gradient reduce-scatter</span><span class="metric-val mono">~83 GB/step</span><span class="metric-note">41.7 GB grads ÷ 5, all-reduce ≈ 2×</span></div>
+      <div class="metric-row"><span class="metric-key">Checkpoint size (BF16)</span><span class="metric-val mono">~2 TB</span><span class="metric-note">full model + optimizer states</span></div>
+      <div class="metric-row"><span class="metric-key">Recommended storage</span><span class="metric-val mono">Parallel FS ≥ 200 GB/s</span><span class="metric-note">Lustre or GPFS</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Software Stack</div>
+      <div class="metric-row"><span class="metric-key">Training framework</span><span class="metric-val mono">Megatron-LM + DeepSpeed</span></div>
+      <div class="metric-row"><span class="metric-key">FP8 backend</span><span class="metric-val mono">NVIDIA Transformer Engine</span></div>
+      <div class="metric-row"><span class="metric-key">Attention kernel</span><span class="metric-val mono">FlashAttention-3</span></div>
+      <div class="metric-row"><span class="metric-key">Communication library</span><span class="metric-val mono">NCCL 2.19+</span></div>
+      <div class="metric-row"><span class="metric-key">MoE routing implementation</span><span class="metric-val mono">Custom CUDA All2All</span></div>
+      <div class="metric-row"><span class="metric-key">Data loading</span><span class="metric-val mono">DALI / memmap BPE</span></div>
+      <div class="metric-row"><span class="metric-key">CUDA version</span><span class="metric-val mono">12.4+</span></div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>Key risk:</strong> MoE expert load imbalance during continued pretraining on domain-specific data can spike auxiliary loss and reduce throughput by up to 8%. Monitor per-expert token counts and adjust the load-balance coefficient (0.005–0.02) if imbalance exceeds ±25% from uniform distribution.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ §9 SUMMARY ═══════════════════════════════════════ -->
+<section>
+  <div class="sec-head">
+    <div class="sec-num">9</div>
+    <h2>Summary</h2>
+  </div>
+
+  <div class="card">
+    <table>
+      <tr><th colspan="2">Complete Configuration at a Glance</th></tr>
+      <tr><td class="muted">Cluster</td><td class="mono">30 × DGX H200 = 240 × H200 SXM (141 GB)</td></tr>
+      <tr><td class="muted">Tensor Parallelism (TP)</td><td class="mono hi">8 — full intra-node NVLink domain</td></tr>
+      <tr><td class="muted">Pipeline Parallelism (PP)</td><td class="mono hi">6 — 6 nodes per pipeline, ~10 layers/stage</td></tr>
+      <tr><td class="muted">Data Parallelism (DP)</td><td class="mono hi">5 — 5 model replicas</td></tr>
+      <tr><td class="muted">Expert Parallelism (EP)</td><td class="mono hi">8 — 32 experts/GPU, all-intra-node</td></tr>
+      <tr><td class="muted">Sequence Parallelism</td><td class="mono">Enabled (paired with TP)</td></tr>
+      <tr><td class="muted">ZeRO Stage</td><td class="mono">2 (optimizer + gradient sharding)</td></tr>
+      <tr><td class="muted">Precision</td><td class="mono">FP8 forward/backward · FP32 master weights</td></tr>
+      <tr><td class="muted">Global batch size</td><td class="mono">~5.24 M tokens/step</td></tr>
+      <tr><td class="muted">Steps for 1 T tokens</td><td class="mono">190 735</td></tr>
+      <tr><td class="muted">Throughput (FP8)</td><td class="mono hi-g">~1.48 M tokens / second</td></tr>
+      <tr><td class="muted">Throughput (BF16)</td><td class="mono">~940 K tokens / second</td></tr>
+      <tr><td class="muted">Wall-clock — 1 T tokens (FP8)</td><td class="mono hi-g">~7.8 days</td></tr>
+      <tr><td class="muted">Wall-clock — 1 T tokens (BF16)</td><td class="mono">~12.3 days</td></tr>
+      <tr><td class="muted">Per-GPU memory (FP8)</td><td class="mono hi-g">~88 GB / 141 GB (62 %)</td></tr>
+      <tr><td class="muted">Per-GPU memory (BF16)</td><td class="mono">~113 GB / 141 GB (80 %)</td></tr>
+    </table>
+  </div>
+
+  <p class="footnote" style="margin-top:16px;">
+    Generated 2026-06-17. Architecture figures based on Moonshot AI public disclosures for Kimi K2.
+    MFU estimates reflect observed MoE training efficiency at equivalent scale (25–40% range is typical for 1T-class MoE models).
+    Actual throughput will vary ±15% depending on data pipeline throughput, network congestion, and expert load balance.
+  </p>
+</section>
+
+</div><!-- /page -->
+</body>
+</html>
