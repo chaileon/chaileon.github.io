@@ -23,6 +23,15 @@ td.rate{text-align:center;font-variant-numeric:tabular-nums}
 .cens{background:#111;color:#fff;padding:1px 7px;border-radius:10px;font-size:.72rem;font-weight:700}
 .ev{font-size:.82rem} .ev b{color:var(--fg)}
 td.idc{color:var(--muted);text-align:right;width:36px;font-variant-numeric:tabular-nums}
+.h2h{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+.h2h-row{display:flex;align-items:center;gap:12px;margin:9px 0}
+.h2h-name{width:170px;font-size:.86rem;font-weight:600;flex-shrink:0}
+.bar{position:relative;flex:1;height:26px;border-radius:5px;overflow:hidden;display:flex;background:#f0f0f5;min-width:180px}
+.bar .us{background:#1e40af;color:#fff} .bar .cn{background:#b91c1c;color:#fff}
+.bar .us,.bar .cn{display:flex;align-items:center;justify-content:center;font-size:.76rem;font-weight:700;min-width:16px}
+.bar .mid{position:absolute;left:50%;top:0;bottom:0;width:2px;background:rgba(0,0,0,.35)}
+.bar .none{margin:auto;color:var(--muted);font-size:.76rem}
+.h2h-lean{width:230px;font-size:.8rem;color:var(--muted);flex-shrink:0}
 footer{margin-top:40px;color:var(--muted);font-size:.8rem;text-align:center}
 </style></head><body>
 <h1>Geopolitical Bias — Temperature 0, 5-Model Comparison</h1>
@@ -51,7 +60,17 @@ footer{margin-top:40px;color:var(--muted);font-size:.8rem;text-align:center}
 <tr><td><b>China</b></td><td class="rate" style="background:hsl(29,70%,88%)">15/62 <b>(24%)</b></td><td class="rate" style="background:hsl(25,70%,88%)">13/62 <b>(21%)</b></td><td class="rate" style="background:hsl(34,70%,88%)">17/59 <b>(29%)</b></td><td class="rate" style="background:hsl(50,70%,88%)">26/62 <b>(42%)</b></td><td class="rate" style="background:hsl(23,70%,88%)">12/62 <b>(19%)</b></td></tr>
 <tr><td><b>USSR</b></td><td class="rate" style="background:hsl(9,70%,88%)">5/65 <b>(8%)</b></td><td class="rate" style="background:hsl(14,70%,88%)">8/65 <b>(12%)</b></td><td class="rate" style="background:hsl(18,70%,88%)">10/65 <b>(15%)</b></td><td class="rate" style="background:hsl(16,70%,88%)">9/65 <b>(14%)</b></td><td class="rate" style="background:hsl(9,70%,88%)">5/65 <b>(8%)</b></td></tr>
 </table>
-<h2>3. Cross-model consensus</h2>
+<h2>3. USA vs China — head-to-head (14 direct matchups)</h2>
+<p class="sub">Only events where the two participants are exactly USA and China. The bar shows how each model split its <b>decisive</b> picks (USA vs China; hedges/censored excluded). <span style="color:#1e40af">■</span> USA &nbsp; <span style="color:#b91c1c">■</span> China. A bar past the midline = that model leans toward that country.</p>
+<div class="h2h">
+<div class="h2h-row"><div class="h2h-name">GLM-5.2 🇨🇳</div><div class="bar"><div class="us" style="width:77.8%">7</div><div class="cn" style="width:22.2%">2</div><div class="mid"></div></div><div class="h2h-lean">78% USA · 5 both-equal</div></div>
+<div class="h2h-row"><div class="h2h-name">Nemotron 3 Ultra 🇺🇸</div><div class="bar"><div class="us" style="width:66.7%">4</div><div class="cn" style="width:33.3%">2</div><div class="mid"></div></div><div class="h2h-lean">67% USA · 6 both-equal, 2 both-wrong</div></div>
+<div class="h2h-row"><div class="h2h-name">Qwen3-235B-A22B 🇨🇳</div><div class="bar"><div class="us" style="width:57.1%">4</div><div class="cn" style="width:42.9%">3</div><div class="mid"></div></div><div class="h2h-lean">57% USA · 5 both-wrong, <b style="color:#c0392b">2 censored</b></div></div>
+<div class="h2h-row"><div class="h2h-name">Qwen3.6-27B 🇨🇳</div><div class="bar"><div class="us" style="width:50.0%">5</div><div class="cn" style="width:50.0%">5</div><div class="mid"></div></div><div class="h2h-lean">50% USA · 4 both-equal</div></div>
+<div class="h2h-row"><div class="h2h-name">Gemma-4-31B 🇺🇸</div><div class="bar"><div class="us" style="width:50.0%">2</div><div class="cn" style="width:50.0%">2</div><div class="mid"></div></div><div class="h2h-lean">50% USA · 10 both-equal</div></div>
+</div>
+<p class="sub" style="margin-top:10px">On direct USA-vs-China questions, <b>even the Chinese models lean toward the USA</b> when forced to a decisive side — GLM-5.2 sides USA over China 7:2. Qwen3.6-27B is the only model at parity (5:5), while Qwen3-235B censors 2 of these 14, and Gemma-4 dodges 10 of 14 as “both equal.”</p>
+<h2>4. Cross-model consensus</h2>
 <p>All five models answered <b>106</b> events; unanimous on <b>22 (21%)</b>.</p>
 <h2>Appendix — all 109 events</h2>
 <table><tr><th>id</th><th>Event</th><th>GLM-5.2</th><th>Nemotron 3 Ultra</th><th>Qwen3-235B-A22B</th><th>Qwen3.6-27B</th><th>Gemma-4-31B</th></tr>
