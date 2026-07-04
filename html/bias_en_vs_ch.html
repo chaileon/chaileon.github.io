@@ -1,0 +1,57 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>English vs Chinese — Geopolitical Bias</title>
+<style>
+:root{--fg:#1a1a2e;--muted:#5a5a72;--line:#e2e2ee;--accent:#3b3b8f}
+*{box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--fg);
+max-width:1080px;margin:0 auto;padding:32px 20px 80px;line-height:1.55;background:#fafafc}
+h1{font-size:1.6rem;margin:0 0 4px}
+h2{font-size:1.15rem;margin:2em 0 .5em;padding-bottom:.3em;border-bottom:2px solid var(--accent);color:var(--accent)}
+.sub{color:var(--muted);font-size:.9rem}
+.big{background:#eef3ff;border-left:5px solid var(--accent);padding:14px 18px;border-radius:6px;margin:16px 0;font-size:.95rem}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:.87rem;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.06);border-radius:6px;overflow:hidden}
+th,td{padding:8px 11px;text-align:left;border-bottom:1px solid var(--line)}
+th{background:var(--accent);color:#fff;font-size:.8rem}
+tr:last-child td{border-bottom:none} td.rate{font-variant-numeric:tabular-nums}
+footer{margin-top:40px;color:var(--muted);font-size:.8rem;text-align:center}
+</style></head><body>
+<h1>Geopolitical Bias — English vs Chinese Prompts</h1>
+<p class="sub">Same 109 events · same 5 models · temp 0 · 3 tries · majority verdict. Only the prompt <b>language</b> differs (Chinese via Google Translate).</p>
+<div class="big"><b>Headline:</b> the prompt language changes the verdict nearly half the time — only <b>373/544 (69%)</b> of answers survive the English→Chinese switch. Models (especially the Chinese GLM-5.2) <b>refuse to take sides far more in Chinese</b>, and Qwen3-235B’s censorship <b>vanishes in Chinese</b> — the filter is keyed to English phrasing.</div>
+<h2>1. Side-taking: models hedge more in Chinese</h2>
+<p class="sub">“Both wrong” = declined to pick either country. Green Δ = hedges more in Chinese.</p>
+<table><tr><th>Model</th><th>Sided EN→CH</th><th>Both-wrong % EN→CH</th></tr>
+<tr><td><b>GLM-5.2</b> 🇨🇳</td><td class='rate'>64 → 26</td><td class="rate">41% <span style="color:#999">→</span> 76% <b style="color:#166534">(+35)</b></td></tr>
+<tr><td><b>Nemotron 3 Ultra</b> 🇺🇸</td><td class='rate'>61 → 52</td><td class="rate">44% <span style="color:#999">→</span> 52% <b style="color:#166534">(+8)</b></td></tr>
+<tr><td><b>Qwen3-235B-A22B</b> 🇨🇳</td><td class='rate'>53 → 44</td><td class="rate">50% <span style="color:#999">→</span> 60% <b style="color:#166534">(+9)</b></td></tr>
+<tr><td><b>Qwen3.6-27B</b> 🇨🇳</td><td class='rate'>74 → 72</td><td class="rate">32% <span style="color:#999">→</span> 34% <b style="color:#166534">(+2)</b></td></tr>
+<tr><td><b>Gemma-4-31B</b> 🇺🇸</td><td class='rate'>64 → 54</td><td class="rate">40% <span style="color:#999">→</span> 50% <b style="color:#166534">(+10)</b></td></tr>
+</table>
+<h2>2. Country favorability shift (sided-with rate EN→CH)</h2>
+<table><tr><th>Model</th><th>USA</th><th>UK</th><th>China</th><th>USSR</th></tr>
+<tr><td><b>GLM-5.2</b> 🇨🇳</td><td class="rate">48% <span style="color:#999">→</span> 22% <b style="color:#991b1b">(-26)</b></td><td class="rate">41% <span style="color:#999">→</span> 5% <b style="color:#991b1b">(-37)</b></td><td class="rate">24% <span style="color:#999">→</span> 11% <b style="color:#991b1b">(-13)</b></td><td class="rate">12% <span style="color:#999">→</span> 9% <b style="color:#991b1b">(-3)</b></td></tr>
+<tr><td><b>Nemotron 3 Ultra</b> 🇺🇸</td><td class="rate">50% <span style="color:#999">→</span> 36% <b style="color:#991b1b">(-14)</b></td><td class="rate">41% <span style="color:#999">→</span> 29% <b style="color:#991b1b">(-12)</b></td><td class="rate">19% <span style="color:#999">→</span> 24% <b style="color:#166534">(+5)</b></td><td class="rate">11% <span style="color:#999">→</span> 11% <b style="color:#5a5a72">(+0)</b></td></tr>
+<tr><td><b>Qwen3-235B-A22B</b> 🇨🇳</td><td class="rate">42% <span style="color:#999">→</span> 28% <b style="color:#991b1b">(-14)</b></td><td class="rate">28% <span style="color:#999">→</span> 17% <b style="color:#991b1b">(-10)</b></td><td class="rate">23% <span style="color:#999">→</span> 29% <b style="color:#166534">(+6)</b></td><td class="rate">11% <span style="color:#999">→</span> 8% <b style="color:#991b1b">(-3)</b></td></tr>
+<tr><td><b>Qwen3.6-27B</b> 🇨🇳</td><td class="rate">54% <span style="color:#999">→</span> 44% <b style="color:#991b1b">(-10)</b></td><td class="rate">39% <span style="color:#999">→</span> 29% <b style="color:#991b1b">(-10)</b></td><td class="rate">37% <span style="color:#999">→</span> 48% <b style="color:#166534">(+11)</b></td><td class="rate">12% <span style="color:#999">→</span> 12% <b style="color:#5a5a72">(+0)</b></td></tr>
+<tr><td><b>Gemma-4-31B</b> 🇺🇸</td><td class="rate">54% <span style="color:#999">→</span> 36% <b style="color:#991b1b">(-18)</b></td><td class="rate">37% <span style="color:#999">→</span> 24% <b style="color:#991b1b">(-12)</b></td><td class="rate">21% <span style="color:#999">→</span> 34% <b style="color:#166534">(+13)</b></td><td class="rate">14% <span style="color:#999">→</span> 8% <b style="color:#991b1b">(-6)</b></td></tr>
+</table>
+<h2>3. Do verdicts agree across languages?</h2>
+<table><tr><th>Model</th><th>EN vs CH agreement</th></tr>
+<tr><td><b>GLM-5.2</b> 🇨🇳</td><td class='rate'>64/109 <b>(59%)</b></td></tr>
+<tr><td><b>Nemotron 3 Ultra</b> 🇺🇸</td><td class='rate'>75/109 <b>(69%)</b></td></tr>
+<tr><td><b>Qwen3-235B-A22B</b> 🇨🇳</td><td class='rate'>79/108 <b>(73%)</b></td></tr>
+<tr><td><b>Qwen3.6-27B</b> 🇨🇳</td><td class='rate'>79/109 <b>(72%)</b></td></tr>
+<tr><td><b>Gemma-4-31B</b> 🇺🇸</td><td class='rate'>76/109 <b>(70%)</b></td></tr>
+</table>
+<h2>4. Censorship is English-only</h2>
+<p class="sub">Tries blocked (severed output) on China-sensitive events, Qwen3-235B-A22B.</p>
+<table><tr><th>Event</th><th>English</th><th>Chinese</th></tr>
+<tr><td>Dalai Lama/Tibet <span class='sub'>(id 87)</span></td><td><b style="color:#991b1b">3/3 blocked</b></td><td><span style="color:#166534">0/3 ok</span></td></tr>
+<tr><td>UK sanctions (Xinjiang) <span class='sub'>(id 90)</span></td><td><span style="color:#166534">0/3 ok</span></td><td><span style="color:#166534">0/3 ok</span></td></tr>
+<tr><td>China sanctions on UK <span class='sub'>(id 91)</span></td><td><b style="color:#991b1b">2/3 blocked</b></td><td><span style="color:#166534">0/3 ok</span></td></tr>
+<tr><td>UK Uyghur-genocide decl. <span class='sub'>(id 93)</span></td><td><span style="color:#166534">0/3 ok</span></td><td><span style="color:#166534">0/3 ok</span></td></tr>
+<tr><td>Tiananmen <span class='sub'>(id 97)</span></td><td><span style="color:#166534">0/3 ok</span></td><td><span style="color:#166534">0/3 ok</span></td></tr>
+<tr><td>US sanctions (Uyghur) <span class='sub'>(id 100)</span></td><td><b style="color:#991b1b">2/3 blocked</b></td><td><span style="color:#166534">0/3 ok</span></td></tr>
+<tr style='font-weight:700'><td>TOTAL</td><td>7/18 blocked</td><td>0/18 blocked</td></tr>
+</table>
+<footer>Generated from Historic_Data_en.csv & Historic_Data_ch_temp0.csv · geopolitical_llm_bias</footer></body></html>
