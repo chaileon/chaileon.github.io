@@ -1,0 +1,2246 @@
+<title>Agentic Trace Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap">
+<style>
+  :root {
+    --ground:#F4F6F8; --surface:#FFFFFF; --surface-2:#EAEDF2;
+    --ink:#161A21; --ink-2:#4B5464; --ink-3:#78818F;
+    --rule:#DCE1E8; --rule-2:#C6CDD8;
+    --accent:#2B5CA8; --accent-2:#E8EEF8;
+    --ok:#1C6E46; --ok-bg:#E2F0E8; --ok-line:#B9D9C8;
+    --warn:#82570A; --warn-bg:#F6EBD6; --warn-line:#E2CB9C;
+    --risk:#98392B; --risk-bg:#F7E6E2; --risk-line:#E7C2B9;
+    --shadow:0 1px 2px rgba(20,26,36,.05),0 8px 24px -16px rgba(20,26,36,.28);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:#0E1116; --surface:#151A21; --surface-2:#1C222B;
+      --ink:#E4E8EE; --ink-2:#A0A9B7; --ink-3:#727B89;
+      --rule:#262D37; --rule-2:#333B47;
+      --accent:#83A9E6; --accent-2:#18222F;
+      --ok:#63BE90; --ok-bg:#132519; --ok-line:#22412E;
+      --warn:#D6A54B; --warn-bg:#241E10; --warn-line:#413521;
+      --risk:#DF8272; --risk-bg:#2A1714; --risk-line:#472823;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -16px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:#0E1116; --surface:#151A21; --surface-2:#1C222B;
+    --ink:#E4E8EE; --ink-2:#A0A9B7; --ink-3:#727B89;
+    --rule:#262D37; --rule-2:#333B47;
+    --accent:#83A9E6; --accent-2:#18222F;
+    --ok:#63BE90; --ok-bg:#132519; --ok-line:#22412E;
+    --warn:#D6A54B; --warn-bg:#241E10; --warn-line:#413521;
+    --risk:#DF8272; --risk-bg:#2A1714; --risk-line:#472823;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -16px rgba(0,0,0,.7);
+  }
+
+  * { box-sizing:border-box; }
+  body {
+    background:var(--ground); color:var(--ink);
+    font-family:"IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size:15px; line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  .wrap { max-width:1080px; margin:0 auto; padding:0 24px; }
+  a { color:var(--accent); }
+  a:focus-visible, summary:focus-visible { outline:2px solid var(--accent); outline-offset:3px; border-radius:2px; }
+  h1,h2,h3 { font-family:"IBM Plex Sans Condensed", "IBM Plex Sans", sans-serif; text-wrap:balance; margin:0; }
+
+  /* ---- masthead ---- */
+  .mast { border-bottom:1px solid var(--rule); background:var(--surface); }
+  .mast__inner { padding:60px 24px 40px; max-width:1080px; margin:0 auto; }
+  .eyebrow {
+    font-family:"IBM Plex Mono", monospace; font-size:11.5px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--ink-3); margin:0 0 18px;
+  }
+  h1 { font-size:clamp(34px,5.2vw,52px); font-weight:700; line-height:1.04; letter-spacing:-.018em; }
+  .mast__sub {
+    margin:18px 0 0; max-width:63ch; font-size:16.5px; color:var(--ink-2);
+  }
+
+  /* ---- stat band ---- */
+  .stats {
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(148px,1fr));
+    gap:1px; background:var(--rule); border:1px solid var(--rule);
+    margin:36px 0 0; border-radius:3px; overflow:hidden;
+  }
+  .stat { background:var(--surface); padding:16px 18px; }
+  .stat__n {
+    font-family:"IBM Plex Sans Condensed", sans-serif; font-weight:700;
+    font-size:27px; line-height:1.1; font-variant-numeric:tabular-nums; letter-spacing:-.01em;
+  }
+  .stat__l { font-size:12.5px; color:var(--ink-3); margin-top:3px; }
+  .stat--warn .stat__n { color:var(--warn); }
+  .stat--risk .stat__n { color:var(--risk); }
+
+  /* ---- nav ---- */
+  .nav {
+    position:sticky; top:0; z-index:20; background:var(--surface);
+    border-bottom:1px solid var(--rule); box-shadow:var(--shadow);
+  }
+  .nav__inner {
+    max-width:1080px; margin:0 auto; padding:0 24px;
+    display:flex; gap:22px; overflow-x:auto; scrollbar-width:thin;
+  }
+  .nav a {
+    flex:0 0 auto; padding:13px 0; font-size:12.5px; color:var(--ink-2);
+    text-decoration:none; white-space:nowrap; border-bottom:2px solid transparent;
+  }
+  .nav a:hover { color:var(--ink); border-bottom-color:var(--rule-2); }
+
+  /* ---- sections ---- */
+  main { padding:8px 0 40px; }
+  .sec { padding:52px 0 8px; scroll-margin-top:56px; }
+  .sec__head { max-width:66ch; margin-bottom:14px; }
+  .sec__head h2 { font-size:24px; font-weight:700; letter-spacing:-.012em; }
+  .sec__lede { margin:7px 0 0; color:var(--ink-2); font-size:15px; }
+  .sec__stat {
+    margin:11px 0 0; font-family:"IBM Plex Mono", monospace; font-size:11.5px;
+    letter-spacing:.05em; text-transform:uppercase; color:var(--ink-3);
+    font-variant-numeric:tabular-nums;
+  }
+  .entries { display:flex; flex-direction:column; }
+  .entry {
+    display:grid; grid-template-columns:minmax(0,300px) minmax(0,1fr);
+    gap:6px 32px; padding:17px 0; border-top:1px solid var(--rule);
+  }
+  .entry__id {
+    font-family:"IBM Plex Mono", monospace; font-size:13px; font-weight:500;
+    color:var(--ink); text-decoration:none; overflow-wrap:anywhere;
+    border-bottom:1px solid var(--rule-2);
+  }
+  .entry__id:hover { color:var(--accent); border-bottom-color:var(--accent); }
+  .entry__size {
+    margin:5px 0 0; font-family:"IBM Plex Mono", monospace; font-size:11.5px;
+    color:var(--ink-3); font-variant-numeric:tabular-nums;
+  }
+  .entry__desc { margin:0; color:var(--ink-2); max-width:64ch; }
+  .chips { margin:9px 0 0; display:flex; flex-wrap:wrap; gap:6px; }
+  .chip {
+    font-family:"IBM Plex Mono", monospace; font-size:10.5px; letter-spacing:.045em;
+    text-transform:uppercase; padding:2.5px 7px; border-radius:2px; border:1px solid;
+  }
+  .chip--ok { color:var(--ok); background:var(--ok-bg); border-color:var(--ok-line); }
+  .chip--warn { color:var(--warn); background:var(--warn-bg); border-color:var(--warn-line); }
+  .chip--risk { color:var(--risk); background:var(--risk-bg); border-color:var(--risk-line); }
+  .chip--access { color:var(--ink-3); background:transparent; border-color:var(--rule-2); }
+
+  /* ---- notes + steps ---- */
+  .band { background:var(--surface); border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); margin-top:56px; }
+  .band__inner { max-width:1080px; margin:0 auto; padding:52px 24px; }
+  .band h2 { font-size:24px; font-weight:700; letter-spacing:-.012em; }
+  .band__lede { margin:7px 0 26px; color:var(--ink-2); max-width:66ch; }
+  .notes { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1px; background:var(--rule); border:1px solid var(--rule); border-radius:3px; overflow:hidden; }
+  .note { background:var(--ground); padding:18px 20px; }
+  .note h3 { font-size:15px; font-weight:600; }
+  .note p { margin:7px 0 0; color:var(--ink-2); font-size:14px; }
+  code {
+    font-family:"IBM Plex Mono", monospace; font-size:.86em;
+    background:var(--surface-2); padding:1.5px 4px; border-radius:2px; overflow-wrap:anywhere;
+  }
+  ol.steps { list-style:none; counter-reset:s; padding:0; margin:0; display:flex; flex-direction:column; }
+  .step { counter-increment:s; padding:16px 0 16px 46px; border-top:1px solid var(--rule); position:relative; }
+  .step::before {
+    content:counter(s,decimal-leading-zero); position:absolute; left:0; top:16px;
+    font-family:"IBM Plex Mono", monospace; font-size:12px; color:var(--accent);
+    font-variant-numeric:tabular-nums;
+  }
+  .step h3 { font-size:16px; font-weight:600; }
+  .step p { margin:5px 0 0; color:var(--ink-2); max-width:66ch; }
+
+  pre {
+    background:var(--surface-2); border:1px solid var(--rule); border-radius:3px;
+    padding:14px 16px; overflow-x:auto; font-family:"IBM Plex Mono", monospace;
+    font-size:12.5px; line-height:1.65; margin:0;
+  }
+  pre code { background:none; padding:0; font-size:inherit; }
+
+
+  .harn {
+    margin:8px 0 0; font-family:"IBM Plex Mono", monospace; font-size:11.5px;
+    color:var(--ink-2); display:flex; gap:7px; align-items:baseline; flex-wrap:wrap;
+  }
+  .harn__k {
+    color:var(--ink-3); text-transform:uppercase; letter-spacing:.07em; font-size:10px;
+    border-right:1px solid var(--rule-2); padding-right:7px;
+  }
+  .harn--none { color:var(--ink-3); }
+  .harn--unk { color:var(--ink-3); font-style:italic; }
+  .harn__v { color:var(--ok); font-size:11px; }
+  .mixes { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:20px 28px; margin-top:6px; }
+  .mix__top { display:flex; justify-content:space-between; align-items:baseline; gap:10px; }
+  .mix__name { font-size:14px; font-weight:600; }
+  .mix__pct {
+    font-family:"IBM Plex Mono", monospace; font-size:13px; font-variant-numeric:tabular-nums; color:var(--ink);
+  }
+  .mix__bar { height:5px; background:var(--surface-2); border-radius:3px; margin:7px 0 5px; overflow:hidden; }
+  .mix__bar span { display:block; height:100%; background:var(--accent); border-radius:3px; }
+  .mix__sub {
+    font-family:"IBM Plex Mono", monospace; font-size:11px; color:var(--ink-3);
+    font-variant-numeric:tabular-nums;
+  }
+  .tick { color:var(--ok); }
+  footer { padding:34px 0 60px; color:var(--ink-3); font-size:13px; }
+  footer p { margin:0 0 6px; max-width:70ch; }
+
+  @media (max-width:720px) {
+    .entry { grid-template-columns:1fr; gap:8px; }
+    .mast__inner { padding:44px 24px 32px; }
+  }
+  @media (prefers-reduced-motion:reduce) {
+    * { animation:none !important; transition:none !important; }
+  }
+</style>
+
+<header class="mast">
+  <div class="mast__inner">
+    <p class="eyebrow">Corpus survey · compiled 30 August 2026</p>
+    <h1>Agentic Trace Atlas</h1>
+    <p class="mast__sub">Every open-source agentic trace corpus we could locate, for post-training a general
+    multimodal agent. Each Hugging Face entry was checked live against the Hub API — availability, gating,
+    declared license, paginated download size, and the harness the traces were recorded under — rather than
+    taken from a paper or a search result. A <span class="tick">&#10003;</span> on a harness means it was
+    confirmed in the dataset card; everything else is inferred or unverified.</p>
+    <div class="stats">
+      <div class="stat"><div class="stat__n">123</div><div class="stat__l">sources catalogued</div></div>
+      <div class="stat"><div class="stat__n">3.5 TB</div><div class="stat__l">multimodal tier</div></div>
+      <div class="stat"><div class="stat__n">308 GB</div><div class="stat__l">text trace tier</div></div>
+      <div class="stat stat--warn"><div class="stat__n">6</div><div class="stat__l">gated, still scriptable</div></div>
+      <div class="stat stat--warn"><div class="stat__n">12</div><div class="stat__l">on-Hub, no license</div></div>
+      <div class="stat stat--risk"><div class="stat__n">3</div><div class="stat__l">non-commercial only</div></div>
+    </div>
+  </div>
+</header>
+
+<nav class="nav" aria-label="Sections">
+  <div class="nav__inner">
+        <a href="#core">Core general-agent corpora</a>
+        <a href="#gui">Computer-use and GUI agents</a>
+        <a href="#mobile">Mobile and Android agents</a>
+        <a href="#web">Web and browser agents</a>
+        <a href="#swe">Software engineering and terminal</a>
+        <a href="#tools">Tool and function calling</a>
+        <a href="#rl">Reinforcement learning and verifiers</a>
+        <a href="#sessions">Real production agent sessions</a>
+        <a href="#research">Deep research and search agents</a>
+        <a href="#cyber">Security and vulnerability research</a>
+        <a href="#embodied">Embodied and robotics</a>
+        <a href="#envs">Environments to generate your own traces</a>
+        <a href="#indexes">Aggregators worth re-checking</a>
+        <a href="#harness">Harness mix</a>
+        <a href="#caveats">Caveats</a>
+        <a href="#order">Ingestion order</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+    <section class="sec" id="core">
+      <header class="sec__head">
+        <h2>Core general-agent corpora</h2>
+        <p class="sec__lede">Multi-domain and already format-normalized. The highest-leverage place to start.</p>
+        <p class="sec__stat">9 sources · 41 GB indexed</p>
+      </header>
+      <div class="entries">
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/open-thoughts/AgentTrove" target="_blank" rel="noopener">open-thoughts/AgentTrove</a>
+            <p class="entry__size">1.70M rows · 19.6 GB</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Large multi-domain SFT mixture assembled by the Open Thoughts collective — the broadest single permissively-licensed corpus in this catalog.</p>
+            <p class="harn"><span class="harn__k">Harness</span>Terminus-2<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/Agent-Ark/Toucan-1.5M" target="_blank" rel="noopener">Agent-Ark/Toucan-1.5M</a>
+            <p class="entry__size">1.65M rows · 21.8 GB</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">1.5M tool-use and multi-step trajectories synthesized across a wide tool inventory; pairs naturally with AgentTrove for volume.</p>
+            <p class="harn"><span class="harn__k">Harness</span>Hermes / MCP<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/neulab/agent-data-collection" target="_blank" rel="noopener">neulab/agent-data-collection</a>
+            <p class="entry__size">loader repo</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">The Agent Data Protocol reference release — a loader that normalizes roughly 13 heterogeneous agent datasets into one shared trajectory schema.</p>
+            <p class="harn"><span class="harn__k">Harness</span>Emits OpenHands · SWE-agent · AgentLab<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--warn">unstated</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/Solaris99/AgentBank" target="_blank" rel="noopener">Solaris99/AgentBank</a>
+            <p class="entry__size">53,205 rows</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">50K+ interaction trajectories spanning web, embodied, SQL and reasoning tasks, built specifically for generalist agent fine-tuning.</p>
+            <p class="harn"><span class="harn__k">Harness</span>Unified ReAct</p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/CharlieDreemur/OpenManus-RL" target="_blank" rel="noopener">CharlieDreemur/OpenManus-RL</a>
+            <p class="entry__size">48,927 rows</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Trajectories from the OpenManus agent framework, collected for reinforcement learning and rejection-sampling experiments.</p>
+            <p class="harn"><span class="harn__k">Harness</span>OpenManus</p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/AgentGym/AgentTraj-L" target="_blank" rel="noopener">AgentGym/AgentTraj-L</a>
+            <p class="entry__size">14,485 traj · 14 domains</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">The long-form trajectory split of AgentGym, covering 14 task environments in a single consistent ReAct-style format.</p>
+            <p class="harn"><span class="harn__k">Harness</span>AgentGym</p>
+            <p class="chips">
+              <span class="chip chip--warn">unstated</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/open-thoughts/OpenThoughts-Agent-v1-SFT" target="_blank" rel="noopener">open-thoughts/OpenThoughts-Agent-v1-SFT</a>
+            <p class="entry__size">15,209 rows</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Curated agentic SFT set filtered for reasoning quality rather than raw volume.</p>
+            <p class="harn"><span class="harn__k">Harness</span>Terminus-2<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/zai-org/AgentInstruct" target="_blank" rel="noopener">zai-org/AgentInstruct</a>
+            <p class="entry__size">1,866 rows</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">The original AgentTuning instruction set — small and hand-verified, still useful as a high-precision seed.</p>
+            <p class="harn"><span class="harn__k">Harness</span>ReAct (AgentTuning)</p>
+            <p class="chips">
+              <span class="chip chip--warn">unstated</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/internlm/Agent-FLAN" target="_blank" rel="noopener">internlm/Agent-FLAN</a>
+            <p class="entry__size">—</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Agent instruction data restructured to reduce format overfitting when mixing agent and chat corpora.</p>
+            <p class="harn"><span class="harn__k">Harness</span>Agent-FLAN</p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>      </div>
+    </section>
+
+    <section class="sec" id="gui">
+      <header class="sec__head">
+        <h2>Computer-use and GUI agents</h2>
+        <p class="sec__lede">The core of the multimodal requirement — screenshots paired with actions. Budget roughly 2.5 TB for the full tier.</p>
+        <p class="sec__stat">12 sources · 2,933 GB indexed</p>
+      </header>
+      <div class="entries">
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/neulab/MultiUI" target="_blank" rel="noopener">neulab/MultiUI</a>
+            <p class="entry__size">954.7 GB · 7.3M instr</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">7.3M multimodal instructions rendered from 1M websites; the largest UI-grounding corpus publicly available.</p>
+            <p class="harn harn--none"><span class="harn__k">Harness</span>None — grounding data<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">odc-by</span>
+              <span class="chip chip--access" title="Requires accepting terms with a Hugging Face account">Gated</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/OS-Copilot/OS-Atlas-data" target="_blank" rel="noopener">OS-Copilot/OS-Atlas-data</a>
+            <p class="entry__size">816.1 GB</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">13M+ annotated GUI elements across mobile, desktop and web — the reference corpus for cross-platform grounding.</p>
+            <p class="harn"><span class="harn__k">Harness</span>OS-Atlas action space</p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/xlangai/AgentNet" target="_blank" rel="noopener">xlangai/AgentNet</a>
+            <p class="entry__size">199.6 GB · 22,625 traj</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">22,625 human-annotated desktop trajectories on Windows, macOS and Ubuntu, averaging 18.6 steps across 140+ applications. Released with OpenCUA.</p>
+            <p class="harn"><span class="harn__k">Harness</span>OpenCUA · pyautogui<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">mit</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/xlangai/aguvis-stage1" target="_blank" rel="noopener">xlangai/aguvis-stage1</a>
+            <p class="entry__size">180.3 GB · 4.2M samples</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Stage-one Aguvis data: 4.2M grounding samples that teach element referring before any action prediction.</p>
+            <p class="harn"><span class="harn__k">Harness</span>Aguvis · pyautogui</p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/xlangai/aguvis-stage2" target="_blank" rel="noopener">xlangai/aguvis-stage2</a>
+            <p class="entry__size">167.8 GB · 1.3M samples</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Stage-two Aguvis data: 1.3M full trajectories layering planning and reasoning onto the stage-one grounding.</p>
+            <p class="harn"><span class="harn__k">Harness</span>Aguvis · pyautogui</p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/Aria-UI/Aria-UI_Data" target="_blank" rel="noopener">Aria-UI/Aria-UI_Data</a>
+            <p class="entry__size">174.3 GB</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">2.9M web, 1.1M mobile and 150K desktop instruction samples backing a unified UI grounding model.</p>
+            <p class="harn harn--none"><span class="harn__k">Harness</span>None — grounding data</p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/osunlp/Multimodal-Mind2Web" target="_blank" rel="noopener">osunlp/Multimodal-Mind2Web</a>
+            <p class="entry__size">14,193 rows · 13.6 GB</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Screenshot-augmented Mind2Web — the standard offline training and benchmark set for multimodal web action prediction.</p>
+            <p class="harn harn--none"><span class="harn__k">Harness</span>None — human demos<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">openrail</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/vyokky/GUI-360" target="_blank" rel="noopener">vyokky/GUI-360</a>
+            <p class="entry__size">1.2M steps</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">1.2M executed action steps in Windows office applications with full-resolution screenshots, accessibility metadata and — unusually — failed trajectories alongside successful ones.</p>
+            <p class="harn"><span class="harn__k">Harness</span>Hybrid GUI + API action space<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">mit</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/OpenGVLab/ScaleCUA-Data" target="_blank" rel="noopener">OpenGVLab/ScaleCUA-Data</a>
+            <p class="entry__size">—</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Cross-platform computer-use data backing the ScaleCUA family of open agent models.</p>
+            <p class="harn"><span class="harn__k">Harness</span>ScaleCUA unified action space<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/osunlp/UGround-V1-Data" target="_blank" rel="noopener">osunlp/UGround-V1-Data</a>
+            <p class="entry__size">424.5 GB · 10M elements</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">10M UI elements across 1.3M screenshots for pure visual grounding, with no action supervision.</p>
+            <p class="harn harn--none"><span class="harn__k">Harness</span>None — grounding data<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--risk">cc-by-nc-sa-4.0</span>
+              <span class="chip chip--access" title="Requires accepting terms with a Hugging Face account">Gated</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/xlangai/AgentTrek" target="_blank" rel="noopener">xlangai/AgentTrek</a>
+            <p class="entry__size">52,594 rows · 1.8 GB</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">10K web trajectories synthesized by replaying online tutorials, carrying screenshots, accessibility trees and chain-of-thought together.</p>
+            <p class="harn"><span class="harn__k">Harness</span>Browser replay (unnamed)</p>
+            <p class="chips">
+              <span class="chip chip--warn">unstated</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/Voxel51/ScreenSpot-Pro" target="_blank" rel="noopener">Voxel51/ScreenSpot-Pro</a>
+            <p class="entry__size">1,581 tasks</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">1,581 high-resolution grounding tasks drawn from 23 professional industries; small, and primarily an evaluation set.</p>
+            <p class="harn harn--none"><span class="harn__k">Harness</span>None — grounding data<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--warn">unstated</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>      </div>
+    </section>
+
+    <section class="sec" id="mobile">
+      <header class="sec__head">
+        <h2>Mobile and Android agents</h2>
+        <p class="sec__lede">Phone-control traces. Include this tier only if mobile is genuinely in scope — it is large and domain-specific.</p>
+        <p class="sec__stat">10 sources · 569 GB indexed</p>
+      </header>
+      <div class="entries">
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/Yuxiang007/AMEX" target="_blank" rel="noopener">Yuxiang007/AMEX</a>
+            <p class="entry__size">93.6 GB · 104K shots</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">104K high-resolution screenshots from 110 Android apps, annotated at element, screen and instruction level simultaneously.</p>
+            <p class="harn harn--none"><span class="harn__k">Harness</span>None — human demos<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">cc-by-4.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/mllmTeam/MobileViews" target="_blank" rel="noopener">mllmTeam/MobileViews</a>
+            <p class="entry__size">475.5 GB · 600K pairs</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">600K+ screenshot and view-hierarchy pairs — the largest raw Android UI scrape on the Hub.</p>
+            <p class="harn harn--none"><span class="harn__k">Harness</span>None — UI scrape<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">mit</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/OpenGVLab/GUI-Odyssey" target="_blank" rel="noopener">OpenGVLab/GUI-Odyssey</a>
+            <p class="entry__size">7,735 episodes</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">7,735 cross-app Android episodes recorded across six different device configurations.</p>
+            <p class="harn harn--none"><span class="harn__k">Harness</span>None — human demos<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">cc-by-4.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/OS-Copilot/OS-Genesis-mobile-data" target="_blank" rel="noopener">OS-Copilot/OS-Genesis-mobile-data</a>
+            <p class="entry__size">51,114 rows</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Mobile trajectories built by reverse task synthesis — explore first, then label what the exploration actually accomplished.</p>
+            <p class="harn"><span class="harn__k">Harness</span>OS-Genesis</p>
+            <p class="chips">
+              <span class="chip chip--ok">mit</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/xwk123/Mobile3M" target="_blank" rel="noopener">xwk123/Mobile3M</a>
+            <p class="entry__size">3M pages</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">3M UI pages from 49 Chinese mobile apps, structured as a navigation graph rather than flat episodes.</p>
+            <p class="harn harn--none"><span class="harn__k">Harness</span>None — UI scrape<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/lgy0404/LearnGUI" target="_blank" rel="noopener">lgy0404/LearnGUI</a>
+            <p class="entry__size">2,353 tasks</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">2,252 offline and 101 online mobile tasks aimed at demonstration-based learning.</p>
+            <p class="harn harn--none"><span class="harn__k">Harness</span>None — human demos</p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/reece124/android_control" target="_blank" rel="noopener">reece124/android_control</a>
+            <p class="entry__size">15,283 demos</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">15,283 Android demonstrations over 14,548 tasks; a community re-upload of AndroidControl.</p>
+            <p class="harn harn--none"><span class="harn__k">Harness</span>None — human demos<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--warn">unstated</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/rootsautomation/RICO-SCA" target="_blank" rel="noopener">rootsautomation/RICO-SCA</a>
+            <p class="entry__size">295,476 cmds</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">295,476 synthetic commands grounded on RICO screens — classic pretraining data for UI referring expressions.</p>
+            <p class="harn harn--none"><span class="harn__k">Harness</span>None — synthetic on RICO<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://github.com/google-research/google-research/tree/master/android_in_the_wild" target="_blank" rel="noopener">Android in the Wild (AitW)</a>
+            <p class="entry__size">715K episodes</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">715K episodes and 5.6M screenshots of real Android use — still the largest mobile trace set anywhere. Distributed by Google Research over GCS, not the Hub.</p>
+            <p class="harn harn--none"><span class="harn__k">Harness</span>None — human demos<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">cc-by-4.0</span>
+              <span class="chip chip--access" title="Hosted outside Hugging Face">Off-Hub</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://www.kaggle.com/datasets/onurgunes1993/rico-dataset" target="_blank" rel="noopener">RICO</a>
+            <p class="entry__size">72K screens</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">72K Android UI screenshots with view hierarchies from 2018 — the substrate most later mobile UI datasets are built on.</p>
+            <p class="harn harn--none"><span class="harn__k">Harness</span>None — UI scrape<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--warn">unstated</span>
+              <span class="chip chip--access" title="Hosted outside Hugging Face">Off-Hub</span>
+            </p>
+          </div>
+        </article>      </div>
+    </section>
+
+    <section class="sec" id="web">
+      <header class="sec__head">
+        <h2>Web and browser agents</h2>
+        <p class="sec__lede">Browser navigation traces. Text-and-DOM heavy; the screenshot-bearing ones are listed under computer-use.</p>
+        <p class="sec__stat">9 sources · 4 GB indexed</p>
+      </header>
+      <div class="entries">
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/stanfordnlp/nnetnav-live" target="_blank" rel="noopener">stanfordnlp/nnetnav-live</a>
+            <p class="entry__size">53,709 rows · 3.6 GB</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Trajectories from unsupervised exploration of live websites, labeled retroactively rather than from a task list.</p>
+            <p class="harn"><span class="harn__k">Harness</span>BrowserGym</p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/data-for-agents/insta-150k-v3" target="_blank" rel="noopener">data-for-agents/insta-150k-v3</a>
+            <p class="entry__size">146,441 rows</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Playwright-driven navigation tasks generated and filtered across 150K websites.</p>
+            <p class="harn"><span class="harn__k">Harness</span>InSTA · Playwright<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">mit</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/McGill-NLP/WebLINX" target="_blank" rel="noopener">McGill-NLP/WebLINX</a>
+            <p class="entry__size">79,777 rows</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">2,300 conversational web-navigation demonstrations with screenshots and DOM state — rare coverage of dialogue-guided browsing.</p>
+            <p class="harn harn--none"><span class="harn__k">Harness</span>None — human demos; BrowserGym for eval<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--risk">cc-by-nc-sa-4.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/osunlp/Mind2Web" target="_blank" rel="noopener">osunlp/Mind2Web</a>
+            <p class="entry__size">2,350 tasks</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">The original 2,350-task web agent benchmark over 137 real sites; text and HTML only.</p>
+            <p class="harn harn--none"><span class="harn__k">Harness</span>None — human demos<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">cc-by-4.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/iMeanAI/Mind2Web-Live" target="_blank" rel="noopener">iMeanAI/Mind2Web-Live</a>
+            <p class="entry__size">646 rows</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">542 Mind2Web tasks re-grounded against live websites with step-level checkpoints.</p>
+            <p class="harn"><span class="harn__k">Harness</span>WebCanvas</p>
+            <p class="chips">
+              <span class="chip chip--ok">cc-by-4.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/osunlp/Mind2Web-2" target="_blank" rel="noopener">osunlp/Mind2Web-2</a>
+            <p class="entry__size">130 tasks</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">130 long-horizon, open-ended browsing tasks scored against rubrics instead of exact action match.</p>
+            <p class="harn harn--unk"><span class="harn__k">Harness</span>Not verified</p>
+            <p class="chips">
+              <span class="chip chip--ok">cc-by-4.0</span>
+              <span class="chip chip--access" title="Requires accepting terms with a Hugging Face account">Gated</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/McGill-NLP/A3-Synth" target="_blank" rel="noopener">McGill-NLP/A3-Synth</a>
+            <p class="entry__size">—</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Synthetic web agent trajectories released alongside McGill&#x27;s A3 agent work.</p>
+            <p class="harn harn--unk"><span class="harn__k">Harness</span>Not verified</p>
+            <p class="chips">
+              <span class="chip chip--warn">unstated</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/biglab/webui-all" target="_blank" rel="noopener">biglab/webui-all</a>
+            <p class="entry__size">400K pages</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">400K rendered web pages with UI annotations — a visual pretraining substrate rather than a trajectory set.</p>
+            <p class="harn harn--none"><span class="harn__k">Harness</span>None — page scrape<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--warn">other</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://arxiv.org/abs/2502.11357" target="_blank" rel="noopener">Explorer</a>
+            <p class="entry__size">94K traj · 720K shots</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">94K successful web trajectories and 720K screenshots across 49K URLs, produced by a multi-agent synthesis pipeline.</p>
+            <p class="harn"><span class="harn__k">Harness</span>Playwright pipeline</p>
+            <p class="chips">
+              <span class="chip chip--warn">unstated</span>
+              <span class="chip chip--access" title="Hosted outside Hugging Face">Off-Hub</span>
+            </p>
+          </div>
+        </article>      </div>
+    </section>
+
+    <section class="sec" id="swe">
+      <header class="sec__head">
+        <h2>Software engineering and terminal</h2>
+        <p class="sec__lede">The largest volume of any category and the cleanest licensing. Roughly 120 GB covers the top tier.</p>
+        <p class="sec__stat">14 sources · 179 GB indexed</p>
+      </header>
+      <div class="entries">
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/togethercomputer/CoderForge-Preview" target="_blank" rel="noopener">togethercomputer/CoderForge-Preview</a>
+            <p class="entry__size">826,556 rows · 72.8 GB</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">The largest coding-agent trajectory dump found anywhere in this survey — and simultaneously its biggest licensing unknown.</p>
+            <p class="harn"><span class="harn__k">Harness</span>Single unnamed scaffold, fixed tool set<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--warn">unstated</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/nvidia/SWE-Zero-openhands-trajectories" target="_blank" rel="noopener">nvidia/SWE-Zero-openhands-trajectories</a>
+            <p class="entry__size">318,115 rows · 12.2 GB</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Execution-verified OpenHands rollouts over the SWE-Zero task set.</p>
+            <p class="harn"><span class="harn__k">Harness</span>OpenHands<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">cc-by-4.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/nvidia/Open-SWE-Traces" target="_blank" rel="noopener">nvidia/Open-SWE-Traces</a>
+            <p class="entry__size">46.5 GB · 207,489 traj</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">207K SWE-agent and OpenHands trajectories spanning nine programming languages — the best multilingual coverage available openly.</p>
+            <p class="harn"><span class="harn__k">Harness</span>OpenHands · SWE-agent · mini-SWE-agent<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">cc-by-4.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/AlienKevin/SWE-ZERO-12M-trajectories" target="_blank" rel="noopener">AlienKevin/SWE-ZERO-12M-trajectories</a>
+            <p class="entry__size">36.0 GB · 12.29M traj</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">12.29M execution-free trajectories totalling 112B tokens over 122K pull requests and 3K repositories, built to instill tool-use priors in base models.</p>
+            <p class="harn"><span class="harn__k">Harness</span>mini-swe-agent-1<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/nvidia/Nemotron-Terminal-Corpus" target="_blank" rel="noopener">nvidia/Nemotron-Terminal-Corpus</a>
+            <p class="entry__size">366,154 rows · 8.2 GB</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Long-horizon terminal interaction traces — the principal open source for shell-agent behavior.</p>
+            <p class="harn"><span class="harn__k">Harness</span>Terminus-2 · Terminal-Bench 2.0<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">cc-by-4.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/internlm/SWE-Fixer-Train-110K" target="_blank" rel="noopener">internlm/SWE-Fixer-Train-110K</a>
+            <p class="entry__size">115,406 rows · 1.5 GB</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">110K issue-and-fix pairs carrying both retrieval and editing traces.</p>
+            <p class="harn harn--none"><span class="harn__k">Harness</span>None — retrieve-then-edit pipeline<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">mit</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/nvidia/Nemotron-SWE-v1" target="_blank" rel="noopener">nvidia/Nemotron-SWE-v1</a>
+            <p class="entry__size">59K traj</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">59K OpenHands trajectories distilled from Qwen3-Coder-480B, curated specifically for SWE-bench-style supervised fine-tuning.</p>
+            <p class="harn"><span class="harn__k">Harness</span>OpenHands<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">cc-by-4.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/nvidia/SWE-Hero-openhands-trajectories" target="_blank" rel="noopener">nvidia/SWE-Hero-openhands-trajectories</a>
+            <p class="entry__size">34K traj</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">A further 34K OpenHands rollouts from the same Nemotron SWE line.</p>
+            <p class="harn"><span class="harn__k">Harness</span>OpenHands<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">cc-by-4.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/R2E-Gym/R2E-Gym-V1" target="_blank" rel="noopener">R2E-Gym/R2E-Gym-V1</a>
+            <p class="entry__size">8,101 rows · 1.7 GB</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Executable software environments shipped with paired trajectories and verifiers.</p>
+            <p class="harn"><span class="harn__k">Harness</span>R2E-Gym</p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/SWE-Gym/OpenHands-Sampled-Trajectories" target="_blank" rel="noopener">SWE-Gym/OpenHands-Sampled-Trajectories</a>
+            <p class="entry__size">6,055 rows · 0.3 GB</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Sampled OpenHands rollouts on SWE-Gym tasks, retaining both successful and failed attempts.</p>
+            <p class="harn"><span class="harn__k">Harness</span>OpenHands<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--warn">unstated</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/SWE-bench/SWE-smith-trajectories" target="_blank" rel="noopener">SWE-bench/SWE-smith-trajectories</a>
+            <p class="entry__size">5,016 traj</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">The 5,016 expert trajectories from Claude 3.7 Sonnet that trained SWE-agent-LM-32B to 40.2% on SWE-bench Verified.</p>
+            <p class="harn"><span class="harn__k">Harness</span>SWE-agent<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">mit</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/nebius/SWE-rebench-openhands-trajectories" target="_blank" rel="noopener">nebius/SWE-rebench-openhands-trajectories</a>
+            <p class="entry__size">—</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">OpenHands traces on SWE-rebench, notable for including agent-generated tests in the recorded evaluation.</p>
+            <p class="harn"><span class="harn__k">Harness</span>OpenHands v0.54.0<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">cc-by-4.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/SWE-Gym/SWE-Gym" target="_blank" rel="noopener">SWE-Gym/SWE-Gym</a>
+            <p class="entry__size">2,438 rows</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">The SWE-Gym task instances themselves — an environment definition rather than a trace corpus.</p>
+            <p class="harn harn--none"><span class="harn__k">Harness</span>None — task definitions<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">mit</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/thoughtworks/agentic-coding-trajectories" target="_blank" rel="noopener">thoughtworks/agentic-coding-trajectories</a>
+            <p class="entry__size">—</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">LLM-generated trajectories solving real GitHub repositories.</p>
+            <p class="harn harn--unk"><span class="harn__k">Harness</span>Not verified</p>
+            <p class="chips">
+              <span class="chip chip--warn">other</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>      </div>
+    </section>
+
+    <section class="sec" id="tools">
+      <header class="sec__head">
+        <h2>Tool and function calling</h2>
+        <p class="sec__lede">Small on disk, high value. This is where call-format priors and the decision of whether to call at all are learned.</p>
+        <p class="sec__stat">12 sources · 26 GB indexed</p>
+      </header>
+      <div class="entries">
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/nvidia/Nemotron-SFT-Agentic-v2" target="_blank" rel="noopener">nvidia/Nemotron-SFT-Agentic-v2</a>
+            <p class="entry__size">992K rows · 21.9 GB</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">NVIDIA&#x27;s consolidated agentic SFT mixture. Ships under three licenses at once, so terms must be checked per subset.</p>
+            <p class="harn"><span class="harn__k">Harness</span>Mixed (Nemotron pipeline)</p>
+            <p class="chips">
+              <span class="chip chip--ok">cc-by-4.0 / apache-2.0 / mit</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/Nanbeige/ToolMind" target="_blank" rel="noopener">Nanbeige/ToolMind</a>
+            <p class="entry__size">368,611 rows · 4.0 GB</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Large reasoning-enhanced tool-use corpus that attaches an explicit rationale to each call.</p>
+            <p class="harn"><span class="harn__k">Harness</span>Mixed; tau-bench style<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/nvidia/Nemotron-Agentic-v1" target="_blank" rel="noopener">nvidia/Nemotron-Agentic-v1</a>
+            <p class="entry__size">335K rows</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Multi-turn tool-use conversations covering goal decomposition and reasoning over returned tool output.</p>
+            <p class="harn"><span class="harn__k">Harness</span>Simulated 3-role conversation<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">cc-by-4.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/allenai/Dolci-Instruct-SFT-Tool-Use" target="_blank" rel="noopener">allenai/Dolci-Instruct-SFT-Tool-Use</a>
+            <p class="entry__size">227,579 rows</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">AI2&#x27;s tool-use split from the broader Dolci instruction suite.</p>
+            <p class="harn harn--unk"><span class="harn__k">Harness</span>Not verified</p>
+            <p class="chips">
+              <span class="chip chip--ok">odc-by</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/glaiveai/glaive-function-calling-v2" target="_blank" rel="noopener">glaiveai/glaive-function-calling-v2</a>
+            <p class="entry__size">113K rows</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">The long-standing baseline function-calling set: widely used, and by now somewhat dated in call format.</p>
+            <p class="harn"><span class="harn__k">Harness</span>Glaive schema<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/Team-ACE/ToolACE" target="_blank" rel="noopener">Team-ACE/ToolACE</a>
+            <p class="entry__size">26,507 APIs</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Synthetic calls over a 26,507-API pool, deliberately varied across JSON, YAML, XML and Markdown call formats.</p>
+            <p class="harn"><span class="harn__k">Harness</span>Multi-format: JSON · YAML · XML · Markdown<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/Salesforce/xlam-function-calling-60k" target="_blank" rel="noopener">Salesforce/xlam-function-calling-60k</a>
+            <p class="entry__size">60K rows · 3,673 APIs</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">60K verified calls over 3,673 executable APIs, generated and execution-checked by the APIGen pipeline.</p>
+            <p class="harn"><span class="harn__k">Harness</span>APIGen · xLAM schema<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">cc-by-4.0</span>
+              <span class="chip chip--access" title="Requires accepting terms with a Hugging Face account">Gated</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/nvidia/When2Call" target="_blank" rel="noopener">nvidia/When2Call</a>
+            <p class="entry__size">27,952 rows</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Trains the decision of whether to call a tool at all, including the negative cases most corpora omit entirely.</p>
+            <p class="harn harn--unk"><span class="harn__k">Harness</span>Not verified</p>
+            <p class="chips">
+              <span class="chip chip--ok">cc-by-4.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/NousResearch/hermes-function-calling-v1" target="_blank" rel="noopener">NousResearch/hermes-function-calling-v1</a>
+            <p class="entry__size">11,578 rows</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">The Hermes tool-call format set — small, but heavily represented in open fine-tunes.</p>
+            <p class="harn"><span class="harn__k">Harness</span>Hermes<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/Salesforce/APIGen-MT-5k" target="_blank" rel="noopener">Salesforce/APIGen-MT-5k</a>
+            <p class="entry__size">5K traj</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">5K multi-turn trajectories from simulated agent-human interplay against verified task blueprints.</p>
+            <p class="harn"><span class="harn__k">Harness</span>APIGen-MT<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--risk">cc-by-nc-4.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/bytedance-research/ToolHop" target="_blank" rel="noopener">bytedance-research/ToolHop</a>
+            <p class="entry__size">—</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Multi-hop queries that require chained, mutually dependent tool calls.</p>
+            <p class="harn harn--unk"><span class="harn__k">Harness</span>Not verified</p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/argilla/Synth-APIGen-v0.1" target="_blank" rel="noopener">argilla/Synth-APIGen-v0.1</a>
+            <p class="entry__size">49K rows</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">An open reproduction of the APIGen synthesis pipeline.</p>
+            <p class="harn"><span class="harn__k">Harness</span>APIGen</p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>      </div>
+    </section>
+
+    <section class="sec" id="rl">
+      <header class="sec__head">
+        <h2>Reinforcement learning and verifiers</h2>
+        <p class="sec__lede">For a second stage after supervised fine-tuning. Tasks with verifiable outcomes, plus reward-model training data.</p>
+        <p class="sec__stat">7 sources</p>
+      </header>
+      <div class="entries">
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/nvidia/Nemotron-RL-Agentic-Terminal-Pivot-v1" target="_blank" rel="noopener">nvidia/Nemotron-RL-Agentic-Terminal-Pivot-v1</a>
+            <p class="entry__size">—</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">RL prompt and reward data for terminal agents, from the Nemotron training pipeline.</p>
+            <p class="harn"><span class="harn__k">Harness</span>Terminal (Nemotron)</p>
+            <p class="chips">
+              <span class="chip chip--ok">cc-by-4.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/nvidia/Nemotron-RL-Agentic-SWE-Pivot-v1" target="_blank" rel="noopener">nvidia/Nemotron-RL-Agentic-SWE-Pivot-v1</a>
+            <p class="entry__size">—</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">The software-engineering counterpart: RL-stage tasks with verifiable pass/fail outcomes.</p>
+            <p class="harn"><span class="harn__k">Harness</span>SWE (Nemotron)</p>
+            <p class="chips">
+              <span class="chip chip--ok">cc-by-4.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/open-thoughts/OpenThoughts-Agent-RL-5K" target="_blank" rel="noopener">open-thoughts/OpenThoughts-Agent-RL-5K</a>
+            <p class="entry__size">5K tasks</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">5K RL-ready agentic tasks shipped with their verifiers.</p>
+            <p class="harn"><span class="harn__k">Harness</span>Terminus-2</p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/open-thoughts/OpenThoughts-Agent-SFT-ColdStartForRL-10K" target="_blank" rel="noopener">open-thoughts/OpenThoughts-Agent-SFT-ColdStartForRL-10K</a>
+            <p class="entry__size">9,437 rows</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Cold-start SFT trajectories intended to run immediately before the RL stage.</p>
+            <p class="harn"><span class="harn__k">Harness</span>Terminus-2</p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/open-thoughts/TaskTrove" target="_blank" rel="noopener">open-thoughts/TaskTrove</a>
+            <p class="entry__size">17.2K tasks</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">17.2K agentic task specifications meant for generating your own rollouts.</p>
+            <p class="harn harn--none"><span class="harn__k">Harness</span>None — task definitions<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/PrimeIntellect/SYNTHETIC-1" target="_blank" rel="noopener">PrimeIntellect/SYNTHETIC-1</a>
+            <p class="entry__size">—</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Distributed-generation reasoning and verified-task corpus from Prime Intellect.</p>
+            <p class="harn harn--unk"><span class="harn__k">Harness</span>Not verified</p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/SWE-Gym/OpenHands-Verifier-Trajectories" target="_blank" rel="noopener">SWE-Gym/OpenHands-Verifier-Trajectories</a>
+            <p class="entry__size">5,272 rows</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Trajectories labeled for verifier and reward-model training rather than policy cloning.</p>
+            <p class="harn"><span class="harn__k">Harness</span>OpenHands<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">mit</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>      </div>
+    </section>
+
+    <section class="sec" id="sessions">
+      <header class="sec__head">
+        <h2>Real production agent sessions</h2>
+        <p class="sec__lede">Human-in-the-loop traces — rarer, and behaviorally distinct from synthetic data. All are community uploads: audit for personal data and secrets before training.</p>
+        <p class="sec__stat">7 sources</p>
+      </header>
+      <div class="entries">
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/lewtun/ml-intern-sessions" target="_blank" rel="noopener">lewtun/ml-intern-sessions</a>
+            <p class="entry__size">—</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Recorded machine-learning engineering sessions, carrying real task framing and mid-task correction.</p>
+            <p class="harn harn--unk"><span class="harn__k">Harness</span>Not verified</p>
+            <p class="chips">
+              <span class="chip chip--warn">other</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/clem/hf-coding-tools-traces" target="_blank" rel="noopener">clem/hf-coding-tools-traces</a>
+            <p class="entry__size">—</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Coding-tool traces captured across Hugging Face internal tooling.</p>
+            <p class="harn harn--unk"><span class="harn__k">Harness</span>Not verified</p>
+            <p class="chips">
+              <span class="chip chip--warn">other</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/armand0e/minimax-m3-claude-code-traces" target="_blank" rel="noopener">armand0e/minimax-m3-claude-code-traces</a>
+            <p class="entry__size">—</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Claude Code sessions driven against MiniMax M3; useful for terminal-agent format diversity.</p>
+            <p class="harn"><span class="harn__k">Harness</span>Claude Code</p>
+            <p class="chips">
+              <span class="chip chip--warn">other</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/armand0e/qwen3.7-max-pi-traces" target="_blank" rel="noopener">armand0e/qwen3.7-max-pi-traces</a>
+            <p class="entry__size">—</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Agent sessions from Qwen 3.7 Max running in the Pi harness.</p>
+            <p class="harn"><span class="harn__k">Harness</span>Pi</p>
+            <p class="chips">
+              <span class="chip chip--warn">other</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/TeichAI/DeepSeek-v4-Pro-Agent" target="_blank" rel="noopener">TeichAI/DeepSeek-v4-Pro-Agent</a>
+            <p class="entry__size">—</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">DeepSeek v4 Pro agent sessions contributed to the open pool.</p>
+            <p class="harn harn--unk"><span class="harn__k">Harness</span>Not verified</p>
+            <p class="chips">
+              <span class="chip chip--warn">other</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/thomasmustier/pi-for-excel-sessions" target="_blank" rel="noopener">thomasmustier/pi-for-excel-sessions</a>
+            <p class="entry__size">—</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Spreadsheet-agent sessions — rare coverage of an office document workflow.</p>
+            <p class="harn"><span class="harn__k">Harness</span>Pi</p>
+            <p class="chips">
+              <span class="chip chip--warn">other</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/julien-c/synthtraces" target="_blank" rel="noopener">julien-c/synthtraces</a>
+            <p class="entry__size">—</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">A mixed synthetic trace collection.</p>
+            <p class="harn harn--unk"><span class="harn__k">Harness</span>Not verified</p>
+            <p class="chips">
+              <span class="chip chip--warn">other</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>      </div>
+    </section>
+
+    <section class="sec" id="research">
+      <header class="sec__head">
+        <h2>Deep research and search agents</h2>
+        <p class="sec__lede">Mostly paper-released. Each repository needs individual checking for whether the data drop actually landed.</p>
+        <p class="sec__stat">6 sources</p>
+      </header>
+      <div class="entries">
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://www.alphaxiv.org/abs/2603.20278" target="_blank" rel="noopener">OpenResearcher</a>
+            <p class="entry__size">97K traj</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">97K long-horizon research trajectories — some exceeding 100 tool calls — generated offline against a 15M-document corpus.</p>
+            <p class="harn"><span class="harn__k">Harness</span>Three browser primitives, offline corpus<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--warn">unstated</span>
+              <span class="chip chip--access" title="Hosted outside Hugging Face">Off-Hub</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/papers/2603.01152" target="_blank" rel="noopener">DeepResearch-9K</a>
+            <p class="entry__size">9K questions</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">9K multi-hop research questions with search trajectories, reasoning chains and verifiable answers.</p>
+            <p class="harn"><span class="harn__k">Harness</span>DeepResearch-R1</p>
+            <p class="chips">
+              <span class="chip chip--warn">unstated</span>
+              <span class="chip chip--access" title="Hosted outside Hugging Face">Off-Hub</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://arxiv.org/pdf/2604.17931" target="_blank" rel="noopener">LiteResearcher</a>
+            <p class="entry__size">68,231 traj</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">68,231 search trajectories assembled for a deliberately lightweight deep-research agent.</p>
+            <p class="harn"><span class="harn__k">Harness</span>LiteResearcher</p>
+            <p class="chips">
+              <span class="chip chip--warn">unstated</span>
+              <span class="chip chip--access" title="Hosted outside Hugging Face">Off-Hub</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://arxiv.org/html/2605.05185v1" target="_blank" rel="noopener">OpenSearch-VL</a>
+            <p class="entry__size">36K SFT + 8K RL</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">SearchVL-SFT-36k and SearchVL-RL-8k — the main multimodal search-agent data drop, and the most relevant entry here for a vision model.</p>
+            <p class="harn"><span class="harn__k">Harness</span>OpenSearch-VL</p>
+            <p class="chips">
+              <span class="chip chip--warn">unstated</span>
+              <span class="chip chip--access" title="Hosted outside Hugging Face">Off-Hub</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://arxiv.org/abs/2509.10446" target="_blank" rel="noopener">DeepDive</a>
+            <p class="entry__size">—</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Knowledge-graph-grounded deep search trained with multi-turn RL; code and data both public.</p>
+            <p class="harn"><span class="harn__k">Harness</span>DeepDive</p>
+            <p class="chips">
+              <span class="chip chip--warn">unstated</span>
+              <span class="chip chip--access" title="Hosted outside Hugging Face">Off-Hub</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://github.com/Gen-Verse/Open-AgentRL" target="_blank" rel="noopener">AutoTool / RLAnything</a>
+            <p class="entry__size">200K traj · 1,346 tools</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">200K tool-use trajectories with explicit tool-selection rationales, spanning 1,346 tools and 120 task types.</p>
+            <p class="harn"><span class="harn__k">Harness</span>AutoTool</p>
+            <p class="chips">
+              <span class="chip chip--warn">unstated</span>
+              <span class="chip chip--access" title="Hosted outside Hugging Face">Off-Hub</span>
+            </p>
+          </div>
+        </article>      </div>
+    </section>
+
+    <section class="sec" id="cyber">
+      <header class="sec__head">
+        <h2>Security and vulnerability research</h2>
+        <p class="sec__lede">Vulnerability discovery, patching, penetration testing and CTF solving. The smallest tier by volume and the most fragmented — much of the best-known work releases a runtime or a benchmark rather than trajectories, and the largest corpus of all is not public.</p>
+        <p class="sec__stat">22 sources · 2 GB indexed</p>
+      </header>
+      <div class="entries">
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/jedisct1/security-audits" target="_blank" rel="noopener">jedisct1/security-audits</a>
+            <p class="entry__size">1.69 GB · 35,219 runs</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">35K security audit agent runs — by a wide margin the largest openly downloadable corpus of security agent traces, and a production session dump rather than synthetic data.</p>
+            <p class="harn harn--unk"><span class="harn__k">Harness</span>Not verified</p>
+            <p class="chips">
+              <span class="chip chip--ok">mit</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/0dAI/PentestingCommandLogic" target="_blank" rel="noopener">0dAI/PentestingCommandLogic</a>
+            <p class="entry__size">10,188 rows</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">10K records pairing penetration-testing situations with the command-level reasoning behind the next action.</p>
+            <p class="harn harn--none"><span class="harn__k">Harness</span>Command-level, no harness</p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/AmL-hug/cyberforge-teacher-traj-gpt-5.4-mini" target="_blank" rel="noopener">AmL-hug/cyberforge-teacher-traj-gpt-5.4-mini</a>
+            <p class="entry__size">1,276 traj</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">CyberForge teacher trajectories for vulnerability patching, distilled from GPT-5.4-mini. Fine-tuning on this line reportedly moves SEC-bench patch repair by +14.7 points.</p>
+            <p class="harn"><span class="harn__k">Harness</span>CyberForge</p>
+            <p class="chips">
+              <span class="chip chip--ok">mit</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/AmL-hug/cyberforge-teacher-traj-gemma4-31b" target="_blank" rel="noopener">AmL-hug/cyberforge-teacher-traj-gemma4-31b</a>
+            <p class="entry__size">880 traj</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">The second CyberForge teacher, from Gemma-4-31B — useful precisely because it pairs with the GPT-distilled set for teacher diversity.</p>
+            <p class="harn"><span class="harn__k">Harness</span>CyberForge</p>
+            <p class="chips">
+              <span class="chip chip--ok">mit</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/AmL-hug/cyberforge-projects" target="_blank" rel="noopener">AmL-hug/cyberforge-projects</a>
+            <p class="entry__size">1,034 vulns · 80 repos</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">The CyberForge substrate: 1,034 verified injected vulnerabilities across 80 repositories and 63 weakness categories, from which the trajectories above are generated.</p>
+            <p class="harn harn--none"><span class="harn__k">Harness</span>None — vulnerability corpus<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">mit</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/cowWhySo/pentest-redteam-steering" target="_blank" rel="noopener">cowWhySo/pentest-redteam-steering</a>
+            <p class="entry__size">1,963 rows</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Steering data for red-team and penetration-testing behavior.</p>
+            <p class="harn harn--unk"><span class="harn__k">Harness</span>Not verified</p>
+            <p class="chips">
+              <span class="chip chip--warn">unlicense</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/sunblaze-ucb/cybergym" target="_blank" rel="noopener">sunblaze-ucb/cybergym</a>
+            <p class="entry__size">1,507 tasks</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Real-world CVE reproduction tasks at scale — by download count the most used security agent resource on the Hub. Task definitions, not trajectories.</p>
+            <p class="harn harn--none"><span class="harn__k">Harness</span>None — task definitions<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--warn">unstated</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/sunblaze-ucb/cybergym-e2e" target="_blank" rel="noopener">sunblaze-ucb/cybergym-e2e</a>
+            <p class="entry__size">—</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">The end-to-end CyberGym split, covering the full discover-and-reproduce loop.</p>
+            <p class="harn"><span class="harn__k">Harness</span>CyberGym runtime</p>
+            <p class="chips">
+              <span class="chip chip--warn">unstated</span>
+              <span class="chip chip--access" title="Requires accepting terms with a Hugging Face account">Gated</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/sunblaze-ucb/cybergym-poc" target="_blank" rel="noopener">sunblaze-ucb/cybergym-poc</a>
+            <p class="entry__size">—</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Proof-of-concept exploit artifacts for the CyberGym CVEs. Manually gated rather than auto-approved — expect a real review, and plan for it not being granted.</p>
+            <p class="harn harn--none"><span class="harn__k">Harness</span>None — exploit artifacts<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--warn">unstated</span>
+              <span class="chip chip--access" title="Gated with manual approval — a human reviews the request">Manual review</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/SEC-bench/SEC-bench" target="_blank" rel="noopener">SEC-bench/SEC-bench</a>
+            <p class="entry__size">600 rows</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">200 verified real CVE instances across 29 C/C++ projects, focused on memory safety. Best agents reach only 18% on PoC generation and 34% on patching, so headroom is large.</p>
+            <p class="harn harn--none"><span class="harn__k">Harness</span>None — task definitions<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">mit</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/SEC-bench/Seed" target="_blank" rel="noopener">SEC-bench/Seed</a>
+            <p class="entry__size">898 rows</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">The seed corpus SEC-bench instances are constructed from.</p>
+            <p class="harn harn--none"><span class="harn__k">Harness</span>None — seed corpus<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">mit</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/preemware/pentesting-eval" target="_blank" rel="noopener">preemware/pentesting-eval</a>
+            <p class="entry__size">241 rows</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">A compact penetration-testing evaluation set.</p>
+            <p class="harn harn--unk"><span class="harn__k">Harness</span>Not verified</p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/autogenCTF/CTFAIA" target="_blank" rel="noopener">autogenCTF/CTFAIA</a>
+            <p class="entry__size">—</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">CTF agent data from the CTFAIA project, with a companion public results split.</p>
+            <p class="harn harn--unk"><span class="harn__k">Harness</span>Not verified</p>
+            <p class="chips">
+              <span class="chip chip--warn">unstated</span>
+              <span class="chip chip--access" title="Verified reachable without authentication">Public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/datasets/CyCraftAI/TraceSafe" target="_blank" rel="noopener">CyCraftAI/TraceSafe</a>
+            <p class="entry__size">—</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">The defensive counterpart: multi-step tool-calling traces deliberately mutated to inject specific security and functional failure modes, for training and testing guardrails that detect them.</p>
+            <p class="harn"><span class="harn__k">Harness</span>Tool-call traces (mutated)<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Requires accepting terms with a Hugging Face account">Gated</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://github.com/amazon-science/cyber-zero" target="_blank" rel="noopener">Cyber-Zero</a>
+            <p class="entry__size">code + models</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Runtime-free synthesis of offensive-security trajectories from public CTF writeups via persona-driven simulation — the way to get trace volume without standing up exploit runtimes. Code on GitHub; no Hub dataset found.</p>
+            <p class="harn"><span class="harn__k">Harness</span>EnIGMA / EnIGMA+ spec<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--warn">unstated</span>
+              <span class="chip chip--access" title="Hosted outside Hugging Face">Off-Hub</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://arxiv.org/pdf/2508.18370" target="_blank" rel="noopener">CTF-Dojo</a>
+            <p class="entry__size">658 envs · 486 traj</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">658 fully executable CTF challenges in Docker, with 486 execution-verified trajectories. The companion CTF-Forge pipeline converts public artifacts into ready runtimes.</p>
+            <p class="harn"><span class="harn__k">Harness</span>Docker runtime + verified rollouts<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--warn">unstated</span>
+              <span class="chip chip--access" title="Hosted outside Hugging Face">Off-Hub</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://arxiv.org/abs/2605.28146" target="_blank" rel="noopener">CAI Dataset</a>
+            <p class="entry__size">230,935 sessions · 18 TB</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">230,935 real session logs over 14 months — by far the largest corpus of LLM-driven security trajectories described anywhere, and the reason this tier looks thinner than it should. Released only to partner organisations and selected customers, so treat it as unavailable.</p>
+            <p class="harn"><span class="harn__k">Harness</span>CAI framework<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--warn">partner-only</span>
+              <span class="chip chip--access" title="Described in the literature but not openly released">Not public</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://github.com/NYU-LLM-CTF/NYU_CTF_Bench" target="_blank" rel="noopener">NYU CTF Bench</a>
+            <p class="entry__size">200 challenges</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">200 CSAW CTF challenges from 2017-2023 with an automated solving framework.</p>
+            <p class="harn"><span class="harn__k">Harness</span>NYU CTF framework</p>
+            <p class="chips">
+              <span class="chip chip--ok">mit</span>
+              <span class="chip chip--access" title="Run it to generate traces; no data ships">Environment</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://arxiv.org/pdf/2408.08926" target="_blank" rel="noopener">Cybench</a>
+            <p class="entry__size">40 challenges</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">40 challenges from HackTheBox, Sekai, Glacier and HKCert — materially harder than the CTF sets above.</p>
+            <p class="harn"><span class="harn__k">Harness</span>Cybench</p>
+            <p class="chips">
+              <span class="chip chip--ok">mit</span>
+              <span class="chip chip--access" title="Run it to generate traces; no data ships">Environment</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://arxiv.org/abs/2306.14898" target="_blank" rel="noopener">InterCode-CTF</a>
+            <p class="entry__size">100 challenges</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">100 picoCTF challenges across crypto, web, binary exploitation, reversing and forensics.</p>
+            <p class="harn"><span class="harn__k">Harness</span>InterCode</p>
+            <p class="chips">
+              <span class="chip chip--ok">mit</span>
+              <span class="chip chip--access" title="Run it to generate traces; no data ships">Environment</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://arxiv.org/html/2410.03225v1" target="_blank" rel="noopener">AutoPenBench</a>
+            <p class="entry__size">33 tasks</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">33 penetration-testing tasks of graded difficulty, spanning in-vitro and real-world scenarios.</p>
+            <p class="harn"><span class="harn__k">Harness</span>AutoPenBench</p>
+            <p class="chips">
+              <span class="chip chip--warn">unstated</span>
+              <span class="chip chip--access" title="Run it to generate traces; no data ships">Environment</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://arxiv.org/pdf/2409.16165" target="_blank" rel="noopener">EnIGMA</a>
+            <p class="entry__size">harness</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">The SWE-agent-derived security harness with interactive tooling. Its action-space spec is what Cyber-Zero targets, making it the de-facto format for this domain.</p>
+            <p class="harn"><span class="harn__k">Harness</span>EnIGMA (SWE-agent derived)<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">mit</span>
+              <span class="chip chip--access" title="Run it to generate traces; no data ships">Environment</span>
+            </p>
+          </div>
+        </article>      </div>
+    </section>
+
+    <section class="sec" id="embodied">
+      <header class="sec__head">
+        <h2>Embodied and robotics</h2>
+        <p class="sec__lede">Optional for a general multimodal agent, but the only source of real physical-world action data at scale.</p>
+        <p class="sec__stat">1 source</p>
+      </header>
+      <div class="entries">
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://robotics-transformer-x.github.io/" target="_blank" rel="noopener">Open X-Embodiment</a>
+            <p class="entry__size">1M+ traj · 22 embodiments</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">1M+ real robot trajectories pooled from 60 datasets across 22 embodiments and 21 institutions, standardized into RLDS. Distributed as tfrecords on Google Cloud Storage.</p>
+            <p class="harn harn--none"><span class="harn__k">Harness</span>None — RLDS episodes<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--warn">varies</span>
+              <span class="chip chip--access" title="Hosted outside Hugging Face">Off-Hub</span>
+            </p>
+          </div>
+        </article>      </div>
+    </section>
+
+    <section class="sec" id="envs">
+      <header class="sec__head">
+        <h2>Environments to generate your own traces</h2>
+        <p class="sec__lede">No pre-collected data — you run a policy to produce it. Essential for the RL stage and for covering distribution gaps the static corpora miss.</p>
+        <p class="sec__stat">9 sources</p>
+      </header>
+      <div class="entries">
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://arxiv.org/abs/2404.07972" target="_blank" rel="noopener">OSWorld</a>
+            <p class="entry__size">369 tasks</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">369 real computer-use tasks in executable Ubuntu, Windows and macOS environments, each with script-based verification.</p>
+            <p class="harn"><span class="harn__k">Harness</span>OSWorld · pyautogui</p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Run it to generate traces; no data ships">Environment</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://webarena.dev/" target="_blank" rel="noopener">WebArena / VisualWebArena</a>
+            <p class="entry__size">812 tasks</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Self-hosted clones of real websites with programmatic success checks — the standard web RL environment, and the visual variant adds image-grounded tasks.</p>
+            <p class="harn"><span class="harn__k">Harness</span>BrowserGym-compatible</p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Run it to generate traces; no data ships">Environment</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://github.com/google-research/android_world" target="_blank" rel="noopener">AndroidWorld</a>
+            <p class="entry__size">116 tasks</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">116 tasks across 20 Android apps with live reward signals, built on top of AndroidEnv.</p>
+            <p class="harn"><span class="harn__k">Harness</span>AndroidEnv</p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Run it to generate traces; no data ships">Environment</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://arxiv.org/abs/2412.05467" target="_blank" rel="noopener">BrowserGym</a>
+            <p class="entry__size">—</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">A unified browser environment exposing HTML, accessibility tree and screenshots behind one API, so policies port across web benchmarks.</p>
+            <p class="harn"><span class="harn__k">Harness</span>BrowserGym<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Run it to generate traces; no data ships">Environment</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://arxiv.org/abs/2409.08264" target="_blank" rel="noopener">WindowsAgentArena</a>
+            <p class="entry__size">154 tasks</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">154 tasks running inside a real Windows virtual machine.</p>
+            <p class="harn"><span class="harn__k">Harness</span>Windows VM</p>
+            <p class="chips">
+              <span class="chip chip--ok">mit</span>
+              <span class="chip chip--access" title="Run it to generate traces; no data ships">Environment</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://github.com/deepmind/android_env" target="_blank" rel="noopener">AndroidEnv</a>
+            <p class="entry__size">100 tasks</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">DeepMind&#x27;s low-level Android RL interface operating over raw pixels and touch actions.</p>
+            <p class="harn"><span class="harn__k">Harness</span>AndroidEnv<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Run it to generate traces; no data ships">Environment</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://github.com/SWE-bench/SWE-smith" target="_blank" rel="noopener">SWE-smith</a>
+            <p class="entry__size">50K instances</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">A pipeline that generates effectively unlimited software task instances from 128 real repositories — 50K shipped in the initial release.</p>
+            <p class="harn"><span class="harn__k">Harness</span>SWE-agent<span class="harn__v" title="Confirmed from the dataset card">&#10003;</span></p>
+            <p class="chips">
+              <span class="chip chip--ok">mit</span>
+              <span class="chip chip--access" title="Run it to generate traces; no data ships">Environment</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/blog/openenv-agentic-rl" target="_blank" rel="noopener">OpenEnv</a>
+            <p class="entry__size">—</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">A Hugging Face and Meta-backed hub standardizing agentic RL environments across providers.</p>
+            <p class="harn"><span class="harn__k">Harness</span>OpenEnv</p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Run it to generate traces; no data ships">Environment</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://arxiv.org/abs/2403.07718" target="_blank" rel="noopener">WorkArena / WorkArena++</a>
+            <p class="entry__size">29+ tasks</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">Enterprise workflow tasks executed against a live ServiceNow instance.</p>
+            <p class="harn"><span class="harn__k">Harness</span>BrowserGym</p>
+            <p class="chips">
+              <span class="chip chip--ok">apache-2.0</span>
+              <span class="chip chip--access" title="Run it to generate traces; no data ships">Environment</span>
+            </p>
+          </div>
+        </article>      </div>
+    </section>
+
+    <section class="sec" id="indexes">
+      <header class="sec__head">
+        <h2>Aggregators worth re-checking</h2>
+        <p class="sec__lede">This field moves monthly. These indexes are where new releases surface first.</p>
+        <p class="sec__stat">5 sources</p>
+      </header>
+      <div class="entries">
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://github.com/voidful/awesome-agent-dataset" target="_blank" rel="noopener">voidful/awesome-agent-dataset</a>
+            <p class="entry__size">63 datasets</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">63 datasets catalogued across seven categories with licenses and pipeline integration status — the most current curated index found.</p>
+            <p class="chips">
+              <span class="chip chip--ok">mit</span>
+              <span class="chip chip--access" title="Hosted outside Hugging Face">Off-Hub</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://github.com/Khang-9966/Computer-Browser-Phone-Use-Agent-Datasets" target="_blank" rel="noopener">Khang-9966/Computer-Browser-Phone-Use-Agent-Datasets</a>
+            <p class="entry__size">100+ datasets</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">100+ GUI and computer-use datasets indexed by year from 2018 to 2026, with sizes and modalities.</p>
+            <p class="chips">
+              <span class="chip chip--warn">unstated</span>
+              <span class="chip chip--access" title="Hosted outside Hugging Face">Off-Hub</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://github.com/OSU-NLP-Group/GUI-Agents-Paper-List" target="_blank" rel="noopener">OSU-NLP-Group/GUI-Agents-Paper-List</a>
+            <p class="entry__size">—</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">A continuously updated GUI agent paper and dataset tracker, sliceable by topic.</p>
+            <p class="chips">
+              <span class="chip chip--ok">mit</span>
+              <span class="chip chip--access" title="Hosted outside Hugging Face">Off-Hub</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://github.com/mlabonne/llm-datasets" target="_blank" rel="noopener">mlabonne/llm-datasets</a>
+            <p class="entry__size">—</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">A broad post-training dataset index that carries a dedicated agentic and tool-use section.</p>
+            <p class="chips">
+              <span class="chip chip--ok">mit</span>
+              <span class="chip chip--access" title="Hosted outside Hugging Face">Off-Hub</span>
+            </p>
+          </div>
+        </article>
+        <article class="entry">
+          <div class="entry__key">
+            <a class="entry__id" href="https://huggingface.co/collections/nvidia/nemotron-agentic-and-tool-use" target="_blank" rel="noopener">NVIDIA Nemotron Agentic &amp; Tool-Use</a>
+            <p class="entry__size">—</p>
+          </div>
+          <div class="entry__body">
+            <p class="entry__desc">NVIDIA&#x27;s own grouping of its agentic, terminal, SWE and tool-use releases in one collection.</p>
+            <p class="chips">
+              <span class="chip chip--ok">cc-by-4.0</span>
+              <span class="chip chip--access" title="Hosted outside Hugging Face">Off-Hub</span>
+            </p>
+          </div>
+        </article>      </div>
+    </section>
+</main>
+
+
+<div class="band" id="harness">
+  <div class="band__inner">
+    <h2>Harness mix</h2>
+    <p class="band__lede">Every trace was recorded under some scaffold, and the scaffold fixes the action
+    space, the tool schema and the turn structure. Shares below are computed from measured repository bytes
+    across the trace corpora, excluding the Agent Data Protocol collection, which re-encodes several of the
+    others and would double-count. Environments and index repositories are excluded too.</p>
+    <div class="mixes">
+
+        <div class="mix">
+          <div class="mix__top"><span class="mix__name">Other / bespoke</span><span class="mix__pct">24%</span></div>
+          <div class="mix__bar"><span style="width:24.3%"></span></div>
+          <div class="mix__sub">75 GB &middot; 7 corpora</div>
+        </div>
+        <div class="mix">
+          <div class="mix__top"><span class="mix__name">Tool-call schema</span><span class="mix__pct">18%</span></div>
+          <div class="mix__bar"><span style="width:17.6%"></span></div>
+          <div class="mix__sub">54 GB &middot; 10 corpora</div>
+        </div>
+        <div class="mix">
+          <div class="mix__top"><span class="mix__name">Multi-harness</span><span class="mix__pct">15%</span></div>
+          <div class="mix__bar"><span style="width:15.1%"></span></div>
+          <div class="mix__sub">46 GB &middot; 1 corpora</div>
+        </div>
+        <div class="mix">
+          <div class="mix__top"><span class="mix__name">SWE-agent family</span><span class="mix__pct">13%</span></div>
+          <div class="mix__bar"><span style="width:13.0%"></span></div>
+          <div class="mix__sub">40 GB &middot; 2 corpora</div>
+        </div>
+        <div class="mix">
+          <div class="mix__top"><span class="mix__name">OpenHands</span><span class="mix__pct">11%</span></div>
+          <div class="mix__bar"><span style="width:10.8%"></span></div>
+          <div class="mix__sub">33 GB &middot; 7 corpora</div>
+        </div>
+        <div class="mix">
+          <div class="mix__top"><span class="mix__name">Terminus-2</span><span class="mix__pct">10%</span></div>
+          <div class="mix__bar"><span style="width:9.6%"></span></div>
+          <div class="mix__sub">29 GB &middot; 6 corpora</div>
+        </div>
+        <div class="mix">
+          <div class="mix__top"><span class="mix__name">Not verified</span><span class="mix__pct">10%</span></div>
+          <div class="mix__bar"><span style="width:9.5%"></span></div>
+          <div class="mix__sub">29 GB &middot; 8 corpora</div>
+        </div>
+        <div class="mix">
+          <div class="mix__top"><span class="mix__name">ReAct-style</span><span class="mix__pct">0%</span></div>
+          <div class="mix__bar"><span style="width:0.1%"></span></div>
+          <div class="mix__sub">0 GB &middot; 2 corpora</div>
+        </div>
+    </div>
+    <div class="notes" style="margin-top:30px">
+      <div class="note">
+        <h3>Concentration sits in one unnamed scaffold</h3>
+        <p><code>togethercomputer/CoderForge-Preview</code> alone is 73&nbsp;GB — roughly a quarter of all
+        measured trace bytes — and its card states it was generated with a <strong>single scaffold and fixed
+        tool set, no permutations</strong>, warning that models fine-tuned on it "may perform worse when
+        deployed with different scaffolds, tools, prompt formats".</p>
+      </div>
+      <div class="note">
+        <h3>OpenHands is broad, not dominant</h3>
+        <p>Seven corpora use it, but they are individually small: about 11% of measured bytes. Add the
+        OpenHands portion of the multi-harness <code>Open-SWE-Traces</code> and it reaches roughly a fifth —
+        widespread enough to bias format priors, far from a majority.</p>
+      </div>
+      <div class="note">
+        <h3>Terminus-2 is the one deliberate convergence</h3>
+        <p>AgentTrove, the Nemotron Terminal Corpus and the OpenThoughts agent sets all publish in the
+        terminus-2 ShareGPT layout. It is the only format two independent groups adopted on purpose, which
+        makes it the natural target if you normalize to one harness.</p>
+      </div>
+      <div class="note">
+        <h3>Train the permutation, not one scaffold</h3>
+        <p>The Agent Data Protocol emits <code>full_sft_openhands.jsonl</code>,
+        <code>full_sft_sweagent.jsonl</code> and <code>full_sft_agentlab.jsonl</code> from one normalized
+        trace — the ready-made mechanism for rendering the same trajectory under several harnesses.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="band" id="caveats">
+  <div class="band__inner">
+    <h2>What verification turned up</h2>
+    <p class="band__lede">Access is rarely the obstacle — nearly everything here downloads. Licensing and
+    stale identifiers are the real friction, and both fail quietly.</p>
+    <div class="notes">
+
+      <div class="note">
+        <h3>The biggest security corpus is not public</h3>
+        <p>The CAI Dataset describes 230,935 security agent sessions over 18&nbsp;TB — an order of magnitude beyond everything openly available in that domain combined — but ships only to partner organisations and selected customers. The open security tier is small as a result, and <code>jedisct1/security-audits</code> at 35K runs is the practical ceiling.</p>
+      </div>
+
+      <div class="note">
+        <h3>Repository sizes need paginating</h3>
+        <p>The Hub tree API returns only the first page of files. Two figures in the first edition of this atlas were badly undercounted as a result — <code>osunlp/UGround-V1-Data</code> is 424.5&nbsp;GB, not 5.8, and <code>mllmTeam/MobileViews</code> is 475.5&nbsp;GB, not 76.8. Every size here has since been re-measured by following the pagination cursor to the end.</p>
+      </div>
+
+      <div class="note">
+        <h3>Gating is a speed bump, not a wall</h3>
+        <p><code>neulab/MultiUI</code>, <code>Salesforce/xlam-function-calling-60k</code>, <code>osunlp/UGround-V1-Data</code> and <code>osunlp/Mind2Web-2</code> return <code>gated=auto</code>, as does <code>OS-Copilot/OS-Genesis-web-data</code> outside this list. Each needs a one-time terms acceptance, after which downloads are fully scriptable.</p>
+      </div>
+
+      <div class="note">
+        <h3>Four high-value repositories declare no license</h3>
+        <p><code>togethercomputer/CoderForge-Preview</code>, <code>xlangai/AgentTrek</code>, <code>AgentGym/AgentTraj-L</code> and <code>neulab/agent-data-collection</code> ship without license metadata. Absent a declaration, treat them as all rights reserved and clarify with the authors before commercial training.</p>
+      </div>
+
+      <div class="note">
+        <h3>Three widely-cited dataset IDs do not exist</h3>
+        <p>Papers commonly cite <code>agent-trek/AgentTrek-1.0</code>, <code>ScaleCUA/ScaleCUA-Data</code> and <code>Salesforce/xlam-traces</code>. The first two resolve to <code>xlangai/AgentTrek</code> and <code>OpenGVLab/ScaleCUA-Data</code>; the third has no public release at all. These would fail silently in a bulk download script.</p>
+      </div>
+
+      <div class="note">
+        <h3>Two repositories return empty root listings</h3>
+        <p><code>vyokky/GUI-360</code> and <code>McGill-NLP/A3-Synth</code> show no files at the tree API root — their content sits in subfolders or is awaiting parquet conversion. Both resolve correctly through <code>hf download</code>.</p>
+      </div>
+
+      <div class="note">
+        <h3>Non-commercial licenses</h3>
+        <p><code>osunlp/UGround-V1-Data</code>, <code>McGill-NLP/WebLINX</code> and <code>Salesforce/APIGen-MT-5k</code> are all NC-licensed and cannot be used to train a commercially deployed model.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="band" id="order">
+  <div class="band__inner">
+    <h2>Suggested ingestion order</h2>
+    <p class="band__lede">Ordered by cost-to-value, not by size. The schema decision comes first because
+    every later source has to pass through it.</p>
+    <ol class="steps">
+
+        <li class="step">
+          <h3>Fix the schema first</h3>
+          <p>Adopt the Agent Data Protocol from <code>neulab/agent-data-collection</code> as your internal trace format, so every later source normalizes into one pipeline instead of many bespoke loaders.</p>
+        </li>
+
+        <li class="step">
+          <h3>Take the text agentic core</h3>
+          <p>Software engineering, terminal and tool-calling plus AgentTrove and Toucan. Cheap, permissively licensed, and enough for a competent text agent in roughly 120 GB.</p>
+        </li>
+
+        <li class="step">
+          <h3>Add multimodal grounding</h3>
+          <p>AgentNet, Aguvis and OS-Atlas. This is where the multimodal capability actually comes from, and it is also where the storage cost lands.</p>
+        </li>
+
+        <li class="step">
+          <h3>Extend to mobile</h3>
+          <p>Only if phone control is genuinely in scope — it is a large, domain-specific tier that will not transfer much to desktop.</p>
+        </li>
+
+        <li class="step">
+          <h3>Run the RL stage</h3>
+          <p>The verifier corpora above, plus rollouts you generate yourself from the environments.</p>
+        </li>
+    </ol>
+    <h3 style="margin-top:34px;font-size:15px;font-weight:600">Bulk fetch</h3>
+    <p style="margin:6px 0 12px;color:var(--ink-2)">Authentication is only needed for the gated entries.</p>
+    <pre><code>pip install -U "huggingface_hub[cli]"
+hf auth login
+hf download &lt;repo_id&gt; --repo-type dataset --local-dir ./data/&lt;name&gt;</code></pre>
+  </div>
+</div>
+
+<footer class="wrap">
+  <p>Sizes are full repository byte totals, obtained by following the Hub tree API pagination cursor to the
+  end, otherwise the parquet-converted row and byte counts. Licenses are as declared in dataset card metadata — an absent
+  declaration is recorded as <em>unstated</em>, not assumed permissive.</p>
+  <p>Categories overlap by design: several corpora carry both screenshots and tool calls, and are filed
+  under their dominant modality.</p>
+</footer>
