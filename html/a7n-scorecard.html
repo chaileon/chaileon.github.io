@@ -116,13 +116,13 @@
       <div class="eyebrow">Open-weight evaluation &middot; 2026-09-01</div>
       <h1>a7n-m5-v1</h1>
     </div>
-    <p class="sub">Nineteen evaluations spanning knowledge, reasoning, coding, agentic tool use, multilingual capability and real-traffic behaviour. Reasoning traces are on by default and cannot be disabled on this endpoint; every sample that fails to finish inside the 40,960-token cap is scored as a failure rather than retried at a larger budget.</p>
+    <p class="sub">Twenty evaluations across two models, spanning knowledge, reasoning, coding, agentic tool use, multilingual capability and real-traffic behaviour. Reasoning traces are on by default and cannot be disabled on this endpoint; every sample that fails to finish inside the 40,960-token cap is scored as a failure rather than retried at a larger budget.</p>
     <dl class="facts">
       <div class="fact"><dt>Provider</dt><dd>api.neorouter.ai</dd></div>
       <div class="fact"><dt>Mode</dt><dd>thinking (forced)</dd></div>
       <div class="fact"><dt>Context cap</dt><dd>40,960</dd></div>
-      <div class="fact"><dt>Samples</dt><dd>13,824</dd></div>
-      <div class="fact"><dt>Output tokens</dt><dd>45,634,244</dd></div>
+      <div class="fact"><dt>Samples</dt><dd>19,436</dd></div>
+      <div class="fact"><dt>Output tokens</dt><dd>55,650,769</dd></div>
       <div class="fact"><dt>API errors</dt><dd>0</dd></div>
     </dl>
   </header>
@@ -192,11 +192,11 @@
         <div class="ci">95% CI [70.4, 74.9]</div>
         <div class="meta"><span>n=1500</span><span>25 subjects</span></div>
       </article>
-      <article class="card">
-        <div class="card-top"><div><div class="bench">IndoCulture</div><div class="metric">Indonesian cultural commonsense</div></div><span class="chip idle">running</span></div>
-        <div class="score" style="color:var(--muted)">&mdash;</div><div class="bar"><i style="width:0"></i></div>
-        <div class="ci">n=2,429 &middot; isolates cultural knowledge from reasoning</div>
-        <div class="meta"><span>12 topics</span><span>34 provinces</span></div>
+      <article class="card sev-high">
+        <div class="card-top"><div><div class="bench">IndoCulture</div><div class="metric">Indonesian cultural commonsense</div></div><span class="chip hi">&minus;18.9 vs EN</span></div>
+        <div class="score">73.8%</div><div class="bar"><i style="width:73.8%"></i></div>
+        <div class="ci">95% CI [72.0, 75.5]</div>
+        <div class="meta"><span>n=2429</span><span>12 topics</span><span>34 provinces</span></div>
       </article>
     </div>
 
@@ -331,22 +331,139 @@
 
   <!-- COMPARISON -->
   <section>
-    <div class="axis-head"><h2>Against published figures</h2><span class="rule"></span></div>
+    <div class="axis-head"><h2>Against published results, benchmark by benchmark</h2><span class="rule"></span></div>
+
     <div class="panel">
-      <p class="sub" style="margin:0 0 14px">Vendor-reported, independently unverified, and none state sampling settings. Indicative only.</p>
+      <h3>Reasoning, knowledge &amp; code</h3>
       <div class="tablewrap">
         <table>
-          <thead><tr><th>Benchmark</th><th class="n">a7n reported</th><th class="n">a7n excl. capped</th><th class="n">Qwen3.8-27B</th><th class="n">GLM-5.2</th></tr></thead>
+          <thead><tr><th>Benchmark</th><th class="n">a7n</th><th class="n">excl. capped</th><th>Published reference points</th></tr></thead>
           <tbody>
-            <tr><td>MMLU-Pro</td><td class="n">85.8</td><td class="n hi">86.8</td><td class="n">&mdash;</td><td class="n">85.2</td></tr>
-            <tr><td>GPQA Diamond</td><td class="n">80.7</td><td class="n hi">89.9</td><td class="n">89.2</td><td class="n">89.5 / 91.2 &#9888;</td></tr>
-            <tr><td>AIME 2025</td><td class="n">91.2</td><td class="n hi">97.3</td><td class="n">&mdash;</td><td class="n">95.8</td></tr>
-            <tr><td>LiveCodeBench v6</td><td class="n">74.3</td><td class="n hi">90.9</td><td class="n">90.3</td><td class="n">86.2</td></tr>
-            <tr><td>&tau;&sup2;-bench</td><td class="n">80.0 / 70.2 / 90.2</td><td class="n">&mdash;</td><td class="n">&mdash;</td><td class="n">99.1 &#9888;</td></tr>
+            <tr><td>MMLU-Pro</td><td class="n">85.8</td><td class="n hi">86.8</td><td>GLM-5.2 85.2</td></tr>
+            <tr><td>GPQA Diamond</td><td class="n">80.7</td><td class="n hi">89.9</td><td>Qwen3.8-27B 89.2 &middot; GLM-5.2 89.5&ndash;91.2 &#9888;</td></tr>
+            <tr><td>AIME 2025</td><td class="n">91.2</td><td class="n hi">97.3</td><td>GLM-5.2 95.8</td></tr>
+            <tr><td>AIME 2024</td><td class="n">91.7</td><td class="n hi">98.2</td><td><em>no published figure found</em></td></tr>
+            <tr><td>MATH-500</td><td class="n">98.4</td><td class="n">98.5</td><td><em>no published figure found</em></td></tr>
+            <tr><td>LiveCodeBench v6</td><td class="n">74.3</td><td class="n hi">90.9</td><td>Qwen3.8-27B 90.3 &middot; GLM-5.2 86.2</td></tr>
+            <tr><td>IFEval</td><td class="n">88.4</td><td class="n">&mdash;</td><td><em>no comparable figure found</em></td></tr>
+            <tr><td>SimpleQA</td><td class="n">24.9</td><td class="n">30.3</td><td><em>no published figure found</em></td></tr>
+            <tr><td>BFCL v4 overall</td><td class="n">28.8</td><td class="n">&mdash;</td><td><em>no published figure found</em></td></tr>
+            <tr><td>&tau;&sup2;-bench</td><td class="n">80.0 / 70.2 / 90.2</td><td class="n">&mdash;</td><td>GLM-5.2 99.1 &#9888; not credible</td></tr>
           </tbody>
         </table>
       </div>
-      <p class="sub" style="margin:14px 0 0">&#9888; Sources disagree. GLM-5.2's GPQA appears as 85.4, 89.5 and 91.2 across sources &mdash; and the 85.4 figure is <em>GLM-5-FP8</em>, a different model, conflated in one summary. Its 99.1% &tau;&sup2; result is not credible on a benchmark nowhere near saturation.</p>
+    </div>
+
+    <div class="panel">
+      <h3>MalayMMLU &middot; against the official leaderboard</h3>
+      <p class="sub" style="margin:8px 0 14px">The one benchmark here with a full published leaderboard. a7n lands between GPT-4o and GPT-4 &mdash; but the official numbers use <strong style="color:var(--ink)">first-token accuracy</strong>, while ours are generative chain-of-thought with letter extraction. Different protocols; treat the ordering as indicative.</p>
+      <div class="rows">
+        <div class="row"><span class="lbl">Ilmu 0.1 (YTL)</span><span class="bar"><i style="width:86.98%"></i></span><span class="val">87.0</span></div>
+        <div class="row"><span class="lbl">GPT-4o</span><span class="bar"><i style="width:84.98%"></i></span><span class="val">85.0</span></div>
+        <div class="row"><span class="lbl"><strong>a7n-m5-v1</strong></span><span class="bar"><i style="width:84.1%;background:var(--good)"></i></span><span class="val" style="color:var(--good)">84.1</span></div>
+        <div class="row"><span class="lbl">GPT-4</span><span class="bar"><i style="width:80.11%"></i></span><span class="val">80.1</span></div>
+        <div class="row"><span class="lbl">LLaMA-3.1 70B</span><span class="bar"><i style="width:78.44%"></i></span><span class="val">78.4</span></div>
+        <div class="row"><span class="lbl">Qwen 2.5 72B</span><span class="bar"><i style="width:77.79%"></i></span><span class="val">77.8</span></div>
+        <div class="row"><span class="lbl">GLM-4-Plus</span><span class="bar"><i style="width:75.48%"></i></span><span class="val">75.5</span></div>
+        <div class="row"><span class="lbl">Gemma-2 9B</span><span class="bar"><i style="width:72.51%"></i></span><span class="val">72.5</span></div>
+        <div class="row"><span class="lbl">GPT-3.5</span><span class="bar"><i style="width:67.78%"></i></span><span class="val">67.8</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Indonesian benchmarks</h3>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Benchmark</th><th class="n">a7n</th><th>Published reference points</th></tr></thead>
+          <tbody>
+            <tr><td>IndoMMLU</td><td class="n hi">72.7</td><td>GPT-3.5 53.2 (best in the 2023 paper) &middot; mT0-xxl 13B 42.5. The paper's title is <em>&ldquo;LLMs Only Pass Primary School Exams in Indonesia&rdquo;</em> &mdash; those baselines are three years old.</td></tr>
+            <tr><td>IndoCulture</td><td class="n">73.8</td><td>GPT-4 75.8 <em>with explicit province context</em> &middot; best open-weight 52&ndash;53 &middot; human 100</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="sub" style="margin:14px 0 0">IndoCulture is the sharper result: a7n at 73.8 sits close to GPT-4's 75.8 and roughly 21 points above the open-weight models reported in that work, while humans score 100. Cultural commonsense remains the widest human&ndash;model gap in this whole evaluation.</p>
+    </div>
+
+    <div class="panel">
+      <h3>Why these comparisons are weak</h3>
+      <div class="notes">
+        <div class="note bad"><span class="dot"></span><p><strong>Protocol mismatch is the rule, not the exception.</strong> MalayMMLU's leaderboard uses first-token accuracy; ours is generative CoT. Vendor figures for Qwen3.8-27B and GLM-5.2 state no k, temperature or thinking budget at all. None of these were reproduced independently.</p></div>
+        <div class="note bad"><span class="dot"></span><p><strong>Our numbers carry a penalty theirs do not.</strong> The 40,960-token cap scores non-termination as failure. No published figure does this &mdash; which is why the &ldquo;excl. capped&rdquo; column exists, and why the honest reading of a7n sits between the two columns.</p></div>
+        <div class="note warn"><span class="dot"></span><p><strong>Sources contradict each other.</strong> GLM-5.2's GPQA appears as 85.4, 89.5 and 91.2 depending on source &mdash; and 85.4 is actually <em>GLM-5-FP8</em>, a different model, conflated in one summary. Its 99.1% &tau;&sup2; figure is not credible on a benchmark far from saturation.</p></div>
+        <div class="note warn"><span class="dot"></span><p><strong>Baselines age badly.</strong> IndoMMLU's published figures are from its 2023 paper, when GPT-3.5 led at 53.2. Beating them by 20 points says more about three years of progress than about this model specifically.</p></div>
+        <div class="note"><span class="dot"></span><p><strong>Five benchmarks have no usable published counterpart</strong> at matching settings: AIME 2024, MATH-500, IFEval, SimpleQA and BFCL v4. They are reported here without comparison rather than against a mismatched number.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HEAD TO HEAD -->
+  <section>
+    <div class="axis-head"><h2>Head to head &middot; Nemotron-3-Ultra-550B</h2><span class="rule"></span></div>
+    <div class="panel">
+      <p class="sub" style="margin:0 0 14px">The only benchmark both models completed. Identical 1,497 stratified MMLU-Pro items, identical prompts, identical 40,960-token cap. Every other Nemotron run was destroyed by OpenRouter's free-tier daily request cap.</p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Model</th><th class="n">MMLU-Pro</th><th class="n">95% CI</th><th class="n">capped</th><th class="n">API errors</th></tr></thead>
+          <tbody>
+            <tr><td>a7n-m5-v1</td><td class="n">85.8%</td><td class="n">[83.9, 87.4]</td><td class="n">1.1%</td><td class="n">0</td></tr>
+            <tr><td>nemotron-3-ultra-550b-a55b</td><td class="n">86.0%</td><td class="n">[84.1, 87.6]</td><td class="n">2.0%</td><td class="n">1</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="sub" style="margin:14px 0 14px"><strong style="color:var(--ink)">Statistically indistinguishable.</strong> A 0.2-point gap against confidence intervals spanning ~3.5 points each. The subject-level differences are more informative than the aggregate:</p>
+      <div class="rows">
+        <div class="row"><span class="lbl">History</span><span class="bar"><i style="width:42.5%;background:var(--good)"></i></span><span class="val" style="color:var(--good)">+8.5</span></div>
+        <div class="row"><span class="lbl">Law</span><span class="bar"><i style="width:22%;background:var(--good)"></i></span><span class="val" style="color:var(--good)">+4.4</span></div>
+        <div class="row"><span class="lbl">Business</span><span class="bar"><i style="width:10%;background:var(--good)"></i></span><span class="val" style="color:var(--good)">+2.0</span></div>
+        <div class="row"><span class="lbl">Computer science</span><span class="bar"><i style="width:10%;background:var(--bad)"></i></span><span class="val" style="color:var(--bad)">&minus;2.0</span></div>
+        <div class="row"><span class="lbl">Chemistry</span><span class="bar"><i style="width:10.5%;background:var(--bad)"></i></span><span class="val" style="color:var(--bad)">&minus;2.1</span></div>
+        <div class="row"><span class="lbl">Engineering</span><span class="bar"><i style="width:33%;background:var(--bad)"></i></span><span class="val" style="color:var(--bad)">&minus;6.6</span></div>
+      </div>
+      <p class="sub" style="margin:14px 0 0">Positive favours Nemotron. It leads on humanities and law; a7n leads on engineering and the physical sciences.</p>
+    </div>
+  </section>
+
+  <!-- MoE CLASS -->
+  <section>
+    <div class="axis-head"><h2>Against 200B&ndash;1T open-weight MoEs</h2><span class="rule"></span></div>
+
+    <div class="panel">
+      <p class="sub" style="margin:0 0 14px"><strong style="color:var(--ink)">a7n's parameter count is unknown.</strong> The endpoint publishes no architecture information, so whether it belongs in this weight class is an open question &mdash; this compares it <em>against</em> that class, not <em>within</em> it.</p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Model</th><th class="n">total / active</th><th class="n">MMLU-Pro</th><th class="n">GPQA-D</th><th class="n">AIME</th><th class="n">LiveCodeBench</th></tr></thead>
+          <tbody>
+            <tr><td><strong>a7n-m5-v1</strong> <span style="color:var(--muted)">(measured)</span></td><td class="n">unknown</td><td class="n hi">85.8 / 86.8</td><td class="n hi">80.7 / 89.9</td><td class="n hi">91.2 <span style="color:var(--muted)">'25</span></td><td class="n hi">74.3 / 90.9</td></tr>
+            <tr><td><strong>Nemotron-3-Ultra</strong> <span style="color:var(--muted)">(measured)</span></td><td class="n">550B / 55B</td><td class="n hi">86.0</td><td class="n">&mdash;</td><td class="n">&mdash;</td><td class="n">&mdash;</td></tr>
+            <tr><td>GLM-5.2</td><td class="n">753B / 40B</td><td class="n">85.2</td><td class="n">89.5&ndash;91.2 &#9888;</td><td class="n">95.8 <span style="color:var(--muted)">'25</span></td><td class="n">86.2</td></tr>
+            <tr><td>Qwen3.5-397B-A17B</td><td class="n">397B / 17B</td><td class="n">&mdash;</td><td class="n">88.4</td><td class="n">91.3 <span style="color:var(--muted)">'26</span></td><td class="n">83.6</td></tr>
+            <tr><td>MiniMax-M2.7</td><td class="n">not stated</td><td class="n">&mdash;</td><td class="n">89.8</td><td class="n">94.2 <span style="color:var(--muted)">'26</span></td><td class="n">&mdash;</td></tr>
+            <tr><td>Kimi K2.6</td><td class="n">1T / 32B</td><td class="n">&mdash;</td><td class="n">&mdash;</td><td class="n">&mdash;</td><td class="n">&mdash;</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="sub" style="margin:14px 0 0">Above the band, for scale: DeepSeek V4 Pro (1.6T / 49B) reports GPQA-D 90.1 and LiveCodeBench 93.5; Kimi K3 (2.8T / 50B) reports GPQA-D 93.5.</p>
+    </div>
+
+    <div class="panel">
+      <h3>The one measurement that is actually comparable</h3>
+      <p class="sub" style="margin:8px 0 14px">Both models run through the same harness, the same 1,497 stratified MMLU-Pro items, the same prompts and the same 40,960-token cap. Everything else on this page's comparison tables is third-party.</p>
+      <div class="rows">
+        <div class="row"><span class="lbl">Nemotron-3-Ultra 550B</span><span class="bar"><i style="width:86.0%"></i></span><span class="val">86.0</span></div>
+        <div class="row"><span class="lbl"><strong>a7n-m5-v1</strong></span><span class="bar"><i style="width:85.8%;background:var(--good)"></i></span><span class="val" style="color:var(--good)">85.8</span></div>
+      </div>
+      <p class="sub" style="margin:14px 0 0">A 0.2-point gap against confidence intervals ~3.5 points wide &mdash; <strong style="color:var(--ink)">indistinguishable</strong>. On MMLU-Pro at least, a7n performs at the level of a 550B/55B MoE.</p>
+    </div>
+
+    <div class="panel">
+      <h3>How to read this table &mdash; and how not to</h3>
+      <div class="notes">
+        <div class="note bad"><span class="dot"></span><p><strong>a7n's two columns bracket the truth.</strong> The first applies the 40,960-token cap as a failure; the second removes it entirely. Published figures apply no such penalty, so the right-hand number is the fairer comparison &mdash; but it assumes every non-terminating sample would have been correct, which is an upper bound, not a score.</p></div>
+        <div class="note bad"><span class="dot"></span><p><strong>The AIME years do not match.</strong> We ran AIME 2025; Qwen3.5 and MiniMax report AIME 2026. Those columns are not comparable and are labelled accordingly.</p></div>
+        <div class="note warn"><span class="dot"></span><p><strong>Zhipu published no official benchmarks when GLM-5.2 shipped.</strong> Every GLM-5.2 number in circulation is third-party, which is why its GPQA appears variously as 85.4, 89.5 and 91.2 &mdash; and why one widely-repeated figure is actually GLM-5-FP8, a different model.</p></div>
+        <div class="note warn"><span class="dot"></span><p><strong>Most cells are empty because the data does not exist</strong> at matching settings, not because the models were not tested. MMLU-Pro in particular is rarely reported for this class in 2026 &mdash; it has largely been displaced by SWE-bench and Terminal-Bench in vendor reporting.</p></div>
+        <div class="note"><span class="dot"></span><p><strong>Active parameters matter more than totals</strong> for inference cost. These models activate 17&ndash;55B per token despite 397B&ndash;1T totals, so &ldquo;200B&ndash;1T MoE&rdquo; describes memory footprint, not compute per token.</p></div>
+      </div>
     </div>
   </section>
 
@@ -380,15 +497,15 @@
       </div>
       <div class="note">
         <span class="dot"></span>
-        <p><strong>Nemotron-3-Ultra comparison is not yet available.</strong> On OpenRouter's free tier it hit a ~1,000 request/day cap and runs at ~30 tok/s while spending 20k thinking tokens per short answer. MMLU-Pro is mid-repair; no valid score exists yet.</p>
+        <p><strong>Nemotron comparison covers MMLU-Pro only.</strong> OpenRouter's free tier enforces a ~1,000 request/day cap. Recovering MMLU-Pro's 504 rate-limited samples consumed the day's quota, so all four regional MCQ runs returned 100% rate-limit failures &mdash; their summaries were quarantined rather than reported, since a &ldquo;0.0%&rdquo; built entirely from HTTP 429s is not a measurement. SEA-HELM on Nemotron was abandoned after 4h42m produced zero completed tasks.</p>
       </div>
     </div>
   </section>
 
   <footer>
     <span>a7n-m5-v1</span>
-    <span>13,824 samples</span>
-    <span>45,634,244 output tokens</span>
+    <span>19,436 samples</span>
+    <span>55,650,769 output tokens</span>
     <span>0 API errors</span>
     <span>Wilson 95% intervals</span>
   </footer>
