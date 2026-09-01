@@ -1,0 +1,396 @@
+<title>A7n M5 Scorecard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --ground:#F2F5F7; --surface:#FFFFFF; --surface-2:#E9EEF1;
+    --ink:#0F1720; --ink-2:#35434F; --muted:#5E6E7B;
+    --line:#D4DDE4; --line-2:#BECAD3; --accent:#0E6C77;
+    --good:#2C7A4F; --warn:#9A6410; --bad:#A33526;
+    --good-bg:#E2F0E8; --warn-bg:#F7EDDA; --bad-bg:#F6E3E0;
+    --track:#DCE4E9;
+    --shadow:0 1px 2px rgba(15,23,32,.05),0 1px 8px rgba(15,23,32,.04);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:#0C1216; --surface:#141C22; --surface-2:#1B252C;
+      --ink:#E7EEF3; --ink-2:#BDCAD4; --muted:#8798A5;
+      --line:#24313A; --line-2:#33434E; --accent:#45B3BD;
+      --good:#5FB287; --warn:#D2A054; --bad:#D8776A;
+      --good-bg:#16281F; --warn-bg:#2B2317; --bad-bg:#2C1B18;
+      --track:#212C34;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 1px 10px rgba(0,0,0,.25);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:#0C1216; --surface:#141C22; --surface-2:#1B252C;
+    --ink:#E7EEF3; --ink-2:#BDCAD4; --muted:#8798A5;
+    --line:#24313A; --line-2:#33434E; --accent:#45B3BD;
+    --good:#5FB287; --warn:#D2A054; --bad:#D8776A;
+    --good-bg:#16281F; --warn-bg:#2B2317; --bad-bg:#2C1B18;
+    --track:#212C34;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 1px 10px rgba(0,0,0,.25);
+  }
+
+  * { box-sizing:border-box; }
+  body { background:var(--ground); color:var(--ink);
+    font-family:"IBM Plex Sans",ui-sans-serif,system-ui,sans-serif;
+    font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:1080px; margin:0 auto; padding:40px 24px 88px; }
+
+  h1,h2,h3 { font-family:Archivo,ui-sans-serif,system-ui,sans-serif; text-wrap:balance; margin:0; }
+  h1 { font-size:30px; font-weight:700; letter-spacing:-.021em; }
+  h2 { font-size:15px; font-weight:600; letter-spacing:.085em; text-transform:uppercase; color:var(--muted); }
+  h3 { font-size:17px; font-weight:600; letter-spacing:-.008em; }
+
+  header { display:flex; flex-direction:column; gap:18px; padding-bottom:26px; border-bottom:2px solid var(--line-2); }
+  .eyebrow { font-family:"IBM Plex Mono",monospace; font-size:11.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); font-weight:500; }
+  .sub { color:var(--muted); max-width:68ch; margin:0; }
+  .facts { display:grid; grid-template-columns:repeat(auto-fit,minmax(148px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:3px; overflow:hidden; }
+  .fact { background:var(--surface); padding:11px 14px; display:flex; flex-direction:column; gap:3px; }
+  .fact dt { font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin:0; }
+  .fact dd { margin:0; font-size:14px; font-weight:500; font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; color:var(--ink); }
+
+  section { margin-top:46px; display:flex; flex-direction:column; gap:18px; }
+  .axis-head { display:flex; align-items:baseline; gap:12px; }
+  .axis-head .rule { flex:1; height:1px; background:var(--line); }
+
+  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(268px,1fr)); gap:14px; }
+  .card { background:var(--surface); border:1px solid var(--line); border-radius:4px;
+    padding:16px 17px 15px; display:flex; flex-direction:column; gap:11px;
+    box-shadow:var(--shadow); position:relative; overflow:hidden; }
+  .card::before { content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--sev,var(--accent)); }
+  .card.sev-none { --sev:var(--good); }
+  .card.sev-low  { --sev:var(--warn); }
+  .card.sev-high { --sev:var(--bad); }
+  .card-top { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
+  .bench { font-family:Archivo,sans-serif; font-weight:600; font-size:15.5px; letter-spacing:-.006em; }
+  .metric { font-family:"IBM Plex Mono",monospace; font-size:10.5px; color:var(--muted); letter-spacing:.04em; margin-top:2px; }
+  .score { font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; font-size:31px; font-weight:600; line-height:1; letter-spacing:-.02em; }
+  .bar { height:5px; background:var(--track); border-radius:3px; overflow:hidden; position:relative; }
+  .bar > i { display:block; height:100%; background:var(--accent); border-radius:3px; }
+  .meta { display:flex; flex-wrap:wrap; gap:6px 12px; font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--muted); font-variant-numeric:tabular-nums; }
+  .chip { display:inline-flex; align-items:center; font-family:"IBM Plex Mono",monospace; font-size:10.5px; font-weight:500; padding:2.5px 7px; border-radius:3px; white-space:nowrap; }
+  .chip.ok{background:var(--good-bg);color:var(--good);} .chip.mid{background:var(--warn-bg);color:var(--warn);}
+  .chip.hi{background:var(--bad-bg);color:var(--bad);} .chip.idle{background:var(--surface-2);color:var(--muted);}
+  .ci { font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--muted); font-variant-numeric:tabular-nums; }
+
+  .panel { background:var(--surface); border:1px solid var(--line); border-radius:4px; padding:20px 22px; box-shadow:var(--shadow); }
+  .rows { display:flex; flex-direction:column; gap:7px; }
+  .row { display:grid; grid-template-columns:150px 1fr 52px; align-items:center; gap:12px; }
+  .row .lbl { font-size:13px; color:var(--ink-2); }
+  .row .val { font-family:"IBM Plex Mono",monospace; font-size:12.5px; font-variant-numeric:tabular-nums; text-align:right; }
+  .row .bar { height:14px; border-radius:2px; }
+  .row .bar > i { border-radius:2px; opacity:.88; }
+
+  .stack { display:flex; height:30px; border-radius:3px; overflow:hidden; border:1px solid var(--line); }
+  .legend { display:flex; flex-wrap:wrap; gap:8px 18px; margin-top:12px; font-size:12.5px; color:var(--ink-2); }
+  .legend i { display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:6px; vertical-align:-1px; }
+
+  .tablewrap { overflow-x:auto; }
+  table { border-collapse:collapse; width:100%; font-size:13.5px; min-width:540px; }
+  th,td { text-align:left; padding:9px 12px; border-bottom:1px solid var(--line); }
+  th { font-family:"IBM Plex Mono",monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.09em; color:var(--muted); font-weight:500; }
+  td.n { font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; text-align:right; }
+  td.hi { color:var(--good); font-weight:600; }
+  tbody tr:last-child td { border-bottom:none; }
+
+  .notes { display:flex; flex-direction:column; gap:14px; }
+  .note { display:grid; grid-template-columns:20px 1fr; gap:12px; align-items:start; }
+  .note .dot { width:7px; height:7px; border-radius:50%; background:var(--accent); margin-top:8px; }
+  .note.warn .dot { background:var(--warn); }
+  .note.bad .dot { background:var(--bad); }
+  .note p { margin:0; color:var(--ink-2); max-width:76ch; }
+  .note strong { color:var(--ink); font-weight:600; }
+  code { font-family:"IBM Plex Mono",monospace; font-size:.89em; background:var(--surface-2); padding:1px 5px; border-radius:3px; color:var(--ink); }
+
+  footer { margin-top:52px; padding-top:20px; border-top:1px solid var(--line); color:var(--muted); font-size:12.5px; font-family:"IBM Plex Mono",monospace; display:flex; flex-wrap:wrap; gap:6px 20px; }
+  @media (max-width:560px){ .row{grid-template-columns:104px 1fr 46px;} h1{font-size:25px;} }
+</style>
+
+<div class="wrap">
+
+  <header>
+    <div>
+      <div class="eyebrow">Open-weight evaluation &middot; 2026-09-01</div>
+      <h1>a7n-m5-v1</h1>
+    </div>
+    <p class="sub">Nineteen evaluations spanning knowledge, reasoning, coding, agentic tool use, multilingual capability and real-traffic behaviour. Reasoning traces are on by default and cannot be disabled on this endpoint; every sample that fails to finish inside the 40,960-token cap is scored as a failure rather than retried at a larger budget.</p>
+    <dl class="facts">
+      <div class="fact"><dt>Provider</dt><dd>api.neorouter.ai</dd></div>
+      <div class="fact"><dt>Mode</dt><dd>thinking (forced)</dd></div>
+      <div class="fact"><dt>Context cap</dt><dd>40,960</dd></div>
+      <div class="fact"><dt>Samples</dt><dd>13,824</dd></div>
+      <div class="fact"><dt>Output tokens</dt><dd>45,634,244</dd></div>
+      <div class="fact"><dt>API errors</dt><dd>0</dd></div>
+    </dl>
+  </header>
+
+  <!-- HEADLINE -->
+  <section>
+    <div class="axis-head"><h2>Knowledge &amp; reasoning</h2><span class="rule"></span></div>
+    <div class="cards">
+      <article class="card sev-none">
+        <div class="card-top"><div><div class="bench">MMLU-Pro</div><div class="metric">accuracy</div></div><span class="chip ok">1.1% capped</span></div>
+        <div class="score">85.8%</div><div class="bar"><i style="width:85.8%"></i></div>
+        <div class="ci">95% CI [83.9, 87.4]</div>
+        <div class="meta"><span>n=1497</span><span>k=1</span><span>T=0.0</span></div>
+      </article>
+      <article class="card sev-low">
+        <div class="card-top"><div><div class="bench">GPQA Diamond</div><div class="metric">accuracy</div></div><span class="chip mid">10.2% capped</span></div>
+        <div class="score">80.7%</div><div class="bar"><i style="width:80.7%"></i></div>
+        <div class="ci">95% CI [78.7, 82.6] &middot; 89.9% excl. capped</div>
+        <div class="meta"><span>n=198</span><span>k=8</span><span>T=0.6</span></div>
+      </article>
+      <article class="card sev-low">
+        <div class="card-top"><div><div class="bench">AIME 2025</div><div class="metric">avg@16</div></div><span class="chip mid">6.2% capped</span></div>
+        <div class="score">91.2%</div><div class="bar"><i style="width:91.2%"></i></div>
+        <div class="ci">[88.4, 93.5] &middot; pass@16 96.7% &middot; 97.3% excl. capped</div>
+        <div class="meta"><span>n=30</span><span>k=16</span><span>T=0.6</span></div>
+      </article>
+      <article class="card sev-low">
+        <div class="card-top"><div><div class="bench">AIME 2024</div><div class="metric">avg@16</div></div><span class="chip mid">6.7% capped</span></div>
+        <div class="score">91.7%</div><div class="bar"><i style="width:91.7%"></i></div>
+        <div class="ci">[88.9, 93.8] &middot; pass@16 100% &middot; 98.2% excl. capped</div>
+        <div class="meta"><span>n=30</span><span>k=16</span><span>T=0.6</span></div>
+      </article>
+      <article class="card sev-none">
+        <div class="card-top"><div><div class="bench">MATH-500</div><div class="metric">avg@2</div></div><span class="chip ok">0.1% capped</span></div>
+        <div class="score">98.4%</div><div class="bar"><i style="width:98.4%"></i></div>
+        <div class="ci">[97.4, 99.0] &middot; pass@2 99.0%</div>
+        <div class="meta"><span>n=500</span><span>k=2</span><span>T=0.6</span></div>
+      </article>
+      <article class="card sev-none">
+        <div class="card-top"><div><div class="bench">IFEval</div><div class="metric">prompt-level, strict</div></div><span class="chip idle">official verifier</span></div>
+        <div class="score">88.4%</div><div class="bar"><i style="width:88.4%"></i></div>
+        <div class="ci">loose 89.5% &middot; instruction-level 92.1% / 93.0%</div>
+        <div class="meta"><span>n=541</span><span>k=1</span><span>T=0.0</span></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- MULTILINGUAL -->
+  <section>
+    <div class="axis-head"><h2>Multilingual &middot; English, Malay, Indonesian</h2><span class="rule"></span></div>
+    <div class="cards">
+      <article class="card sev-none">
+        <div class="card-top"><div><div class="bench">MMLU</div><div class="metric">English &middot; accuracy</div></div><span class="chip ok">0.2% capped</span></div>
+        <div class="score">92.7%</div><div class="bar"><i style="width:92.7%"></i></div>
+        <div class="ci">95% CI [91.2, 93.9]</div>
+        <div class="meta"><span>n=1500</span><span>57 subjects</span></div>
+      </article>
+      <article class="card sev-low">
+        <div class="card-top"><div><div class="bench">MalayMMLU</div><div class="metric">Malay &middot; accuracy</div></div><span class="chip mid">&minus;8.6 vs EN</span></div>
+        <div class="score">84.1%</div><div class="bar"><i style="width:84.1%"></i></div>
+        <div class="ci">95% CI [82.1, 85.8]</div>
+        <div class="meta"><span>n=1500</span><span>22 subjects</span></div>
+      </article>
+      <article class="card sev-high">
+        <div class="card-top"><div><div class="bench">IndoMMLU</div><div class="metric">Indonesian &middot; accuracy</div></div><span class="chip hi">&minus;20.0 vs EN</span></div>
+        <div class="score">72.7%</div><div class="bar"><i style="width:72.7%"></i></div>
+        <div class="ci">95% CI [70.4, 74.9]</div>
+        <div class="meta"><span>n=1500</span><span>25 subjects</span></div>
+      </article>
+      <article class="card">
+        <div class="card-top"><div><div class="bench">IndoCulture</div><div class="metric">Indonesian cultural commonsense</div></div><span class="chip idle">running</span></div>
+        <div class="score" style="color:var(--muted)">&mdash;</div><div class="bar"><i style="width:0"></i></div>
+        <div class="ci">n=2,429 &middot; isolates cultural knowledge from reasoning</div>
+        <div class="meta"><span>12 topics</span><span>34 provinces</span></div>
+      </article>
+    </div>
+
+    <div class="panel">
+      <h3>SEA-HELM &middot; Indonesian (partial, paused)</h3>
+      <p class="sub" style="margin:8px 0 14px">Normalized accuracy &mdash; raw score minus the random baseline, the figure SEA-HELM leaderboards report. Four of eighteen task-language combinations completed before the run was paused; it is extremely slow because the model spends up to 20,000 thinking tokens on answers whose expected form is <code>"Jawaban: A"</code>.</p>
+      <div class="rows">
+        <div class="row"><span class="lbl">Sentiment (id)</span><span class="bar"><i style="width:75.4%"></i></span><span class="val">75.4</span></div>
+        <div class="row"><span class="lbl">Metaphor (id)</span><span class="bar"><i style="width:70.1%"></i></span><span class="val">70.1</span></div>
+        <div class="row"><span class="lbl">Causal reasoning (id)</span><span class="bar"><i style="width:55.6%"></i></span><span class="val">55.6</span></div>
+        <div class="row"><span class="lbl">Toxicity detection (id)</span><span class="bar"><i style="width:23.5%"></i></span><span class="val">23.5</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CODING + AGENTIC -->
+  <section>
+    <div class="axis-head"><h2>Coding &amp; agentic</h2><span class="rule"></span></div>
+    <div class="cards">
+      <article class="card sev-high">
+        <div class="card-top"><div><div class="bench">LiveCodeBench v6</div><div class="metric">pass@1 &middot; 2025-01 &rarr; 2025-04</div></div><span class="chip hi">18.3% capped</span></div>
+        <div class="score">74.3%</div><div class="bar"><i style="width:74.3%"></i></div>
+        <div class="ci">[69.5, 78.6] &middot; 90.9% excl. capped</div>
+        <div class="meta"><span>n=175</span><span>k=2</span><span>sandboxed exec</span></div>
+      </article>
+      <article class="card sev-none">
+        <div class="card-top"><div><div class="bench">&tau;&sup2; airline</div><div class="metric">avg reward &middot; pass^1</div></div><span class="chip ok">50/50</span></div>
+        <div class="score">80.0%</div><div class="bar"><i style="width:80%"></i></div>
+        <div class="ci">0 infrastructure errors</div>
+        <div class="meta"><span>1 trial</span><span>self-simulated user</span></div>
+      </article>
+      <article class="card sev-low">
+        <div class="card-top"><div><div class="bench">&tau;&sup2; retail</div><div class="metric">avg reward &middot; pass^1</div></div><span class="chip ok">114/114</span></div>
+        <div class="score">70.2%</div><div class="bar"><i style="width:70.2%"></i></div>
+        <div class="ci">re-run after judge misconfiguration</div>
+        <div class="meta"><span>1 trial</span></div>
+      </article>
+      <article class="card sev-none">
+        <div class="card-top"><div><div class="bench">&tau;&sup2; telecom</div><div class="metric">avg reward &middot; pass^1</div></div><span class="chip ok">112/114</span></div>
+        <div class="score">90.2%</div><div class="bar"><i style="width:90.2%"></i></div>
+        <div class="ci">2 infrastructure errors</div>
+        <div class="meta"><span>1 trial</span></div>
+      </article>
+    </div>
+
+    <div class="panel">
+      <h3>BFCL v4 &middot; function calling</h3>
+      <p class="sub" style="margin:8px 0 14px">The single sharpest weakness found anywhere in this evaluation: the model picks the right function call reliably in isolation and collapses across turns.</p>
+      <div class="rows">
+        <div class="row"><span class="lbl">Non-Live AST</span><span class="bar"><i style="width:80.8%"></i></span><span class="val">80.8</span></div>
+        <div class="row"><span class="lbl">&nbsp;&nbsp;multiple</span><span class="bar"><i style="width:89%"></i></span><span class="val">89.0</span></div>
+        <div class="row"><span class="lbl">&nbsp;&nbsp;parallel</span><span class="bar"><i style="width:89%"></i></span><span class="val">89.0</span></div>
+        <div class="row"><span class="lbl">&nbsp;&nbsp;parallel multiple</span><span class="bar"><i style="width:82%"></i></span><span class="val">82.0</span></div>
+        <div class="row"><span class="lbl">&nbsp;&nbsp;simple</span><span class="bar"><i style="width:63.25%"></i></span><span class="val">63.3</span></div>
+        <div class="row"><span class="lbl">Live accuracy</span><span class="bar"><i style="width:75.35%"></i></span><span class="val">75.4</span></div>
+        <div class="row"><span class="lbl">Multi-turn base</span><span class="bar"><i style="width:69.5%"></i></span><span class="val">69.5</span></div>
+        <div class="row"><span class="lbl"><strong>Multi-turn overall</strong></span><span class="bar"><i style="width:17.38%;background:var(--bad)"></i></span><span class="val" style="color:var(--bad)">17.4</span></div>
+        <div class="row"><span class="lbl"><strong>Overall</strong></span><span class="bar"><i style="width:28.76%"></i></span><span class="val">28.8</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BEHAVIOUR -->
+  <section>
+    <div class="axis-head"><h2>Factuality &amp; behaviour</h2><span class="rule"></span></div>
+
+    <div class="panel">
+      <h3>SimpleQA &middot; re-graded with an independent judge</h3>
+      <p class="sub" style="margin:8px 0 14px">The model grading its own answers mislabelled 327 substantive answers as &ldquo;not attempted&rdquo;. Re-graded with Qwen3.8-27B plus a deterministic guard, the failure mode inverts: this model rarely abstains &mdash; it answers confidently and is wrong most of the time.</p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th></th><th class="n">self-judged (a7n)</th><th class="n">independent judge</th></tr></thead>
+          <tbody>
+            <tr><td>Correct</td><td class="n">19.1%</td><td class="n hi">24.9%</td></tr>
+            <tr><td>Incorrect</td><td class="n">25.9%</td><td class="n">53.9%</td></tr>
+            <tr><td>Not attempted</td><td class="n">49.9%</td><td class="n">17.8%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="sub" style="margin:14px 0 0">Excluding the 178 responses that were empty (truncation plus a <code>tool_use</code> endpoint bug): <strong style="color:var(--ink)">30.3%</strong> [27.2, 33.5]. Of the 17.8% not attempted, nearly all are empty responses rather than refusals.</p>
+    </div>
+
+    <div class="panel">
+      <h3>WildChat-1M &middot; behaviour on real traffic</h3>
+      <p class="sub" style="margin:8px 0 14px">Real user prompts, no ground truth &mdash; scored only on objectively checkable signals. n=500, half drawn from the top moderation-score decile.</p>
+      <div class="stack">
+        <span style="width:90.4%;background:var(--good)"></span>
+        <span style="width:3.8%;background:var(--warn)"></span>
+        <span style="width:4.8%;background:var(--bad)"></span>
+        <span style="width:1.0%;background:var(--line-2)"></span>
+      </div>
+      <div class="legend">
+        <span><i style="background:var(--good)"></i>Complied 90.4%</span>
+        <span><i style="background:var(--warn)"></i>Partial 3.8%</span>
+        <span><i style="background:var(--bad)"></i>Refused 4.8%</span>
+        <span><i style="background:var(--line-2)"></i>Unlabelled 1.0%</span>
+      </div>
+      <div class="tablewrap" style="margin-top:18px">
+        <table>
+          <tbody>
+            <tr><td>Refused on sensitive slice (n=250)</td><td class="n">6.8%</td></tr>
+            <tr><td>Refused on benign slice (n=250)</td><td class="n">2.8%</td></tr>
+            <tr><td>Language fidelity (n=395 comparable)</td><td class="n">90.6%</td></tr>
+            <tr><td>Empty replies &middot; truncated at cap</td><td class="n">0.4% &middot; 0.4%</td></tr>
+            <tr><td>Mean reply length</td><td class="n">3,405 chars</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAP -->
+  <section>
+    <div class="axis-head"><h2>What the 40,960-token cap costs</h2><span class="rule"></span></div>
+    <div class="panel">
+      <p class="sub" style="margin:0 0 14px">Samples that exhausted the budget mid-reasoning and never emitted an answer, scored as wrong. The right column assumes every one would have been correct, so the true value lies between the two &mdash; nearer the left.</p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Benchmark</th><th class="n">capped</th><th class="n">as reported</th><th class="n">excl. capped</th></tr></thead>
+          <tbody>
+            <tr><td>LiveCodeBench v6</td><td class="n">18.3%</td><td class="n">74.3%</td><td class="n hi">90.9%</td></tr>
+            <tr><td>GPQA Diamond</td><td class="n">10.2%</td><td class="n">80.7%</td><td class="n hi">89.9%</td></tr>
+            <tr><td>AIME 2024</td><td class="n">6.7%</td><td class="n">91.7%</td><td class="n hi">98.2%</td></tr>
+            <tr><td>AIME 2025</td><td class="n">6.2%</td><td class="n">91.2%</td><td class="n hi">97.3%</td></tr>
+            <tr><td>MMLU-Pro</td><td class="n">1.1%</td><td class="n">85.8%</td><td class="n">86.8%</td></tr>
+            <tr><td>MATH-500</td><td class="n">0.1%</td><td class="n">98.4%</td><td class="n">98.5%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPARISON -->
+  <section>
+    <div class="axis-head"><h2>Against published figures</h2><span class="rule"></span></div>
+    <div class="panel">
+      <p class="sub" style="margin:0 0 14px">Vendor-reported, independently unverified, and none state sampling settings. Indicative only.</p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Benchmark</th><th class="n">a7n reported</th><th class="n">a7n excl. capped</th><th class="n">Qwen3.8-27B</th><th class="n">GLM-5.2</th></tr></thead>
+          <tbody>
+            <tr><td>MMLU-Pro</td><td class="n">85.8</td><td class="n hi">86.8</td><td class="n">&mdash;</td><td class="n">85.2</td></tr>
+            <tr><td>GPQA Diamond</td><td class="n">80.7</td><td class="n hi">89.9</td><td class="n">89.2</td><td class="n">89.5 / 91.2 &#9888;</td></tr>
+            <tr><td>AIME 2025</td><td class="n">91.2</td><td class="n hi">97.3</td><td class="n">&mdash;</td><td class="n">95.8</td></tr>
+            <tr><td>LiveCodeBench v6</td><td class="n">74.3</td><td class="n hi">90.9</td><td class="n">90.3</td><td class="n">86.2</td></tr>
+            <tr><td>&tau;&sup2;-bench</td><td class="n">80.0 / 70.2 / 90.2</td><td class="n">&mdash;</td><td class="n">&mdash;</td><td class="n">99.1 &#9888;</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="sub" style="margin:14px 0 0">&#9888; Sources disagree. GLM-5.2's GPQA appears as 85.4, 89.5 and 91.2 across sources &mdash; and the 85.4 figure is <em>GLM-5-FP8</em>, a different model, conflated in one summary. Its 99.1% &tau;&sup2; result is not credible on a benchmark nowhere near saturation.</p>
+    </div>
+  </section>
+
+  <!-- METHOD -->
+  <section>
+    <div class="axis-head"><h2>Method &amp; caveats</h2><span class="rule"></span></div>
+    <div class="panel notes">
+      <div class="note bad">
+        <span class="dot"></span>
+        <p><strong>Self-judging corrupted one headline number and was corrected.</strong> SimpleQA originally scored 19.1% correct / 49.9% not attempted with <code>a7n-m5-v1</code> as its own grader. An independent Qwen3.8-27B judge gives 24.9% / 17.8%, and the characterisation reverses entirely &mdash; from &ldquo;abstains often&rdquo; to &ldquo;answers confidently and is wrong 53.9% of the time&rdquo;. The &tau;&sup2; user simulator, &tau;&sup2;'s NL-assertion checker and WildChat refusal labelling remain self-judged and carry the same risk.</p>
+      </div>
+      <div class="note bad">
+        <span class="dot"></span>
+        <p><strong>Thinking cannot be disabled.</strong> Tested three ways with repeats: <code>thinking:{"type":"disabled"}</code> produced <em>more</em> reasoning (470 chars) than sending no parameter (251). The endpoint ignores it. Every figure here is a thinking-mode figure and is not comparable to a non-thinking baseline.</p>
+      </div>
+      <div class="note warn">
+        <span class="dot"></span>
+        <p><strong>An endpoint bug empties some responses.</strong> Roughly 134 SimpleQA samples returned <code>stop_reason: tool_use</code> with empty text despite no <code>tools</code> parameter being sent. Those count as failures and are not model refusals.</p>
+      </div>
+      <div class="note warn">
+        <span class="dot"></span>
+        <p><strong>GPQA uses an ungated mirror.</strong> <code>Idavidrein/gpqa</code> is gated, so this run uses <code>fingertap/GPQA-Diamond</code> &mdash; the same 198 Diamond items in four-choice form, answers near-uniform across A&ndash;D.</p>
+      </div>
+      <div class="note">
+        <span class="dot"></span>
+        <p><strong>Scoring uses official verifiers.</strong> IFEval runs the google-research verifier vendored unchanged; math answers are graded by <code>math_verify</code>; LiveCodeBench solutions execute against full public and private test suites under <code>sandbox-exec</code> with the network denied; BFCL and &tau;&sup2;-bench run their own harnesses. Regional MCQ prompts are written in Indonesian and Malay so the model is not cued into English.</p>
+      </div>
+      <div class="note">
+        <span class="dot"></span>
+        <p><strong>Not run:</strong> SWE-bench Verified, Terminal-Bench and OSWorld all need per-task Docker containers, unavailable on this machine. SEA-HELM is paused at 4 of 18 task-language combinations. IndoCulture is still running.</p>
+      </div>
+      <div class="note">
+        <span class="dot"></span>
+        <p><strong>Nemotron-3-Ultra comparison is not yet available.</strong> On OpenRouter's free tier it hit a ~1,000 request/day cap and runs at ~30 tok/s while spending 20k thinking tokens per short answer. MMLU-Pro is mid-repair; no valid score exists yet.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>a7n-m5-v1</span>
+    <span>13,824 samples</span>
+    <span>45,634,244 output tokens</span>
+    <span>0 API errors</span>
+    <span>Wilson 95% intervals</span>
+  </footer>
+
+</div>
