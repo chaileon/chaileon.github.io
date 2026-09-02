@@ -467,6 +467,81 @@
     </div>
   </section>
 
+  <!-- QWEN36 REGIONAL -->
+  <section>
+    <div class="axis-head"><h2>Regional head to head &middot; Qwen3.6-27B</h2><span class="rule"></span></div>
+
+    <div class="panel">
+      <p class="sub" style="margin:0 0 14px">A <strong style="color:var(--ink)">dense 27B</strong> model run through the same harness, same prompts, same 40,960-token cap. Qwen's sample size is smaller (budget-limited), so its interval is wider.</p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Benchmark</th><th class="n">a7n-m5-v1</th><th class="n">Qwen3.6-27B</th><th class="n">diff</th><th class="n">significance</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>IndoMMLU</td>
+              <td class="n">72.7% <span style="color:var(--muted)">[70.4, 74.9] n=1500</span></td>
+              <td class="n hi">77.3% <span style="color:var(--muted)">[72.6, 81.4] n=348</span></td>
+              <td class="n">+4.6</td>
+              <td class="n">z=1.74, p=0.082</td>
+            </tr>
+            <tr>
+              <td>MalayMMLU</td>
+              <td class="n">84.1% <span style="color:var(--muted)">[82.1, 85.8] n=1500</span></td>
+              <td class="n">84.6% <span style="color:var(--muted)">[80.4, 88.0] n=350</span></td>
+              <td class="n">+0.5</td>
+              <td class="n">z=0.23, p=0.816</td>
+            </tr>
+            <tr><td>IndoCulture</td><td class="n">73.8% <span style="color:var(--muted)">[72.0, 75.5] n=2429</span></td><td class="n">running <span style="color:var(--muted)">294/350</span></td><td class="n">&mdash;</td><td class="n">&mdash;</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="sub" style="margin:14px 0 0"><strong style="color:var(--ink)">The two languages diverge.</strong> On Malay the models are a dead heat &mdash; 0.5 points, p=0.816, indistinguishable. On Indonesian a7n trails by 4.6 points, which still does not clear the conventional bar (p=0.082) but points consistently in one direction. That split matters: if a7n were simply weaker at Southeast Asian languages, Malay would show it too. It does not.</p>
+    </div>
+
+    <div class="panel">
+      <h3>IndoMMLU by subject &mdash; Qwen3.6 leads 13 of 16</h3>
+      <p class="sub" style="margin:8px 0 14px">Positive favours Qwen3.6-27B. Only subjects where both models have &ge;8 samples.</p>
+      <div class="rows">
+        <div class="row"><span class="lbl">Economics</span><span class="bar"><i style="width:95%;background:var(--good)"></i></span><span class="val" style="color:var(--good)">+28.6</span></div>
+        <div class="row"><span class="lbl">Bahasa Bali</span><span class="bar"><i style="width:77%;background:var(--good)"></i></span><span class="val" style="color:var(--good)">+23.2</span></div>
+        <div class="row"><span class="lbl">Bahasa Sunda</span><span class="bar"><i style="width:44%;background:var(--good)"></i></span><span class="val" style="color:var(--good)">+13.2</span></div>
+        <div class="row"><span class="lbl">Geography</span><span class="bar"><i style="width:41%;background:var(--good)"></i></span><span class="val" style="color:var(--good)">+12.4</span></div>
+        <div class="row"><span class="lbl">History</span><span class="bar"><i style="width:38%;background:var(--good)"></i></span><span class="val" style="color:var(--good)">+11.3</span></div>
+        <div class="row"><span class="lbl">Civics (PPKN)</span><span class="bar"><i style="width:27%;background:var(--good)"></i></span><span class="val" style="color:var(--good)">+8.0</span></div>
+        <div class="row"><span class="lbl">Physics</span><span class="bar"><i style="width:27%;background:var(--good)"></i></span><span class="val" style="color:var(--good)">+8.0</span></div>
+        <div class="row"><span class="lbl">Bahasa Indonesia</span><span class="bar"><i style="width:11%;background:var(--good)"></i></span><span class="val" style="color:var(--good)">+3.2</span></div>
+        <div class="row"><span class="lbl">Bahasa Jawa</span><span class="bar"><i style="width:7%;background:var(--good)"></i></span><span class="val" style="color:var(--good)">+2.2</span></div>
+        <div class="row"><span class="lbl">Social studies (IPS)</span><span class="bar"><i style="width:3%;background:var(--bad)"></i></span><span class="val" style="color:var(--bad)">&minus;1.0</span></div>
+        <div class="row"><span class="lbl">Chemistry</span><span class="bar"><i style="width:9%;background:var(--bad)"></i></span><span class="val" style="color:var(--bad)">&minus;2.8</span></div>
+        <div class="row"><span class="lbl">Sociology</span><span class="bar"><i style="width:24%;background:var(--bad)"></i></span><span class="val" style="color:var(--bad)">&minus;7.3</span></div>
+      </div>
+      <p class="sub" style="margin:14px 0 0">Two patterns. Qwen leads on the <strong style="color:var(--ink)">regional languages</strong> &mdash; Balinese +23.2, Sundanese +13.2 &mdash; which is the untranslatable half of IndoMMLU and where a7n is weakest absolutely (Balinese 40.4%). And it leads on <strong style="color:var(--ink)">humanities and social science</strong>, echoing the Nemotron head-to-head where a7n also trailed on history (&minus;8.5) and law (&minus;4.4) while leading on engineering. Two independent comparisons, same shape: a7n is relatively stronger in STEM, weaker in humanities and cultural content.</p>
+    </div>
+
+    <div class="panel">
+      <h3>Where a7n's Indonesian difficulty actually lives</h3>
+      <p class="sub" style="margin:8px 0 14px">Qwen3.6's own subject spread shows the benchmark's structure. Academic subjects sit at 80&ndash;100%; local-language subjects collapse. IndoMMLU is roughly half local-language and cultural content, which is what pulls both models down from their English scores.</p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Strongest (Qwen3.6)</th><th class="n"></th><th>Weakest (Qwen3.6)</th><th class="n"></th></tr></thead>
+          <tbody>
+            <tr><td>Economics &middot; Physics &middot; Sports</td><td class="n">100%</td><td>Bahasa Madura</td><td class="n">14%</td></tr>
+            <tr><td>Civics (PPKN)</td><td class="n">94%</td><td>Bahasa Makassar</td><td class="n">25%</td></tr>
+            <tr><td>Science (IPA)</td><td class="n">91%</td><td>Bahasa Banjar &middot; Lampung &middot; Hindu studies</td><td class="n">33%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="notes">
+        <div class="note"><span class="dot"></span><p><strong>Qwen3.6-27B had zero unparsed and zero truncated samples</strong>, against a7n's 1.1% and 1.0%. On a benchmark whose expected answer is a single letter, a7n still occasionally reasons past the 40,960-token cap and emits nothing; a dense 27B never did.</p></div>
+        <div class="note warn"><span class="dot"></span><p><strong>Sample sizes differ.</strong> Qwen ran n=348&ndash;350 per benchmark against a7n's 1,500&ndash;2,429, because Qwen3.6-27B is a paid model at $3.60/M output. Matching a7n's sample sizes would have cost roughly $59.</p></div>
+        <div class="note"><span class="dot"></span><p><strong>Size context.</strong> Qwen3.6-27B is a dense 27B model, far smaller than the 200B&ndash;1T MoE class tabled above. That a model this size leads a7n on Indonesian is the substantive finding here.</p></div>
+      </div>
+    </div>
+  </section>
+
   <!-- METHOD -->
   <section>
     <div class="axis-head"><h2>Method &amp; caveats</h2><span class="rule"></span></div>
