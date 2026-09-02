@@ -335,23 +335,26 @@
 
     <div class="panel">
       <h3>Reasoning, knowledge &amp; code</h3>
+      <p class="sub" style="margin:8px 0 14px">Qwen3.6-27B and Qwen3.8-27B are <strong style="color:var(--ink)">dense 27B models that also think by default</strong> &mdash; the closest methodological match to a7n anywhere in this report. Their figures are from the official model cards.</p>
       <div class="tablewrap">
         <table>
-          <thead><tr><th>Benchmark</th><th class="n">a7n</th><th class="n">excl. capped</th><th>Published reference points</th></tr></thead>
+          <thead><tr><th>Benchmark</th><th class="n">a7n</th><th class="n">excl. capped</th><th class="n">Qwen3.6-27B</th><th class="n">Qwen3.8-27B</th><th class="n">GLM-5.2</th></tr></thead>
           <tbody>
-            <tr><td>MMLU-Pro</td><td class="n">85.8</td><td class="n hi">86.8</td><td>GLM-5.2 85.2</td></tr>
-            <tr><td>GPQA Diamond</td><td class="n">80.7</td><td class="n hi">89.9</td><td>Qwen3.8-27B 89.2 &middot; GLM-5.2 89.5&ndash;91.2 &#9888;</td></tr>
-            <tr><td>AIME 2025</td><td class="n">91.2</td><td class="n hi">97.3</td><td>GLM-5.2 95.8</td></tr>
-            <tr><td>AIME 2024</td><td class="n">91.7</td><td class="n hi">98.2</td><td><em>no published figure found</em></td></tr>
-            <tr><td>MATH-500</td><td class="n">98.4</td><td class="n">98.5</td><td><em>no published figure found</em></td></tr>
-            <tr><td>LiveCodeBench v6</td><td class="n">74.3</td><td class="n hi">90.9</td><td>Qwen3.8-27B 90.3 &middot; GLM-5.2 86.2</td></tr>
-            <tr><td>IFEval</td><td class="n">88.4</td><td class="n">&mdash;</td><td><em>no comparable figure found</em></td></tr>
-            <tr><td>SimpleQA</td><td class="n">24.9</td><td class="n">30.3</td><td><em>no published figure found</em></td></tr>
-            <tr><td>BFCL v4 overall</td><td class="n">28.8</td><td class="n">&mdash;</td><td><em>no published figure found</em></td></tr>
-            <tr><td>&tau;&sup2;-bench</td><td class="n">80.0 / 70.2 / 90.2</td><td class="n">&mdash;</td><td>GLM-5.2 99.1 &#9888; not credible</td></tr>
+            <tr><td>MMLU-Pro</td><td class="n">85.8</td><td class="n hi">86.8</td><td class="n">86.2</td><td class="n">&mdash;</td><td class="n">85.2</td></tr>
+            <tr><td>MMLU</td><td class="n">92.7</td><td class="n">&mdash;</td><td class="n">93.5 <span style="color:var(--muted)">Redux</span></td><td class="n">&mdash;</td><td class="n">&mdash;</td></tr>
+            <tr><td>GPQA Diamond</td><td class="n">80.7</td><td class="n hi">89.9</td><td class="n">87.8</td><td class="n">89.2</td><td class="n">89.5&ndash;91.2 &#9888;</td></tr>
+            <tr><td>AIME</td><td class="n">91.2 <span style="color:var(--muted)">'25</span></td><td class="n hi">97.3</td><td class="n">94.1 <span style="color:var(--muted)">'26</span></td><td class="n">&mdash;</td><td class="n">95.8 <span style="color:var(--muted)">'25</span></td></tr>
+            <tr><td>MATH-500</td><td class="n">98.4</td><td class="n">98.5</td><td class="n">&mdash;</td><td class="n">&mdash;</td><td class="n">&mdash;</td></tr>
+            <tr><td>LiveCodeBench v6</td><td class="n">74.3</td><td class="n hi">90.9</td><td class="n">83.9</td><td class="n">90.3</td><td class="n">86.2</td></tr>
+            <tr><td>IFEval</td><td class="n">88.4</td><td class="n">&mdash;</td><td class="n">&mdash;</td><td class="n">79.5 <span style="color:var(--muted)">IFBench</span></td><td class="n">&mdash;</td></tr>
+            <tr><td>SWE-bench Verified</td><td class="n">not run</td><td class="n">&mdash;</td><td class="n">77.2</td><td class="n">&mdash;</td><td class="n">~79&ndash;81</td></tr>
+            <tr><td>SimpleQA</td><td class="n">24.9</td><td class="n">30.3</td><td class="n">&mdash;</td><td class="n">&mdash;</td><td class="n">&mdash;</td></tr>
+            <tr><td>BFCL v4 overall</td><td class="n">28.8</td><td class="n">&mdash;</td><td class="n">&mdash;</td><td class="n">&mdash;</td><td class="n">&mdash;</td></tr>
+            <tr><td>&tau;&sup2;-bench</td><td class="n">80.0 / 70.2 / 90.2</td><td class="n">&mdash;</td><td class="n">&mdash;</td><td class="n">&mdash;</td><td class="n">99.1 &#9888;</td></tr>
           </tbody>
         </table>
       </div>
+      <p class="sub" style="margin:14px 0 0"><strong style="color:var(--ink)">a7n and Qwen3.6-27B are level on MMLU-Pro</strong> &mdash; 86.8 excl. capped against 86.2, and 85.8 against 86.2 as reported. Where a7n falls behind is LiveCodeBench and GPQA, and the capped column shows most of that gap is failure-to-terminate rather than failure-to-reason. Note the AIME columns are different years and <em>MMLU-Redux is not plain MMLU</em>, so those two rows are not strictly like-for-like.</p>
     </div>
 
     <div class="panel">
@@ -491,11 +494,11 @@
               <td class="n">+0.5</td>
               <td class="n">z=0.23, p=0.816</td>
             </tr>
-            <tr><td>IndoCulture</td><td class="n">73.8% <span style="color:var(--muted)">[72.0, 75.5] n=2429</span></td><td class="n">running <span style="color:var(--muted)">294/350</span></td><td class="n">&mdash;</td><td class="n">&mdash;</td></tr>
+            <tr><td>IndoCulture</td><td class="n">73.8% <span style="color:var(--muted)">[72.0, 75.5] n=2429</span></td><td class="n">74.8% <span style="color:var(--muted)">[70.0, 79.1] n=349</span></td><td class="n">+1.0</td><td class="n">z=0.39, p=0.700</td></tr>
           </tbody>
         </table>
       </div>
-      <p class="sub" style="margin:14px 0 0"><strong style="color:var(--ink)">The two languages diverge.</strong> On Malay the models are a dead heat &mdash; 0.5 points, p=0.816, indistinguishable. On Indonesian a7n trails by 4.6 points, which still does not clear the conventional bar (p=0.082) but points consistently in one direction. That split matters: if a7n were simply weaker at Southeast Asian languages, Malay would show it too. It does not.</p>
+      <p class="sub" style="margin:14px 0 0"><strong style="color:var(--ink)">Two of three are ties; the gap is narrower than it looks.</strong> Malay is a dead heat (+0.5, p=0.816) and so is IndoCulture (+1.0, p=0.700). Only IndoMMLU shows a gap, and even that does not clear the conventional bar (p=0.082). <strong style="color:var(--ink)">IndoCulture being tied is the informative result</strong> &mdash; it is pure Indonesian cultural commonsense with no academic content to fall back on, so a7n's cultural knowledge is on par. That isolates the IndoMMLU gap to regional-language proficiency specifically &mdash; Balinese, Sundanese, Javanese, Madurese &mdash; not Indonesian culture, and not Southeast Asian languages broadly.</p>
     </div>
 
     <div class="panel">
